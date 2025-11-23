@@ -178,7 +178,7 @@ Depois que seu ambiente estiver configurado e suas alterações estiverem pronta
 3.  **Abra um Pull Request (PR):**
     * Vá até a página do seu fork no GitHub.
     * Clique no botão "Compare & pull request".
-    * Verifique se a base é a branch main (ou master) do repositório VR0414/projeto-Only-Football-Fans e o head é a sua branch.
+    * Verifique se a base é a branch main (ou master) do repositório raulmaiab/projeto-Only-Football-Fans e o head é a sua branch.
     * Na descrição, explique *o que* você fez e *por que*. Se sua alteração corrige uma "Issue" aberta, mencione o número dela (ex: Resolve #42).
 
 **Obrigado por ajudar a construir o Only-Football-Fans!**
@@ -217,9 +217,7 @@ Depois que seu ambiente estiver configurado e suas alterações estiverem pronta
 
 </details>
 <details>
-
   <summary>Entrega 3 ✅</summary>
-  
   [BackLog Jira da Entrega 3](images/backlog3.png)
   
   [Quadro Jira da Entrega 3](images/quadrojira3.png)
