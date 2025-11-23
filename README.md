@@ -60,7 +60,7 @@ _Um app que eterniza momentos que o futebol entrega e o tempo não devolve._
 - 📌 **Jira (Gestão do Projeto)** → [Acessar](https://fds-cesar-school.atlassian.net/jira/software/projects/PGF/boards/1?atlOrigin=eyJpIjoiNWUxNGI5MDY2OGM1NDhiYWJiMjg5ZjliMWU0M2E3ZTMiLCJwIjoiaiJ9)  
 - 🎨 **Figma (Protótipo de Design)** → [Acessar](https://www.figma.com/design/CXlarW1bJs3u1XKdIYB1Q0/ProjetoFDS?node-id=0-1&p=f&t=6GuU3fSHRvxqUSVA-0)  
 - 📄 **Google Docs (Documentação)** → [Acessar](https://docs.google.com/document/d/1KJ7e-UgdJZPT6Hks4MEKToqq0ciq734pU-kY532tJzU/edit?usp=sharing)
-- ⚽️ **Canva (Apresentação)** → [Acessar](https://www.canva.com/design/DAG451OIFY4/_TWTgrChyf5cAFsolQoQCw/edit?ui=e30)  
+- ⚽️ **Canva (Apresentação Do Projeto)** → [Acessar](https://www.canva.com/design/DAG451OIFY4/_TWTgrChyf5cAFsolQoQCw/edit?ui=e30)  
 
 ---
 
