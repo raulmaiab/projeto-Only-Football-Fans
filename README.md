@@ -188,7 +188,7 @@ Depois que seu ambiente estiver configurado e suas alterações estiverem pronta
 ## 📦 Entregáveis  
 <details>
   
-  <summary>- ⚽️✅ Entrega 1 </summary>
+  <summary>Entrega 1 ✅</summary>
   
   [Screencast Figma](https://youtu.be/sAhcepC54wo?si=GCJNAyZaQ7O_8hI4)
   
@@ -201,7 +201,7 @@ Depois que seu ambiente estiver configurado e suas alterações estiverem pronta
 </details>
 <details>
   
-  <summary>- ⚽️✅ Entrega 2 </summary>
+  <summary>Entrega 2 ✅</summary>
 
   [Sessão de Programação em Dupla](images/programacao_dupla.png)
   
@@ -218,7 +218,7 @@ Depois que seu ambiente estiver configurado e suas alterações estiverem pronta
 </details>
 <details>
 
-  <summary>- ⚽️✅ Entrega 3 </summary>
+  <summary>Entrega 3 ✅</summary>
   
   [BackLog Jira da Entrega 3](images/backlog3.png)
   
@@ -239,7 +239,7 @@ Depois que seu ambiente estiver configurado e suas alterações estiverem pronta
 </details>
 <details>
 
-  <summary>- ⚽️✅ Entrega 4 </summary>
+  <summary>Entrega 4 ✅</summary>
 
   [Print do BackLog Jira da Entrega 4](images/backlog4.png)
   
