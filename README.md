@@ -218,6 +218,7 @@ Depois que seu ambiente estiver configurado e suas alterações estiverem pronta
 </details>
 <details>
   <summary>Entrega 3 ✅</summary>
+
   [BackLog Jira da Entrega 3](images/backlog3.png)
   
   [Quadro Jira da Entrega 3](images/quadrojira3.png)
