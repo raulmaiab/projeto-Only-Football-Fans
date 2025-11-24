@@ -1,6 +1,6 @@
 # 🏆 OnlyFootballFans 
 <p align="center"> <img src="https://img.shields.io/badge/Python-blue?style=for-the-badge"/> <img src="https://img.shields.io/badge/Django-success?style=for-the-badge"/> <img src="https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow?style=for-the-badge"/> <img src="https://img.shields.io/badge/Deploy-Azure-blue?style=for-the-badge"/> </p>
-...
+.
 ## 📌 Visão Geral
 
 O **OnlyFootballFans** é um aplicativo web desenvolvido em **Django** que funciona como um diário digital das experiências de cada torcedor.  
