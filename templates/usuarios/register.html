@@ -8,12 +8,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome (ícones profissionais) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css">
     
     <style>
         /* ===========================
          * VARIÁVEIS DE DESIGN
-         * ===========================
-        */
+         * =========================== */
         :root {
             --sidebar-bg: #004a99; 
             --header-bg: #007bff; 
@@ -29,48 +31,19 @@
 
         /* ===========================
          * ANIMAÇÕES (CSS & JS)
-         * ===========================
-        */
-        @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(30px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes slideInLeft {
-            from { opacity: 0; transform: translateX(-30px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes formShake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-8px); }
-            40%, 80% { transform: translateX(8px); }
-        }
-        .form-shake {
-            animation: formShake 0.5s ease-in-out;
-        }
-        @keyframes fadeInOut {
-            0% { opacity: 0; }
-            20% { opacity: 1; }
-            80% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-        .quote-fade {
-            animation: fadeInOut 5s ease-in-out forwards;
-        }
+         * =========================== */
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideInLeft  { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes formShake { 0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-8px);}40%,80%{transform:translateX(8px);} }
+        .form-shake { animation: formShake 0.5s ease-in-out; }
+        @keyframes fadeInOut { 0%{opacity:0}20%{opacity:1}80%{opacity:1}100%{opacity:0} }
+        .quote-fade { animation: fadeInOut 5s ease-in-out forwards; }
 
         /* ===========================
          * LAYOUT: SPLIT-SCREEN
-         * ===========================
-        */
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            overflow: hidden; 
-        }
-
-        .register-container {
-            display: flex;
-            height: 100vh;
-        }
+         * =========================== */
+        body { font-family: 'Poppins', sans-serif; margin: 0; overflow: hidden; }
+        .register-container { display: flex; height: 100vh; }
 
         /* --- PAINEL ESQUERDO (VISUAL) --- */
         .register-panel-left {
@@ -85,59 +58,27 @@
             box-sizing: border-box;
             text-align: center;
             position: relative;
-            
             opacity: 0;
             animation: slideInLeft 0.7s ease-out 0.1s forwards;
         }
-        
-        .welcome-content h1 {
-            font-size: 3rem;
-            margin: 0 0 10px 0;
-            font-weight: 700;
-            letter-spacing: 2px;
-        }
-        .welcome-content p {
-            font-size: 1.25rem;
-            margin: 0;
-            font-weight: 400;
-            opacity: 0.9;
-        }
-        
+        .welcome-content h1 { font-size: 3rem; margin: 0 0 10px 0; font-weight: 700; letter-spacing: 2px; }
+        .welcome-content p { font-size: 1.25rem; margin: 0; font-weight: 400; opacity: 0.9; }
+
         /* Rotador de Frases */
-        .quote-rotator {
-            position: absolute;
-            bottom: 40px;
-            left: 40px;
-            right: 40px;
-        }
-        .quote-rotator h3 {
-            font-size: 1rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-bottom: 2px solid var(--accent-blue-hover);
-            display: inline-block;
-            padding-bottom: 5px;
-            margin-bottom: 15px;
-        }
-        #quote-display {
-            font-size: 0.95rem;
-            font-style: italic;
-            opacity: 0;
-            height: 40px; 
-        }
+        .quote-rotator { position: absolute; bottom: 40px; left: 40px; right: 40px; }
+        .quote-rotator h3 { font-size: 1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid var(--accent-blue-hover); display: inline-block; padding-bottom: 5px; margin-bottom: 15px; }
+        #quote-display { font-size: 0.95rem; font-style: italic; opacity: 0; height: 40px; }
 
         /* --- PAINEL DIREITO (FORMULÁRIO) --- */
         .register-panel-right {
-            flex: 1.2; /* Damos um pouco mais de espaço para o form */
+            flex: 1.2;
             background-color: var(--content-bg);
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow-y: auto; /* Permite scroll se o form for muito grande */
+            overflow-y: auto;
             padding: 2rem 0;
         }
-
         .register-card {
             background-color: #fff;
             padding: 25px 40px;
@@ -145,36 +86,17 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             width: 100%;
             max-width: 450px;
-            box-sizing: border-box; 
-            
+            box-sizing: border-box;
             opacity: 0;
             animation: slideInRight 0.7s ease-out 0.2s forwards;
         }
-
-        .register-card h1 { /* Logo O.F.F. */
-            color: var(--sidebar-bg);
-            margin: 0 0 10px 0;
-            text-align: center;
-            font-weight: 700;
-            font-size: 2.5rem;
-            letter-spacing: 2px;
-        }
-        .register-card h2 { /* Título "Criar Conta" */
-            color: var(--text-dark);
-            margin: 0 0 20px 0;
-            text-align: center;
-            font-weight: 500;
-            font-size: 1.5rem;
-        }
+        .register-card h1 { color: var(--sidebar-bg); margin: 0 0 10px 0; text-align: center; font-weight: 700; font-size: 2.5rem; letter-spacing: 2px; }
+        .register-card h2 { color: var(--text-dark); margin: 0 0 20px 0; text-align: center; font-weight: 500; font-size: 1.5rem; }
 
         /* ===========================
          * ESTILO DO FORMULÁRIO (Float Label)
-         * ===========================
-        */
-        .form-group {
-            position: relative;
-            margin-bottom: 1.25rem; /* 20px */
-        }
+         * =========================== */
+        .form-group { position: relative; margin-bottom: 1.25rem; }
         .form-input {
             width: 100%;
             padding: 10px 5px;
@@ -187,27 +109,12 @@
             box-sizing: border-box;
             transition: border-color 0.3s ease;
         }
-        .form-label {
-            position: absolute;
-            top: 10px;
-            left: 5px;
-            color: #999;
-            font-size: 1rem;
-            pointer-events: none;
-            transition: all 0.2s ease-out;
-        }
+        .form-label { position: absolute; top: 10px; left: 5px; color: #999; font-size: 1rem; pointer-events: none; transition: all 0.2s ease-out; }
         .form-input:focus + .form-label,
         .form-input:not(:placeholder-shown) + .form-label {
-            top: -14px;
-            left: 0;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--accent-blue);
+            top: -14px; left: 0; font-size: 0.85rem; font-weight: 500; color: var(--accent-blue);
         }
-        .form-input:focus {
-            outline: none;
-            border-bottom-color: var(--accent-blue);
-        }
+        .form-input:focus { outline: none; border-bottom-color: var(--accent-blue); }
 
         /* --- Toggle de Senha --- */
         .password-wrapper { position: relative; }
@@ -217,101 +124,46 @@
             right: 5px;
             top: 8px;
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #999;
             transition: color 0.2s ease;
+            display:inline-flex;
+            align-items:center;
         }
+        .toggle-password i { font-size: 1.15rem; }
         .toggle-password:hover { color: var(--accent-blue); }
         
         /* JS 1: Validação de Senha */
-        #password-match-status {
-            font-size: 0.8rem;
-            font-weight: 500;
-            padding-top: 4px;
-            text-align: right;
-        }
+        #password-match-status { font-size: 0.8rem; font-weight: 500; padding-top: 4px; text-align: right; }
         #password-match-status.is-valid { color: var(--success-text); }
         #password-match-status.is-invalid { color: var(--error-text); }
 
         /* JS 2: Input de Avatar Customizado */
-        .form-group-file {
-            margin-bottom: 1.25rem;
-        }
-        .form-group-file input[type="file"] {
-            display: none; /* Esconde o input real */
-        }
+        .form-group-file { margin-bottom: 1.25rem; }
+        .form-group-file input[type="file"] { display: none; }
         .file-upload-label {
-            display: block;
-            padding: 10px 15px;
-            background-color: #f0f0f0;
-            border: 2px dashed var(--border-color-light);
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            font-weight: 500;
-            color: #555;
-            transition: all 0.2s ease;
+            display: block; padding: 10px 15px; background-color: #f0f0f0; border: 2px dashed var(--border-color-light);
+            border-radius: 8px; text-align: center; cursor: pointer; font-weight: 500; color: #555; transition: all 0.2s ease;
+            display:flex;align-items:center;justify-content:center;gap:8px;
         }
-        .file-upload-label:hover {
-            border-color: var(--accent-blue);
-            color: var(--accent-blue);
-            background-color: #e8f0f7;
-        }
-        #file-name {
-            font-size: 0.85rem;
-            color: #555;
-            margin-top: 8px;
-            display: block;
-            text-align: center;
-        }
+        .file-upload-label i { font-size:1.05rem;color:var(--accent-blue); }
+        .file-upload-label:hover { border-color: var(--accent-blue); color: var(--accent-blue); background-color: #e8f0f7; }
+        #file-name { font-size: 0.85rem; color: #555; margin-top: 8px; display: block; text-align: center; }
 
         /* --- Botão --- */
         .botao-registrar {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--accent-blue);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 1rem;
-            margin-top: 10px;
-            transition: all 0.3s ease;
+            width: 100%; padding: 12px; background-color: var(--accent-blue); color: #fff; border: none;
+            border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 1rem; margin-top: 10px; transition: all 0.3s ease;
         }
-        .botao-registrar:hover {
-            background-color: var(--accent-blue-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-        }
+        .botao-registrar:hover { background-color: var(--accent-blue-hover); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); }
 
         /* --- Link de Login --- */
-        .login-link {
-            margin-top: 24px;
-            text-align: center;
-            font-size: 0.9rem;
-            color: #555;
-        }
-        .login-link a {
-            color: var(--accent-blue);
-            text-decoration: none;
-            font-weight: 600;
-        }
+        .login-link { margin-top: 24px; text-align: center; font-size: 0.9rem; color: #555; }
+        .login-link a { color: var(--accent-blue); text-decoration: none; font-weight: 600; }
         .login-link a:hover { text-decoration: underline; }
         
         /* --- Erro do Django --- */
-        .error {
-            list-style: none;
-            padding: 10px 15px;
-            margin: 0 0 20px 0;
-            background-color: var(--error-bg);
-            border: 1px solid var(--error-border);
-            color: var(--error-text);
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            text-align: center;
-        }
+        .error { list-style: none; padding: 10px 15px; margin: 0 0 20px 0; background-color: #fdecea; border: 1px solid #f5c6cb; color: var(--error-text); border-radius: 8px; font-size: 0.9rem; font-weight: 500; text-align: center; }
     </style>
 </head>
 <body>
@@ -355,13 +207,17 @@
                     <div class="form-group password-wrapper">
                         <input type="password" name="password" id="password" class="form-input" placeholder=" " required autocomplete="new-password">
                         <label for="password" class="form-label">Senha</label>
-                        <span class="toggle-password" data-target="password">👁️</span>
+                        <span class="toggle-password" data-target="password" title="Mostrar / ocultar senha">
+                            <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                        </span>
                     </div>
                     
                     <div class="form-group password-wrapper">
                         <input type="password" name="confirm_password" id="confirm_password" class="form-input" placeholder=" " required autocomplete="new-password">
                         <label for="confirm_password" class="form-label">Confirmar senha</label>
-                        <span class="toggle-password" data-target="confirm_password">👁️</span>
+                        <span class="toggle-password" data-target="confirm_password" title="Mostrar / ocultar senha">
+                            <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                        </span>
                     </div>
                     <div id="password-match-status"></div>
 
@@ -371,7 +227,7 @@
                     </div>
                     
                     <div class="form-group-file">
-                        <label for="avatar" class="file-upload-label">📸 Escolher Avatar (Opcional)</label>
+                        <label for="avatar" class="file-upload-label"><i class="fa-solid fa-camera-retro" aria-hidden="true"></i> Escolher Avatar (Opcional)</label>
                         <input type="file" name="avatar" id="avatar" accept="image/*">
                         <span id="file-name">Nenhum arquivo selecionado</span>
                     </div>
@@ -389,16 +245,20 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
-            // --- Toggle de Senha (para múltiplos campos) ---
+            // --- Toggle de Senha (para múltiplos campos) usando Font Awesome REGULAR icons ---
             const toggleButtons = document.querySelectorAll('.toggle-password');
             toggleButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const targetInputId = button.dataset.target;
                     const targetInput = document.getElementById(targetInputId);
                     if (targetInput) {
-                        const type = targetInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                        targetInput.setAttribute('type', type);
-                        button.textContent = type === 'password' ? '👁️' : '🙈';
+                        const isHidden = targetInput.type === 'password';
+                        targetInput.type = isHidden ? 'text' : 'password';
+
+                        // sempre usar ícones REGULAR
+                        button.innerHTML = isHidden
+                            ? '<i class="fa-regular fa-eye-slash" aria-hidden="true"></i>'
+                            : '<i class="fa-regular fa-eye" aria-hidden="true"></i>';
                     }
                 });
             });
@@ -410,19 +270,14 @@
             if (registerForm && registerCard) {
                 registerForm.addEventListener('submit', (event) => {
                     let hasEmptyFields = false;
-                    // Checa todos os inputs REQUERIDOS
                     registerForm.querySelectorAll('input[required]').forEach(input => {
-                        if (input.value.trim() === '') {
-                            hasEmptyFields = true;
-                        }
+                        if (input.value.trim() === '') hasEmptyFields = true;
                     });
 
                     if (hasEmptyFields) {
                         event.preventDefault(); 
                         registerCard.classList.add('form-shake');
-                        setTimeout(() => {
-                            registerCard.classList.remove('form-shake');
-                        }, 500);
+                        setTimeout(() => registerCard.classList.remove('form-shake'), 500);
                     }
                 });
             }
@@ -450,14 +305,13 @@
                 quoteDisplay.classList.add('quote-fade');
             }
 
-            // --- JS 1: Validação de Senha em Tempo Real ---
+            // --- Validação de Senha em Tempo Real ---
             const passwordInput = document.getElementById('password');
             const confirmPasswordInput = document.getElementById('confirm_password');
             const matchStatus = document.getElementById('password-match-status');
             
             const validatePasswordMatch = () => {
                 if (!passwordInput || !confirmPasswordInput || !matchStatus) return;
-                
                 const pass = passwordInput.value;
                 const confirmPass = confirmPasswordInput.value;
 
@@ -475,8 +329,7 @@
             if(passwordInput) passwordInput.addEventListener('input', validatePasswordMatch);
             if(confirmPasswordInput) confirmPasswordInput.addEventListener('input', validatePasswordMatch);
 
-
-            // --- JS 2: Input de Avatar Customizado ---
+            // --- Input de Avatar Customizado ---
             const avatarInput = document.getElementById('avatar');
             const fileNameDisplay = document.getElementById('file-name');
             const fileLabel = document.querySelector('.file-upload-label');
@@ -493,6 +346,9 @@
                         fileLabel.style.color = '#555';
                     }
                 });
+
+                // abrir o input ao clicar no label (acessibilidade)
+                fileLabel.addEventListener('click', () => avatarInput.click());
             }
 
         });

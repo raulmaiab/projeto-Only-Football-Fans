@@ -3,203 +3,223 @@
 <html lang="pt-br">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Only Football Fans</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OFF — Only Football Fans</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 
-    <!-- Font Awesome (ícones profissionais) -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css">
 
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        /* ===========================
-         * FUNDO (Carrossel e Gradiente)
-         * =========================== */
-        .background-slider { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; }
-        .background-slider img { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 2s ease-in-out; filter: brightness(0.6) blur(3px); transform: scale(1.05); }
-        .background-slider img.active { opacity: 1; }
-        .gradient-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: linear-gradient(135deg, rgba(0, 86, 179, 0.7) 0%, rgba(0, 74, 153, 0.7) 100%); }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            overflow: hidden;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            background: none;
+        :root{
+            --brand: #007bff;
+            --brand-600: #0056b3;
+            --navy: #004a99;
+            --soft-white: rgba(255,255,255,0.95);
+            --muted: #cddff8;
+            --glass: rgba(255,255,255,0.04);
+            --max-width: 1200px;
+            --radius: 18px;
+            --strip-h: 110px; /* maior para logo grande */
+            --ease: cubic-bezier(.16,.84,.32,1);
         }
 
-        @keyframes slideInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        .fade-in-item { opacity: 0; animation: slideInUp 0.6s ease-out forwards; }
-
-        .main-content { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; background: transparent; position: relative; z-index: 1; overflow-y: auto; }
-        .hero-section { max-width: 700px; margin: 0 auto; animation-delay: 0.1s; }
-
-        .logo-section { display: flex; flex-direction: column; align-items: center; margin-bottom: 30px; animation-delay: 0.1s; }
-        .logo { width: 240px; height: 150px; border-radius: 20px; object-fit: cover; box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
-
-        /* Ícones principais */
-        .emoji { font-size: 3rem; margin-bottom: 15px; display: block; animation-delay: 0.2s; color: #fff; }
-        .emoji i { font-size: 3rem; vertical-align: middle; }
-
-        .slogan { font-size: 2.5rem; font-weight: 800; color: white; margin-bottom: 20px; line-height: 1.2; text-shadow: 0 2px 5px rgba(0,0,0,0.4); animation-delay: 0.3s; }
-        .sub-slogan { font-size: 1.2rem; color: #e0e0e0; margin-bottom: 30px; line-height: 1.5; font-weight: 400; text-shadow: 0 1px 3px rgba(0,0,0,0.3); animation-delay: 0.4s; }
-
-        .features-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; max-width: 600px; perspective: 1000px; margin: 30px auto 0 auto; }
-        .feature-card { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.3); padding: 25px 20px; border-radius: 15px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); height: 180px; display:flex; flex-direction:column; justify-content:center; transform-style:preserve-3d; transition: transform 0.4s, box-shadow 0.4s; }
-        .feature-card:hover { box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
-        .card-content-wrapper { transform: translateZ(20px); }
-        .feature-icon { font-size: 2.2rem; margin-bottom: 15px; display:block; color: white; }
-        .feature-icon i { font-size: 2.2rem; }
-        .feature-title { font-size: 1.2rem; font-weight: 700; color: white; margin-bottom: 10px; }
-        .feature-description { color: #e0e0e0; line-height: 1.4; font-size: 0.9rem; }
-
-        .auth-buttons { display:flex; gap:20px; justify-content:center; margin-top:40px; animation-delay:0.7s; }
-        .auth-btn { padding: 12px 35px; border-radius: 30px; text-decoration: none; font-weight:600; font-size:1rem; transition: all 0.3s ease; border: 2px solid white; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .login-btn { background: white; color: #007bff; }
-        .login-btn:hover { background:#f0f0f0; color:#0056b3; border-color:#f0f0f0; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        .register-btn { background: transparent; color: white; }
-        .register-btn:hover { background: rgba(255,255,255,0.9); color:#007bff; border-color: rgba(255,255,255,0.9); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-
-        /* Responsividade */
-        @media (max-width: 768px) {
-            body { overflow: auto; }
-            .main-content { padding: 30px 15px; }
-            .slogan { font-size: 1.8rem; }
-            .emoji { font-size: 2.5rem; }
-            .sub-slogan { font-size: 1rem; margin-bottom: 25px; }
-            .auth-btn { padding: 10px 25px; font-size: 0.9rem; }
-            .features-grid { grid-template-columns: 1fr; gap: 15px; max-width: 400px; }
-            .feature-card { padding: 20px 15px; height: 160px; }
-            .feature-icon { font-size: 2rem; }
-            .feature-title { font-size: 1.1rem; }
+        /* Reset */
+        *{box-sizing:border-box;margin:0;padding:0}
+        html,body{height:100%}
+        body{
+            font-family:'Poppins',system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+            color:#071428;
+            background:#031028;
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+            overflow-x:hidden;
         }
-        @media (max-width: 480px) {
-            .logo-section { margin-bottom: 15px; }
-            .logo { width: 200px; height: 125px; }
-            .slogan { font-size: 1.6rem; }
-            .emoji { font-size: 2.2rem; }
-            .auth-buttons { flex-direction: column; width: 100%; max-width: 300px; gap: 15px; }
-            .auth-btn { width: 100%; }
-            .feature-card { height: auto; padding: 25px 15px; }
+
+        /* Background carousel */
+        .background-slider{position:fixed;inset:0;z-index:-3;overflow:hidden}
+        .background-slider img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.48) saturate(0.95) contrast(0.98);opacity:0;transform:scale(1.02);transition:opacity 1.6s var(--ease),transform 8s linear}
+        .background-slider img.active{opacity:1;transform:scale(1)}
+        .gradient-overlay{position:fixed;inset:0;z-index:-2;background:linear-gradient(180deg, rgba(0,86,179,0.42) 0%, rgba(3,16,40,0.62) 100%);backdrop-filter:blur(2px)}
+
+        /* TOP STRIP: branco, logo grande à esquerda, OFF central, botões à direita */
+        .top-strip{
+            position:fixed;top:0;left:0;right:0;height:var(--strip-h);
+            display:flex;align-items:center;justify-content:space-between;
+            padding:10px 30px; z-index:80;
+            background: rgba(255,255,255,0.985);
+            border-bottom: 1px solid rgba(3,16,40,0.06);
+            box-shadow: 0 10px 30px rgba(2,10,30,0.06);
+            backdrop-filter: blur(6px);
         }
-        @media (max-width: 360px) {
-            .logo { width: 160px; height: 100px; }
-            .features-grid { gap: 12px; }
-            .feature-icon { font-size: 1.8rem; }
-            .feature-title { font-size: 1rem; }
-            .feature-description { font-size: 0.85rem; }
+        .top-left{display:flex;align-items:center;gap:14px}
+        .strip-logo{width:88px;height:88px;border-radius:12px;overflow:hidden;display:block;box-shadow:0 12px 30px rgba(2,10,30,0.06)}
+        
+        /* OFF title centered, agora maior e com gradiente animado */
+        .strip-title{
+            position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+            font-weight:900;font-size:1.35rem;letter-spacing:1.5px;text-transform:uppercase;
+            background: linear-gradient(90deg,#00a0ff,#004a99,#00c0ff);
+            background-size:200% 200%;
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            text-shadow: 0 6px 18px rgba(0,0,0,0.06);
+            animation: gradientShift 6s linear infinite;
+        }
+        @keyframes gradientShift { 0% { background-position: 0% 50% } 50% { background-position: 100% 50% } 100% { background-position: 0% 50% } }
+
+        .top-right{display:flex;gap:12px;align-items:center}
+        .strip-btn{padding:10px 16px;border-radius:999px;font-weight:700;border:0;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:10px;font-size:0.95rem;transition:transform .14s var(--ease),box-shadow .14s var(--ease);box-shadow: 0 8px 22px rgba(2,10,30,0.06)}
+        .strip-btn.primary{background:linear-gradient(180deg,var(--brand),var(--navy));color:#fff}
+        .strip-btn.primary:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(2,10,30,0.12)}
+        .strip-btn.ghost{background:transparent;border:1px solid rgba(3,16,40,0.06);color:#071428}
+        .strip-btn.ghost:hover{transform:translateY(-3px);border-color:rgba(3,16,40,0.12)}
+        .strip-btn:focus{outline:3px solid rgba(0,123,255,0.12);outline-offset:2px}
+
+        /* Page layout */
+        .page{min-height:calc(100vh - var(--strip-h));padding-top:calc(var(--strip-h) + 28px);display:flex;align-items:center;justify-content:center}
+        .container{width:100%;max-width:var(--max-width);display:flex;gap:40px;align-items:center;padding:0 28px;justify-content:center}
+
+        /* CENTRAL CARD (apenas o bloco OFF, maior e centralizado) */
+        .central-card{
+            width:100%;
+            max-width:980px;
+            margin:0 auto;
+            padding:56px;
+            border-radius:22px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+            box-shadow: 0 30px 100px rgba(2,10,30,0.6);
+            text-align:center;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            gap:22px;
+            backdrop-filter: blur(6px);
+        }
+
+        .central-logo{width:220px;height:220px;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.6)}
+        .central-title{
+            font-weight:900;
+            font-size:clamp(3rem, 7vw, 5rem);
+            line-height:1;
+            margin:0;
+            background: linear-gradient(90deg,#00a0ff,#004a99,#00d1ff);
+            background-size:300% 300%;
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            animation: gradientShift 6s linear infinite;
+            text-transform:uppercase;
+            letter-spacing:6px;
+            text-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        }
+
+        .central-sub{
+            color:var(--muted);
+            font-size:clamp(1.05rem, 2.2vw, 1.25rem);
+            max-width:86ch;
+            line-height:1.5;
+        }
+
+        .features{display:flex;gap:16px;margin-top:6px;justify-content:center;flex-wrap:wrap}
+        .feature{background:var(--glass);padding:12px 14px;border-radius:12px;display:flex;gap:12px;align-items:flex-start;border:1px solid rgba(255,255,255,0.03);min-width:220px}
+        .feature i{font-size:20px;color:var(--brand);margin-top:4px}
+        .feature .ftext{color:var(--muted);font-size:0.95rem;line-height:1.35}
+
+        /* responsive */
+        @media (max-width: 1100px){
+            .strip-logo{width:72px;height:72px}
+            .central-logo{width:180px;height:180px}
+            .central-card{padding:42px}
+        }
+        @media (max-width: 720px){
+            .top-strip{padding:8px 14px}
+            .strip-title{font-size:1rem}
+            .central-card{padding:28px}
+            .central-logo{width:140px;height:140px}
+            .central-title{font-size:clamp(2rem, 10vw, 3rem);letter-spacing:4px}
+            .central-sub{font-size:1rem}
         }
     </style>
 </head>
 <body>
-    
+
+    <!-- background -->
     <div class="background-slider" id="background-slider"></div>
     <div class="gradient-overlay"></div>
 
-    <div class="main-content">
-        <div class="hero-section">
-            
-            <div class="logo-section fade-in-item">
-                <img src="{% static 'logo_OFF.png' %}" alt="Only Football Fans" class="logo">
-            </div>
-
-            <!-- ícones substituídos -->
-            <span class="emoji fade-in-item">
-                <i class="fa-solid fa-futbol" aria-hidden="true"></i>
-                <i class="fa-solid fa-fire" style="margin-left:8px;" aria-hidden="true"></i>
-            </span>
-
-            <h1 class="slogan fade-in-item">Sua paixão pelo futebol tem um novo lar</h1>
-            <p class="sub-slogan fade-in-item">Seu diário do futebol com um toque especial</p>
-
-            <div class="features-grid">
-                <div class="feature-card fade-in-item tilt-card">
-                    <div class="card-content-wrapper">
-                        <span class="feature-icon"><i class="fa-solid fa-stadium" aria-hidden="true"></i></span>
-                        <h3 class="feature-title">Avalie Experiências</h3>
-                        <p class="feature-description">Compartilhe suas experiências e revisite os seus sonhos quando quiser</p>
-                    </div>
-                </div>
-                
-                <div class="feature-card fade-in-item tilt-card">
-                    <div class="card-content-wrapper">
-                        <span class="feature-icon"><i class="fa-solid fa-star" aria-hidden="true"></i></span>
-                        <h3 class="feature-title">Registre Momentos</h3>
-                        <p class="feature-description">Registre momentos especiais e crie memórias que vão durar para sempre</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="auth-buttons fade-in-item">
-                <a href="{% url 'core:login' %}" class="auth-btn login-btn">Entrar</a>
-                <a href="{% url 'core:register' %}" class="auth-btn register-btn">Cadastrar-se</a>
-            </div>
-
+    <!-- top strip -->
+    <header class="top-strip" role="banner" aria-label="Barra superior">
+        <div class="top-left">
+            <a href="{% url 'core:home' %}" title="OFF">
+                <img src="{% static 'logo_OFF.png' %}" alt="OFF logo" class="strip-logo" />
+            </a>
         </div>
-    </div>
+
+        <div class="strip-title" aria-hidden="false">OFF</div>
+
+        <div class="top-right" role="navigation" aria-label="Acesso">
+            <a class="strip-btn primary" href="{% url 'core:login' %}">Entrar</a>
+            <a class="strip-btn ghost" href="{% url 'core:register' %}">Cadastrar-se</a>
+        </div>
+    </header>
+
+    <!-- main: central card -->
+    <main class="page" role="main">
+        <div class="container">
+            <section class="central-card" aria-labelledby="central-off">
+                <div class="central-logo" aria-hidden="true">
+                    <img src="{% static 'logo_OFF.png' %}" alt="OFF logo" style="width:100%;height:100%;object-fit:cover;display:block">
+                </div>
+
+                <h1 id="central-off" class="central-title">OFF</h1>
+
+                <p class="central-sub">
+                    Registre o jogo. Avalie o estádio. Reviva o momento.  
+                    Organize suas experiências de torcedor em um só lugar — <strong>fotos, avaliações e histórico</strong>.
+                </p>
+
+                <div class="features" aria-hidden="false">
+                    <div class="feature">
+                        <i class="fa-solid fa-stadium" aria-hidden="true"></i>
+                        <div class="ftext"><strong>Avalie Estádios</strong><br>Conte como foi sua experiência nas arquibancadas.</div>
+                    </div>
+                    <div class="feature">
+                        <i class="fa-solid fa-camera-retro" aria-hidden="true"></i>
+                        <div class="ftext"><strong>Galeria</strong><br>Reviva seus melhores momentos com fotos e vídeos.</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-
-    /* JS 1: ANIMAÇÃO EM CASCATA */
-    const animatedItems = document.querySelectorAll('.fade-in-item');
-    animatedItems.forEach((item, index) => {
-        let delay = window.getComputedStyle(item).animationDelay;
-        if (!delay || delay === '0s') {
-            item.style.animationDelay = (index * 100 + 100) + 'ms';
-        }
-        item.classList.add('is-visible'); 
-    });
-
-    /* JS 2: EFEITO TILT 3D */
-    const tiltCards = document.querySelectorAll('.tilt-card');
-    tiltCards.forEach(card => {
-        const maxTilt = 15; 
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const cardWidth = card.offsetWidth;
-            const cardHeight = card.offsetHeight;
-            const mouseX = (e.clientX - rect.left - cardWidth / 2) / (cardWidth / 2);
-            const mouseY = (e.clientY - rect.top - cardHeight / 2) / (cardHeight / 2);
-            const rotateX = -maxTilt * mouseY;
-            const rotateY = maxTilt * mouseX;
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
-        });
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
-        });
-    });
-
-    /* BACKGROUND SLIDER */
-    const backgroundSlider = document.getElementById('background-slider');
-    const backgroundImages = [
+document.addEventListener('DOMContentLoaded', function () {
+    const imgs = [
         "{% static 'torcida.jpg' %}",
         "{% static 'estadio3.jpg' %}",
         "{% static 'messi.jpg' %}",
-        "{% static 'neymar.jpg' %}",
+        "{% static 'neymar.jpg' %}"
     ];
-    let currentImageIndex = 0;
-    function changeBackground() {
-        const currentActive = backgroundSlider.querySelector('.active');
-        if (currentActive) currentActive.classList.remove('active');
+    const slider = document.getElementById('background-slider');
+    let i = 0;
+
+    function showNext() {
+        const prev = slider.querySelector('img.active');
+        if (prev) prev.classList.remove('active');
         const img = document.createElement('img');
-        img.src = backgroundImages[currentImageIndex];
-        img.classList.add('active');
-        backgroundSlider.appendChild(img);
-        if (currentActive) {
-            currentActive.addEventListener('transitionend', () => { currentActive.remove(); }, { once: true });
-        }
-        currentImageIndex = (currentImageIndex + 1) % backgroundImages.length;
+        img.src = imgs[i];
+        img.alt = '';
+        img.loading = 'lazy';
+        img.className = 'active';
+        slider.appendChild(img);
+        if (prev) prev.addEventListener('transitionend', () => prev.remove(), { once: true });
+        i = (i + 1) % imgs.length;
     }
-    changeBackground();
-    setInterval(changeBackground, 8000);
+
+    showNext();
+    setInterval(showNext, 7000);
 });
 </script>
 
