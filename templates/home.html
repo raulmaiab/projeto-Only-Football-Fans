@@ -4,13 +4,16 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css">
 {% endblock %}
 
 {% block content %}
 <main class="dashboard-container">
     
     <header class="welcome-header fade-in-item">
-        <h1>Olá, {{ request.user.username }}! 👋</h1>
+        <h1><i class="fa-solid fa-hand-wave" aria-hidden="true"></i> Olá, {{ request.user.username }}!</h1>
         <p>Bem-vindo ao seu painel de torcedor. O que vamos fazer hoje?</p>
     </header>
 
@@ -18,7 +21,7 @@
         
         <a href="{% url 'core:registrar_partida' %}" class="action-card card-destaque fade-in-item tilt-card">
             <div class="card-content-wrapper">
-                <div class="card-icon">🏟️</div>
+                <div class="card-icon"><i class="fa-solid fa-stadium" aria-hidden="true"></i></div>
                 <h3>Registrar Nova Partida</h3>
                 <p>Anote os detalhes do jogo que você assistiu.</p>
             </div>
@@ -26,7 +29,7 @@
         
         <a href="{% url 'core:lista_partidas' %}" class="action-card fade-in-item tilt-card">
             <div class="card-content-wrapper">
-                <div class="card-icon">📊</div>
+                <div class="card-icon"><i class="fa-solid fa-chart-simple" aria-hidden="true"></i></div>
                 <h3>Histórico de Jogos</h3>
                 <p>Veja e avalie suas partidas anteriores.</p>
             </div>
@@ -34,7 +37,7 @@
 
         <a href="{% url 'core:avaliacao_inicio' %}" class="action-card fade-in-item tilt-card">
             <div class="card-content-wrapper">
-                <div class="card-icon">⭐</div>
+                <div class="card-icon"><i class="fa-solid fa-star" aria-hidden="true"></i></div>
                 <h3>Avaliar Estádio</h3>
                 <p>Conte como foi sua experiência na arquibancada.</p>
             </div>
@@ -42,7 +45,7 @@
 
         <a href="{% url 'core:galeria' %}" class="action-card fade-in-item tilt-card">
             <div class="card-content-wrapper">
-                <div class="card-icon">📸</div>
+                <div class="card-icon"><i class="fa-solid fa-camera-retro" aria-hidden="true"></i></div>
                 <h3>Galeria de Mídia</h3>
                 <p>Reveja suas fotos e vídeos dos jogos.</p>
             </div>
@@ -96,25 +99,16 @@
         font-family: 'Poppins', sans-serif;
     }
 
-    /* ================================
-       FEATURE 1: ANIMAÇÃO EM CASCATA
-       ================================
-    */
     .fade-in-item {
         opacity: 0;
         transform: translateY(20px);
         transition: opacity 0.6s ease-out, transform 0.6s ease-out;
     }
-
-    /* Classe 'is-visible' será adicionada via JS */
     .fade-in-item.is-visible {
         opacity: 1;
         transform: translateY(0);
     }
-    /* Fim da Animação em Cascata */
 
-
-    /* 1. Cabeçalho de Boas-Vindas */
     .welcome-header {
         padding: 1.5rem 1rem;
         border-radius: 12px;
@@ -122,21 +116,14 @@
         box-shadow: 0 4px 15px var(--shadow-color);
         margin-bottom: 2rem;
     }
-    .welcome-header h1 { margin: 0 0 0.25rem 0; color: var(--text-primary); font-size: 2rem; font-weight: 700; }
+    .welcome-header h1 { margin: 0 0 0.25rem 0; color: var(--text-primary); font-size: 2rem; font-weight: 700; display:flex; align-items:center; gap:0.5rem; }
     .welcome-header p { margin: 0; color: var(--text-secondary); font-size: 1.1rem; }
 
-
-    /* ================================
-       FEATURE 3: EFEITO TILT 3D
-       ================================
-    */
     .quick-actions-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
         gap: 1.5rem;
         margin-bottom: 2rem;
-        
-        /* (JS) Define o "palco" 3D */
         perspective: 1000px;
     }
 
@@ -148,30 +135,21 @@
         color: var(--text-primary);
         box-shadow: 0 4px 15px var(--shadow-color);
         border: 1px solid var(--border-color);
-        
-        /* (JS) Prepara o card para 3D e suaviza a transição de "saída" do mouse */
         transform-style: preserve-3d;
-        transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), 
-                    box-shadow 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s cubic-bezier(0.23, 1, 0.32, 1);
     }
 
-    .action-card:hover {
-        /* (CSS) Sombra mais forte no hover (JS controlará o transform) */
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    }
-    
-    /* (JS) "Empurra" o conteúdo para frente para dar profundidade */
-    .card-content-wrapper {
-        transform: translateZ(20px);
-    }
-    /* Fim do Efeito 3D */
-    
+    .action-card:hover { box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); }
 
-    .card-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    .card-content-wrapper { transform: translateZ(20px); }
+
+    /* Ícones dos cards */
+    .card-icon { font-size: 2.2rem; margin-bottom: 0.5rem; color: var(--destaque-color); display:flex; align-items:center; justify-content:flex-start; }
+    .card-icon i { font-size: 2.2rem; }
+
     .action-card h3 { margin: 0 0 0.5rem 0; font-size: 1.2rem; font-weight: 600; }
     .action-card p { margin: 0; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.4; }
 
-    /* Card de Destaque */
     .action-card.card-destaque {
         background-color: var(--destaque-color);
         color: white;
@@ -181,8 +159,9 @@
     .action-card.card-destaque p { color: #e0e0e0; }
     .action-card.card-destaque:hover { background-color: var(--destaque-hover); }
 
+    /* Garante ícone branco no card destaque */
+    .action-card.card-destaque .card-icon i { color: #fff; }
 
-    /* 3. Painel de Estatísticas */
     .stats-panel {
         background-color: var(--card-bg);
         border-radius: 12px;
@@ -198,8 +177,6 @@
         font-weight: 700;
         color: var(--destaque-color);
         line-height: 1;
-        
-        /* (JS) Impede que o texto "pule" enquanto os números mudam */
         font-variant-numeric: tabular-nums;
     }
 
@@ -210,99 +187,53 @@
 
 
 <script>
-    // Executa tudo quando o DOM (HTML) estiver pronto
     document.addEventListener('DOMContentLoaded', () => {
 
-        /* ================================
-        FEATURE 1: ANIMAÇÃO EM CASCATA
-        ================================
-        */
         const animatedItems = document.querySelectorAll('.fade-in-item');
-        
         animatedItems.forEach((item, index) => {
-            // Adiciona a classe 'is-visible' com um atraso
-            // O primeiro item (index 0) espera 100ms, o segundo 250ms, etc.
-            setTimeout(() => {
-                item.classList.add('is-visible');
-            }, index * 150 + 100); // 150ms de atraso entre cada
+            setTimeout(() => { item.classList.add('is-visible'); }, index * 150 + 100);
         });
 
-
-        /* ================================
-        FEATURE 2: CONTADOR ANIMADO
-        ================================
-        */
         const counters = document.querySelectorAll('.stat-number[data-value]');
-        const animationDuration = 1500; // Duração da animação em milissegundos
-
+        const animationDuration = 1500;
         const animateCounter = (counter) => {
             const targetValue = parseInt(counter.dataset.value, 10);
             if (isNaN(targetValue) || targetValue === 0) {
-                counter.textContent = targetValue; // Define 0 se for 0 ou NaN
+                counter.textContent = targetValue;
                 return;
             }
-            
             let startTime = null;
-
             const step = (timestamp) => {
                 if (!startTime) startTime = timestamp;
-                
                 const progress = Math.min((timestamp - startTime) / animationDuration, 1);
-                
-                // Aplica 'easing' (desaceleração) para um efeito suave
-                const easeOutProgress = 1 - Math.pow(1 - progress, 3); // Ease-out cubc
-                
+                const easeOutProgress = 1 - Math.pow(1 - progress, 3);
                 const currentValue = Math.floor(easeOutProgress * targetValue);
-                
                 counter.textContent = currentValue;
-                
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                } else {
-                    counter.textContent = targetValue; // Garante o valor final
-                }
+                if (progress < 1) { window.requestAnimationFrame(step); } else { counter.textContent = targetValue; }
             };
-            
             window.requestAnimationFrame(step);
         };
-
         counters.forEach(animateCounter);
 
-
-        /* ================================
-        FEATURE 3: EFEITO TILT 3D
-        ================================
-        */
         const tiltCards = document.querySelectorAll('.tilt-card');
-
         tiltCards.forEach(card => {
-            const maxTilt = 15; // Máximo de inclinação em graus
-
+            const maxTilt = 15;
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
                 const cardWidth = card.offsetWidth;
                 const cardHeight = card.offsetHeight;
-                
-                // Calcula a posição do mouse (de -0.5 a +0.5)
                 const mouseX = (e.clientX - rect.left - cardWidth / 2) / (cardWidth / 2);
                 const mouseY = (e.clientY - rect.top - cardHeight / 2) / (cardHeight / 2);
-                
-                // Calcula a rotação (multiplica a posição pelo 'maxTilt')
-                // Invertemos 'mouseY' para 'rotateX' para o efeito natural
                 const rotateX = -maxTilt * mouseY;
                 const rotateY = maxTilt * mouseX;
-                
-                // Aplica o transform com 'perspective'
                 card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
             });
-
             card.addEventListener('mouseleave', () => {
-                // Reseta a transformação quando o mouse sai
                 card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
             });
         });
 
-    }); // Fim do DOMContentLoaded
+    });
 </script>
 
 {% endblock %}
