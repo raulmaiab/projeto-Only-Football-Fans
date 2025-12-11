@@ -6,14 +6,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+
+    <!-- Font Awesome (ícones profissionais usados em sites grandes) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css">
+
+
     {% block extra_head %}{% endblock %}
 
     <style>
-        /* ===========================
-         * VARIÁVEIS DE DESIGN
-         * ===========================
-        */
         :root {
             --sidebar-width: 240px;
             --sidebar-bg: #004a99;
@@ -26,10 +26,6 @@
             --border-color-light: #e1e8ed;
         }
 
-        /* ===========================
-         * RESET BÁSICO E BODY
-         * ===========================
-        */
         body {
             margin: 0;
             font-family: 'Poppins', sans-serif; 
@@ -40,10 +36,7 @@
             transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* ===========================
-         * HEADER (BARRA SUPERIOR)
-         * ===========================
-        */
+        /* HEADER */
         .header {
             position: fixed;
             top: 0;
@@ -54,8 +47,7 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
             padding: 15px 25px;
             z-index: 10;
-            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-                        width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: left 0.3s, width 0.3s;
             
             display: flex;
             align-items: center;
@@ -63,39 +55,23 @@
             height: 34px; 
         }
         
-        .header h1 {
-           display: none; 
-        }
+        .header h1 { display: none; }
 
         .menu-toggle {
-            position: static; 
             font-size: 24px; 
             color: var(--text-light); 
             cursor: pointer;
-            transition: color 0.2s ease;
         }
-        .menu-toggle:hover { color: #ffffff; }
 
         .header-user-icon {
             font-size: 1.5rem;
             text-decoration: none;
             color: var(--text-light); 
-            display: flex;
-            align-items: center;
-            justify-content: center;
             padding: 4px;
             border-radius: 50%; 
-            transition: color 0.2s ease, background-color 0.2s ease;
-        }
-        .header-user-icon:hover {
-            color: #ffffff; 
-            background-color: var(--accent-blue-hover); 
         }
 
-        /* ===========================
-         * SIDEBAR (MENU LATERAL)
-         * ===========================
-        */
+        /* SIDEBAR */
         .sidebar {
             width: var(--sidebar-width);
             background: var(--sidebar-bg);
@@ -104,14 +80,11 @@
             top: 0;
             bottom: 0;
             box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
-            
             transform: translateX(0);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.3s;
             z-index: 20;
-            
             display: flex;
             flex-direction: column;
-            padding: 0; 
         }
         
         .sidebar-header {
@@ -119,111 +92,54 @@
             text-align: center;
             border-bottom: 1px solid #0060c4; 
         }
-        .sidebar-header h2 {
-            margin: 0;
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
         .sidebar-header h2 a {
             color: var(--text-light);
             text-decoration: none;
-            letter-spacing: 1px;
         }
 
         .sidebar ul {
             list-style: none;
             padding: 15px;
             margin: 0;
-            flex-grow: 1; 
+            flex-grow: 1;
             overflow-y: auto; 
         }
-
-        .sidebar ul li { padding: 4px 0; }
 
         .sidebar-link {
             text-decoration: none;
             color: var(--text-light);
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-family: 'Poppins', sans-serif;
-            font-size: 0.95rem; 
-            font-weight: 500;
-            
             display: flex;
             align-items: center;
-            gap: 12px; 
-            
+            gap: 12px;
             width: 100%;
-            text-align: left;
             padding: 12px 15px;
-            border-radius: 8px; 
-            transition: background-color 0.2s ease, color 0.2s ease;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
         }
 
         .sidebar-link:hover {
             background-color: var(--accent-blue); 
             color: #ffffff;
         }
-        
-        .sidebar-link .icon {
+
+        .icon {
             font-size: 1.2rem;
-            width: 20px; 
+            width: 20px;
             text-align: center;
         }
 
-        .sidebar ul li form { margin: 0; }
-
-        .sidebar hr {
-             border: 0; 
-             border-top: 1px solid #0060c4; 
-             margin: 10px 0;
-        }
-
-        /* ===========================
-         * CONTEÚDO PRINCIPAL
-         * ===========================
-        */
         .content {
             margin-left: var(--sidebar-width);
-            padding: 100px 40px 40px; 
-            width: calc(100% - var(--sidebar-width) - 80px); 
-            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                        width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background-color: var(--content-bg);
-            box-sizing: border-box; 
+            padding: 100px 40px 40px;
+            width: calc(100% - var(--sidebar-width) - 80px);
+            transition: margin-left 0.3s, width 0.3s;
         }
 
         body.sidebar-hidden .sidebar { transform: translateX(-100%); }
-        body.sidebar-hidden .header { left: 0; width: 100%; box-sizing: border-box; }
+        body.sidebar-hidden .header { left: 0; width: 100%; }
         body.sidebar-hidden .content { margin-left: 0; width: 100%; }
 
-        /* ===========================
-         * MODAL POPUP
-         * ===========================
-        */
-        .modal { display: none; position: fixed; z-index: 100;
-            left: 0; top: 0; width: 100%; height: 100%;
-            overflow: auto; background-color: rgba(0,0,0,0.7);
-        }
-        .modal-content { background-color: #fefefe; margin: 5% auto; padding: 20px;
-            border-radius: 8px; width: 80%; max-width: 800px;
-        }
-        .modal-header { display: flex; justify-content: space-between;
-            align-items: center; margin-bottom: 10px;
-        }
-        .close { color: #aaa; font-size: 28px; font-weight: bold; cursor: pointer; }
-        .close:hover { color: #000; }
-        .card { border: 1px solid #ccc; border-radius: 5px; padding: 15px;
-            margin-bottom: 10px; display: flex; justify-content: space-between;
-            align-items: center;
-        }
-        .card button { padding: 5px 10px; cursor: pointer; }
-
-        /* ===========================
-         * NOVO: ÁREA DE HOVER LATERAL
-         * ===========================
-        */
         #sidebar-hover-area {
             position: fixed;
             left: 0;
@@ -238,12 +154,10 @@
 <body class="sidebar-hidden">
 
     <div class="header">
-        <span class="menu-toggle" id="menuToggle">&#9776;</span>
+        <span class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></span>
 
-    
-        
         <a href="{% url 'core:perfil' %}" class="header-user-icon" title="Configurações e Perfil">
-            👤
+            <i class="fa-solid fa-user"></i>
         </a>
     </div>
     
@@ -253,19 +167,30 @@
         </div>
 
         <ul>
-            <li><a href="{% url 'core:home' %}" class="sidebar-link"><span class="icon">🏠</span>Página Inicial</a></li>
-            <li><a href="{% url 'core:registrar_partida' %}" class="sidebar-link"><span class="icon">➕</span>Registrar Partida</a></li>
-            <li><a href="{% url 'core:lista_partidas' %}" class="sidebar-link"><span class="icon">📊</span>Histórico</a></li>
-            <li><a href="{% url 'core:avaliacao_inicio' %}" class="sidebar-link"><span class="icon">⭐</span>Avaliar Estádio</a></li>
-            <li><a href="{% url 'core:galeria' %}" class="sidebar-link"><span class="icon">📸</span>Galeria</a></li>
-            <li><a href="{% url 'core:lista_links' %}" class="sidebar-link"><span class="icon">🔗</span>Assistir Jogos</a></li>
-            <li><a href="#" onclick="abrirModal()" class="sidebar-link"><span class="icon">🏟️</span>Avaliar Partida</a></li>
+            <li><a href="{% url 'core:home' %}" class="sidebar-link"><span class="icon"><i class="fa-solid fa-house"></i></span>Página Inicial</a></li>
+
+            <li><a href="{% url 'core:registrar_partida' %}" class="sidebar-link"><span class="icon"><i class="fa-solid fa-plus"></i></span>Registrar Partida</a></li>
+
+            <li><a href="{% url 'core:lista_partidas' %}" class="sidebar-link"><span class="icon"><i class="fa-solid fa-list"></i></span>Histórico</a></li>
+
+            <li><a href="{% url 'core:avaliacao_inicio' %}" class="sidebar-link"><span class="icon"><i class="fa-solid fa-star"></i></span>Avaliar Estádio</a></li>
+
+            <li><a href="{% url 'core:galeria' %}" class="sidebar-link"><span class="icon"><i class="fa-solid fa-camera"></i></span>Galeria</a></li>
+
+            <li><a href="{% url 'core:lista_links' %}" class="sidebar-link"><span class="icon"><i class="fa-solid fa-link"></i></span>Assistir Jogos</a></li>
+
+            <li><a href="#" onclick="abrirModal()" class="sidebar-link"><span class="icon"><i class="fa-solid fa-futbol"></i></span>Avaliar Partida</a></li>
+
             <hr>
-            <li><a href="{% url 'core:perfil' %}" class="sidebar-link"><span class="icon">⚙️</span>Configurações</a></li>
+
+            <li><a href="{% url 'core:perfil' %}" class="sidebar-link"><span class="icon"><i class="fa-solid fa-gear"></i></span>Configurações</a></li>
+
             <li>
                 <form action="{% url 'core:logout' %}" method="post">
                     {% csrf_token %}
-                    <button type"submit" class="sidebar-link"><span class="icon">🚪</span>Sair</button>
+                    <button type="submit" class="sidebar-link">
+                        <span class="icon"><i class="fa-solid fa-right-from-bracket"></i></span>Sair
+                    </button>
                 </form>
             </li>
         </ul>
@@ -282,18 +207,16 @@
 <script>
 var menuToggleButton = document.getElementById('menuToggle');
 var bodyElement = document.body;
-var sidebar = document.querySelector('.sidebar');
 var hoverArea = document.getElementById('sidebar-hover-area');
 
 menuToggleButton.addEventListener('click', function() {
     bodyElement.classList.toggle('sidebar-hidden');
 });
 
-// Abre sidebar ao passar o mouse na lateral
+// abre ao aproximar a lateral
 hoverArea.addEventListener('mouseenter', function() {
     bodyElement.classList.remove('sidebar-hidden');
 });
-
 </script>
 
 </body>
