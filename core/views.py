@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.db.models import Q
-
+from .forms import EditarPerfilForm
 
 from .models import (
     AvaliacaoTorcida, AvaliacaoEstadio, Time, Partida, Imagem, Video, Audio,
@@ -514,19 +514,21 @@ def registrar_gols(request, partida_id):
 # ----------------------------
 
 @login_required
-def perfil(request):
-    return render(request, 'usuarios/perfil.html')
-
-@login_required
-def perfil(request):
-    profile = request.user.userprofile
+def editar_perfil(request):
+    profile, _ = request.user.userprofile.get_or_create(user=request.user)
 
     if request.method == "POST":
-        form = EditarPerfilForm(request.POST, request.FILES, instance=profile)
+        form = EditarPerfilForm(request.POST, request.FILES, instance=profile, user=request.user)
         if form.is_valid():
             form.save()
-            return redirect('perfil')
+            return redirect('core:perfil')
     else:
-        form = EditarPerfilForm(instance=profile)
+        form = EditarPerfilForm(instance=profile, user=request.user)
 
-    return render(request, 'perfil.html', {'form': form})
+    context = {
+        'form': form,
+        'user': request.user,
+        # Adicione outros itens de contexto conforme necessário, por exemplo:
+        # 'profile': profile,
+    }
+    return render(request, 'perfil.html', context)
