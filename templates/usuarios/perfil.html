@@ -41,28 +41,15 @@
 
     .profile-card:hover{ transform: translateY(-6px); box-shadow: var(--shadow-gentle); }
 
-    .card-header-bg{
-        background: linear-gradient(135deg, rgba(0,102,255,0.12), rgba(0,82,212,0.08));
-        height:120px;
-        border-top-left-radius:var(--card-radius);
-        border-top-right-radius:var(--card-radius);
-        position:relative;
+    /* REMOVIDAS AS CLASSES card-header-bg e card-header-title */
+
+    .profile-avatar-wrapper{
         display:flex;
-        align-items:flex-end;
-        padding:18px 28px;
+        justify-content:center;
+        /* Ajuste a margem para posicionar o avatar sem o header azul */
+        margin-top: 36px;
+        margin-bottom: 20px;
     }
-
-    .card-header-title{
-        margin:0;
-        color:var(--text-dark);
-        font-weight:800;
-        font-size:1.2rem;
-        background: linear-gradient(90deg, #1A3A5F, var(--secondary-blue));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-
-    .profile-avatar-wrapper{ display:flex; justify-content:center; margin-top:-56px; }
 
     .profile-avatar{
         width:112px;
@@ -79,12 +66,13 @@
     }
 
     .card-body{
-        padding: 20px 36px 36px;
+        /* Padding superior reduzido, pois o avatar não está mais "entrando" no header */
+        padding: 0 36px 36px;
         text-align:left;
     }
 
     .card-title{
-        margin: 0 0 12px 0;
+        margin: 0 0 24px 0; /* Aumentada a margem inferior para separar do form */
         font-size:1.4rem;
         color:var(--text-dark);
         font-weight:800;
@@ -120,7 +108,7 @@
 
     .secondary-action-link:hover{
         color:white;
-        background: #b80909ff;f6b6a; /* vermelho mais suave */
+        background: #b80909ff;
         transform:translateY(-2px);
         box-shadow:0 4px 12px rgba(255,107,107,0.32);
     }
@@ -133,10 +121,6 @@
 {% block content %}
 <main class="profile-edit-container">
     <section class="profile-card fade-in-item">
-        <div class="card-header-bg">
-            <h3 class="card-header-title">Perfil do Torcedor</h3>
-        </div>
-
         <div class="profile-avatar-wrapper">
             <div class="profile-avatar" aria-hidden="true">
                 <i class="fa-solid fa-user"></i>
