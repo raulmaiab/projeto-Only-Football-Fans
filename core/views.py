@@ -558,4 +558,4 @@ def perfil(request):
     # Note que você precisa garantir que o seu template está em 'usuarios/perfil.html'
     # conforme esta view, ou em 'perfil.html' conforme a view anterior.
     # Vou usar o nome que você usou no primeiro bloco: 'perfil.html'
-    return render(request, 'perfil.html', {'form': form})
+    return render(request, 'usuarios/perfil.html', {'form': form})
