@@ -10,7 +10,9 @@ load_dotenv(BASE_DIR / '.env')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-TARGET_ENV = os.getenv('TARGET_ENV')
+# CORREÇÃO APLICADA: Adicionando 'dev' como valor padrão,
+# para evitar que TARGET_ENV seja None se a variável não estiver definida.
+TARGET_ENV = os.getenv('TARGET_ENV', 'dev') 
 NOT_PROD = not TARGET_ENV.lower().startswith('prod')
 
 if NOT_PROD:
@@ -131,7 +133,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
-    os.path.join(BASE_DIR, 'images'),  # Onde estão suas fotos de fundo
+    os.path.join(BASE_DIR, 'images'),   # Onde estão suas fotos de fundo
 ]
 
 STATICFILES_STORAGE = ('whitenoise.storage.CompressedManifestStaticFilesStorage')
@@ -150,7 +152,7 @@ else:
     AZURE_CONTAINER = os.getenv('AZURE_CONTAINER', 'media')
 
     DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
-    AZURE_URL_EXPIRATION_SECS = None  # URLs fixas (sem expiração)
+    AZURE_URL_EXPIRATION_SECS = None    # URLs fixas (sem expiração)
 
     # URL base dos arquivos armazenados no Azure Blob
     MEDIA_URL = f'https://{AZURE_ACCOUNT_NAME}.blob.core.windows.net/{AZURE_CONTAINER}/'
