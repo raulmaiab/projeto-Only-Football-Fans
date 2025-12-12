@@ -2,156 +2,158 @@
 
 {% block extra_head %}
 <style>
-    /* --- ESTILOS DE EDIÇÃO DE PERFIL (Ajustes Finais de Layout) --- */
+/* --- ESTILOS DE EDIÇÃO DE PERFIL (Ajustes Finais de Layout) --- */
 
-    .profile-edit-container {
-        display: flex;
-        justify-content: center;
-        width: 100%;
-        margin-top: 30px; 
-    }
+.profile-edit-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 30px; 
+}
 
-    .profile-card {
-        background: #fff;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        width: 100%;
-        max-width: 450px; 
-        height: fit-content; 
-        overflow: hidden;
-        font-family: 'Poppins', sans-serif;
-    }
+.profile-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px; 
+    height: fit-content; 
+    overflow: hidden;
+    font-family: 'Poppins', sans-serif;
+}
 
-    /* Header Azul do Cartão */
-    .card-header-bg {
-        height: 90px;
-        background: var(--accent-blue); 
-        position: relative;
-        border-top-left-radius: 12px;
-        border-top-right-radius: 12px;
-    }
+/* Header Azul do Cartão - CORREÇÃO: Aumentamos a altura para cobrir o topo do avatar */
+.card-header-bg {
+    height: 120px; /* Aumentado de 90px para 120px */
+    background: var(--accent-blue); 
+    position: relative;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
 
-    /* Avatar Wrapper para posicionamento */
-    .profile-avatar-wrapper {
-        text-align: center;
-        /* Puxa o avatar para cima */
-        margin-top: -60px; 
-        /* CORREÇÃO CHAVE: Cria espaço ABAIXO do avatar para empurrar o corpo do cartão */
-        margin-bottom: 20px; 
-    }
+/* Avatar Wrapper para posicionamento */
+.profile-avatar-wrapper {
+    text-align: center;
+    /* CORREÇÃO CHAVE: Puxa o avatar mais para cima, colocando-o sobre a div azul */
+    margin-top: -50px; /* 100px (tamanho do avatar) / 2 = 50px */
+    /* Este espaço empurra o corpo do cartão para baixo, abaixo do avatar */
+    margin-bottom: 20px; 
+}
 
-    .profile-avatar {
-        display: inline-block;
-        width: 100px;
-        height: 100px;
-        background: #fff; 
-        border-radius: 50%;
-        border: 5px solid var(--content-bg);
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    /* Ícone da pessoa */
-    .profile-avatar i {
-        font-size: 3.8rem; 
-        color: var(--accent-blue);
-        line-height: 1; 
-    }
+.profile-avatar {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    background: #fff; 
+    /* Adicionando um z-index para garantir que fique acima do header, se necessário */
+    position: relative; 
+    z-index: 10; 
+    border-radius: 50%;
+    /* Alterando a borda para não ter a variável var(--content-bg) se ela for o fundo claro principal */
+    border: 5px solid #f0f0f0; /* Sugestão: Use a cor do fundo do corpo principal se var(--content-bg) for o cinza claro do fundo da página */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-    /* Corpo do Formulário */
-    .card-body {
-        /* CORREÇÃO CHAVE: Padding superior ajustado para NÃO criar uma margem dupla acima do título */
-        padding: 0 40px 30px 40px; 
-        text-align: center;
-    }
+/* Ícone da pessoa */
+.profile-avatar i {
+    font-size: 3.8rem; 
+    color: var(--accent-blue);
+    line-height: 1; 
+}
 
-    .card-title {
-        color: var(--text-dark);
-        /* O espaçamento agora é determinado pelo margin-bottom do wrapper do avatar e este margin-bottom */
-        margin-top: 0;
-        margin-bottom: 30px;
-        font-size: 1.6rem;
-        font-weight: 700; 
-    }
+/* Corpo do Formulário */
+.card-body {
+    padding: 0 40px 30px 40px; 
+    text-align: center;
+}
 
-    /* Grupos de Campo (Sem alterações relevantes) */
-    .form-group {
-        text-align: left;
-        margin-bottom: 20px; 
-    }
+.card-title {
+    color: var(--text-dark);
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-size: 1.6rem;
+    font-weight: 700; 
+}
 
-    .form-group label {
-        display: block;
-        font-weight: 600;
-        color: var(--text-dark);
-        margin-bottom: 6px;
-        font-size: 0.95em;
-    }
+/* Grupos de Campo (Sem alterações relevantes) */
+.form-group {
+    text-align: left;
+    margin-bottom: 20px; 
+}
 
-    .form-group input {
-        width: 100%;
-        padding: 12px 15px;
-        border: 1px solid var(--border-color-light);
-        border-radius: 8px;
-        font-size: 1em;
-        box-sizing: border-box; 
-        transition: border-color 0.3s, box-shadow 0.3s;
-    }
+.form-group label {
+    display: block;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 6px;
+    font-size: 0.95em;
+}
 
-    .form-group input:focus {
-        border-color: var(--accent-blue);
-        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
-        outline: none;
-    }
+.form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color-light);
+    border-radius: 8px;
+    font-size: 1em;
+    box-sizing: border-box; 
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
 
-    .form-group input[disabled] {
-        background-color: #eef3f7; 
-        color: #888;
-        cursor: not-allowed;
-        border-color: #d1d9e0;
-    }
+.form-group input:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+    outline: none;
+}
 
-    .small-text-hint {
-        font-size: 0.8em;
-        color: #6c757d;
-        margin-top: 5px;
-    }
+.form-group input[disabled] {
+    background-color: #eef3f7; 
+    color: #888;
+    cursor: not-allowed;
+    border-color: #d1d9e0;
+}
 
-    /* Botão de Salvar (Sem alterações relevantes) */
-    .save-button {
-        width: 100%;
-        padding: 12px;
-        background-color: var(--accent-blue);
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        font-size: 1.1em;
-        cursor: pointer;
-        margin-top: 30px;
-        transition: background-color 0.2s;
-        font-weight: 600;
-    }
+.small-text-hint {
+    font-size: 0.8em;
+    color: #6c757d;
+    margin-top: 5px;
+}
 
-    .save-button:hover {
-        background-color: var(--accent-blue-hover);
-    }
+/* Botão de Salvar (Sem alterações relevantes) */
+.save-button {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--accent-blue);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    margin-top: 30px;
+    transition: background-color 0.2s;
+    font-weight: 600;
+}
 
-    /* Link Secundário (Sem alterações relevantes) */
-    .secondary-action-link {
-        display: block;
-        margin-top: 20px;
-        color: #6c757d;
-        text-decoration: none;
-        font-size: 0.9em;
-        font-weight: 500;
-    }
+.save-button:hover {
+    background-color: var(--accent-blue-hover);
+}
 
-    .secondary-action-link:hover {
-        color: var(--accent-blue);
-        text-decoration: underline;
-    }
+/* Link Secundário (Sem alterações relevantes) */
+.secondary-action-link {
+    display: block;
+    margin-top: 20px;
+    color: #6c757d;
+    text-decoration: none;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.secondary-action-link:hover {
+    color: var(--accent-blue);
+    text-decoration: underline;
+}
 </style>
 {% endblock %}
 
