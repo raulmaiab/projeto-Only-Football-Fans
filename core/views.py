@@ -516,3 +516,17 @@ def registrar_gols(request, partida_id):
 @login_required
 def perfil(request):
     return render(request, 'usuarios/perfil.html')
+
+@login_required
+def perfil(request):
+    profile = request.user.userprofile
+
+    if request.method == "POST":
+        form = EditarPerfilForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('perfil')
+    else:
+        form = EditarPerfilForm(instance=profile)
+
+    return render(request, 'perfil.html', {'form': form})
