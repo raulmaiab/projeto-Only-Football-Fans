@@ -1,203 +1,198 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>Edição de Perfil - O.F.F.</title>
-    <style>
-        /* CSS COMBINADO E CORRIGIDO */
+{% extends "base.html" %}
+
+{% block extra_head %}
+<style>
+    /* --- ESTILOS DE EDIÇÃO DE PERFIL (Ajustes de Avatar e Sobreposição) --- */
+
+    .profile-edit-container {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-top: 30px; 
+    }
+
+    .profile-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 450px; 
+        height: fit-content; 
+        overflow: hidden;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Header Azul do Cartão */
+    .card-header-bg {
+        height: 80px; /* Reduzido levemente para melhor proporção */
+        background: var(--accent-blue); 
+        position: relative;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+    }
+
+    /* Avatar Wrapper para posicionamento */
+    .profile-avatar-wrapper {
+        text-align: center;
+        /* CORREÇÃO: Ajusta a margem para centralizar a 'cabeça' do avatar sobre a borda */
+        margin-top: -50px; 
+        margin-bottom: 0; /* Remove a margem extra aqui */
+    }
+
+    .profile-avatar {
+        display: inline-block;
+        width: 100px;
+        height: 100px;
+        background: #fff; 
+        border-radius: 50%;
+        border: 5px solid var(--content-bg);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* CORREÇÃO: Tamanho e cor do ícone da pessoa */
+    .profile-avatar i {
+        font-size: 3.8rem; /* Aumentado para preencher melhor o círculo */
+        color: var(--accent-blue);
+        line-height: 1; /* Garante que o ícone fique centralizado verticalmente */
+    }
+
+    /* Corpo do Formulário */
+    .card-body {
+        padding: 30px 40px 30px 40px; /* Aumenta o padding superior */
+        text-align: center;
+    }
+
+    .card-title {
+        color: var(--text-dark);
+        margin-top: 0;
+        margin-bottom: 30px;
+        font-size: 1.6rem;
+        font-weight: 700; 
+    }
+
+    /* Grupos de Campo */
+    .form-group {
+        text-align: left;
+        margin-bottom: 20px; 
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 6px;
+        font-size: 0.95em;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid var(--border-color-light);
+        border-radius: 8px;
+        font-size: 1em;
+        box-sizing: border-box; 
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .form-group input:focus {
+        border-color: var(--accent-blue);
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+        outline: none;
+    }
+
+    /* Estilo para E-mail Desabilitado */
+    .form-group input[disabled] {
+        background-color: #eef3f7; 
+        color: #888;
+        cursor: not-allowed;
+        border-color: #d1d9e0;
+    }
+
+    .small-text-hint {
+        font-size: 0.8em;
+        color: #6c757d;
+        margin-top: 5px;
+    }
+
+    /* Botão de Salvar */
+    .save-button {
+        width: 100%;
+        padding: 12px;
+        background-color: var(--accent-blue);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1em;
+        cursor: pointer;
+        margin-top: 30px;
+        transition: background-color 0.2s;
+        font-weight: 600;
+    }
+
+    .save-button:hover {
+        background-color: var(--accent-blue-hover);
+    }
+
+    /* Link Secundário */
+    .secondary-action-link {
+        display: block;
+        margin-top: 20px;
+        color: #6c757d;
+        text-decoration: none;
+        font-size: 0.9em;
+        font-weight: 500;
+    }
+
+    .secondary-action-link:hover {
+        color: var(--accent-blue);
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-edit-container">
+    <div class="profile-card">
         
-        /* Estilos base */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background-color: #f4f7fa; 
-            display: flex;
-            justify-content: flex-start;
-        }
+        <div class="card-header-bg"></div>
         
-        /* Estrutura do Menu Hamburguer (MANTIDO para manter a estrutura do layout) */
-        .main-content {
-            flex-grow: 1;
-        }
-
-        .menu-hamburger {
-            padding: 15px 30px; 
-            text-align: left;
-            position: absolute; 
-            top: 0;
-            left: 200px; /* Ajuste conforme a largura do seu menu lateral */
-        }
-
-        .hamburger-icon {
-            background: none;
-            border: none;
-            font-size: 28px;
-            cursor: pointer;
-            color: #333; 
-        }
-
-        /* Container principal para o conteúdo da página */
-        .content-container.profile-page {
-            padding-top: 50px; 
-            padding-bottom: 50px;
-            display: flex;
-            justify-content: center;
-            width: 100%;
-        }
-
-        /* Estilo do Cartão de Perfil */
-        .profile-card {
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px; 
-            height: fit-content; 
-            overflow: hidden;
-        }
-
-        /* Cor de fundo do cabeçalho */
-        .card-header-bg {
-            height: 90px;
-            background: linear-gradient(135deg, #1e90ff, #007bff); 
-            position: relative;
-        }
-
-        /* Avatar reposicionado (para não sobrepor o título) */
-        .profile-avatar-wrapper {
-            text-align: center;
-            margin-top: -45px; /* Puxa o avatar para cima */
-            margin-bottom: 20px; 
-        }
-
-        .profile-avatar {
-            display: inline-block;
-            width: 90px;
-            height: 90px;
-            background: #f0f0f0; 
-            border-radius: 50%;
-            border: 5px solid #fff; 
-        }
-
-        /* Corpo do Cartão - Onde o formulário está */
-        .card-body {
-            padding: 10px 40px 30px 40px; 
-            text-align: center;
-        }
-
-        .card-title {
-            color: #333;
-            margin-top: 0;
-            margin-bottom: 25px;
-            font-size: 1.5em;
-            font-weight: 600;
-            padding-bottom: 10px;
-        }
-
-        /* Estilo dos Campos do Formulário */
-        .form-group {
-            text-align: left;
-            margin-bottom: 15px; 
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            color: #555;
-            margin-bottom: 5px;
-            font-size: 0.95em;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 10px 10px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 1em;
-            box-sizing: border-box; 
-            transition: border-color 0.3s;
-        }
-        
-        .form-group input:focus {
-            border-color: #007bff;
-            outline: none;
-        }
-
-        /* Estilo para E-mail Desabilitado */
-        .form-group input[disabled] {
-            background-color: #e9ecef; /* Fundo cinza claro para indicar que não é editável */
-            color: #888;
-            cursor: not-allowed;
-            border-color: #e9ecef;
-        }
-
-        /* Botão Salvar */
-        .save-button {
-            width: 100%;
-            padding: 12px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            font-size: 1.1em;
-            cursor: pointer;
-            margin-top: 25px;
-            transition: background-color 0.3s;
-            font-weight: bold;
-        }
-
-        .save-button:hover {
-            background-color: #0056b3;
-        }
-
-        /* O link .change-password-link e seu CSS foram removidos */
-    </style>
-</head>
-<body>
-
-    <div class="main-content">
-        <div class="menu-hamburger">
-            <button class="hamburger-icon" onclick="toggleSidebar()">
-                <span>&#9776;</span> 
-            </button>
-        </div>
-
-        <div class="content-container profile-page">
-            <div class="profile-card edit-mode">
-                
-                <div class="card-header-bg"></div>
-                
-                <div class="profile-avatar-wrapper">
-                    <div class="profile-avatar"></div>
-                </div>
-
-                <div class="card-body">
-                    <h2 class="card-title">Editar Perfil</h2>
-                    
-                    <form method="POST">
-                        {% csrf_token %} 
-
-                        <div class="form-group">
-                            <label for="id_nome">Nome:</label>
-                            <input type="text" id="id_nome" name="nome" value="{{ form.initial.nome }}" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="id_email">E-mail:</label>
-                            <input type="email" id="id_email" name="email" value="{{ form.initial.email }}" disabled>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="id_time">Time Favorito:</label>
-                            <input type="text" id="id_time" name="time" value="{{ form.instance.time }}">
-                        </div>
-
-                        <button type="submit" class="save-button">Salvar Alterações</button>
-                    </form>
-                    
-                    </div>
+        <div class="profile-avatar-wrapper">
+            <div class="profile-avatar">
+                <i class="fa-solid fa-user-circle"></i> 
             </div>
         </div>
+
+        <div class="card-body">
+            <h2 class="card-title">Configurações de Perfil</h2>
+            
+            <form method="POST">
+                {% csrf_token %} 
+
+                <div class="form-group">
+                    <label for="id_nome">Nome:</label>
+                    <input type="text" id="id_nome" name="nome" value="{{ form.initial.nome }}" placeholder="Seu nome completo" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_email">E-mail:</label>
+                    <input type="email" id="id_email" name="email" value="{{ form.initial.email }}" placeholder="seu.email@exemplo.com" disabled>
+                    <p class="small-text-hint">O email não pode ser editado diretamente por segurança.</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_time">Time Favorito:</label>
+                    <input type="text" id="id_time" name="time" value="{{ form.instance.time }}" placeholder="Ex: Náutico, Sport, Santa Cruz">
+                </div>
+
+                <button type="submit" class="save-button">Salvar Alterações</button>
+            </form>
+            
+            <a href="{% url 'core:logout' %}" class="secondary-action-link">Sair da Conta</a>
+
+        </div>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}
