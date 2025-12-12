@@ -1,327 +1,175 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="avaliacoes-container">
-    <div class="avaliacoes-header">
-        <h2 class="avaliacoes-titulo">Minhas Avaliações</h2>
-        <p class="avaliacoes-subtitulo">Histórico das suas experiências em estádios</p>
-    </div>
+<main class="dashboard-container">
+
+    <header class="welcome-header fade-in-item" style="display:block; text-align:center;">
+        <div class="eyebrow" style="margin-left:auto; margin-right:auto; font-weight:600; color:var(--primary-blue); background:rgba(0,102,255,0.08); padding:6px 14px; border-radius:12px; display:inline-flex; align-items:center; gap:6px;">
+            <i class="fas fa-star"></i> Minhas Avaliações
+        </div>
+        <h1 class="page-title">Histórico de Avaliações</h1>
+        <p class="page-subtitle">Todas as suas experiências em estádios registradas</p>
+    </header>
 
     {% if page_obj %}
-        <div class="avaliacoes-grid">
+        <div class="avaliacoes-full-container">
             {% for avaliacao in page_obj %}
-                <div class="avaliacao-card">
-                    <div class="avaliacao-header">
-                        <h3 class="estadio-nome">{{ avaliacao.estadio }}</h3>
-                        <div class="rating-display">
-                            {% with ''|center:avaliacao.avaliacao_experiencia as range %}
-                            {% for i in range %}
-                                <span class="estrela">⭐</span>
-                            {% endfor %}
-                            {% endwith %}
-                            <span class="rating-numero">({{ avaliacao.avaliacao_experiencia }}/5)</span>
+                <article class="avaliacao-full-card fade-in-item soft-card">
+                    <header class="avaliacao-full-header">
+                        <div class="estadio-full-info">
+                            <div class="estadio-full-icon">
+                                <i class="fas fa-stadium"></i>
+                            </div>
+                            <div class="estadio-full-content">
+                                <h3 class="estadio-full-nome">
+                                    <i class="fas fa-flag stadium-inline-icon" aria-hidden="true"></i>
+                                    {{ avaliacao.estadio }}
+                                </h3>
+
+                                <div class="rating-full-display">
+                                    <div class="stars-full-container" aria-hidden="true">
+                                        {% for ch in "12345" %}
+                                            {% if forloop.counter <= avaliacao.avaliacao_experiencia %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    <span class="rating-full-numero">{{ avaliacao.avaliacao_experiencia }}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+
+                    <div class="avaliacao-full-body">
+                        <div class="comentario-full-wrapper">
+                            <i class="fas fa-comment-dots comment-full-icon"></i>
+                            <div class="comentario-full-content">
+                                <p class="comentario-full">{{ avaliacao.comentario|default:"Sem comentário adicional" }}</p>
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class="avaliacao-body">
-                        <p class="comentario">{{ avaliacao.comentario }}</p>
-                    </div>
-                    
-                    <div class="avaliacao-footer">
-                        <span class="data-avaliacao">📅 {{ avaliacao.data_avaliacao }}</span>
-                    </div>
-                </div>
+
+                    <footer class="avaliacao-full-footer">
+                        <div class="data-full-info">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span class="data-full-avaliacao">{{ avaliacao.data_avaliacao|date:"d/m/Y" }}</span>
+                        </div>
+                        <div class="time-full-info">
+                            <i class="fas fa-clock"></i>
+                            <span class="hora-full-avaliacao">{{ avaliacao.data_avaliacao|time:"H:i" }}</span>
+                        </div>
+                    </footer>
+                </article>
             {% endfor %}
         </div>
 
-        <div class="navegacao">
-            {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}" class="nav-botao nav-anterior">
-                    ⬅️ Anterior
-                </a>
-            {% endif %}
+        <div class="pagination-container fade-in-item">
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}" class="pagination-btn prev-btn">
+                        <i class="fas fa-arrow-left"></i>
+                        Anterior
+                    </a>
+                {% endif %}
 
-            <span class="pagina-atual">
-                Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
-            </span>
+                <div class="page-info">
+                    <span class="current-page">{{ page_obj.number }}</span>
+                    <span class="page-separator">de</span>
+                    <span class="total-pages">{{ page_obj.paginator.num_pages }}</span>
+                </div>
 
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}" class="nav-botao nav-proxima">
-                    Próxima ➡️
-                </a>
-            {% endif %}
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="pagination-btn next-btn">
+                        Próxima
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                {% endif %}
+            </div>
         </div>
     {% else %}
-        <div class="sem-avaliacoes">
-            <div class="vazio-icon">📝</div>
+        <div class="empty-state fade-in-item">
+            <div class="empty-icon"><i class="fas fa-clipboard-list"></i></div>
             <h3>Nenhuma avaliação encontrada</h3>
-            <p>Você ainda não fez nenhuma avaliação.</p>
-            <a href="{% url 'core:nova_avaliacao' %}" class="botao-primario">
+            <p>Você ainda não avaliou nenhum estádio. Comece agora e compartilhe sua experiência!</p>
+            <a href="{% url 'core:nova_avaliacao' %}" class="btn-primary">
+                <i class="fas fa-plus"></i>
                 Fazer Primeira Avaliação
             </a>
         </div>
     {% endif %}
-</div>
+</main>
 
 <style>
-.avaliacoes-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 40px 20px;
-    min-height: 80vh;
+:root{
+    --primary-blue:#0066FF;
+    --secondary-blue:#0052D4;
+    --muted:#f8fbff;
+    --gray-light:#F8FAFC;
+    --gray-medium:#64748B;
+    --gray-dark:#334155;
+    --card-radius:14px;
+    --soft-shadow:0 8px 24px rgba(0,102,255,0.06);
+    --gentle-shadow:0 12px 34px rgba(0,102,255,0.08);
+    --trans: 260ms cubic-bezier(.2,.9,.3,1);
 }
 
-.avaliacoes-header {
-    text-align: center;
-    margin-bottom: 50px;
-}
+.dashboard-container{max-width:1100px;margin:0 auto;padding:18px;display:flex;flex-direction:column;gap:24px}
+.welcome-header{text-align:center;margin-bottom:10px}
+.welcome-header .eyebrow{font-size:0.9rem; letter-spacing:0.3px; box-shadow:var(--soft-shadow)}
 
-.avaliacoes-titulo {
-    color: #2c3e50;
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-}
+.avaliacoes-full-container{display:flex;flex-direction:column;gap:18px}
+.avaliacao-full-card{background:linear-gradient(180deg,#ffffff,#fbfeff);border-radius:var(--card-radius);padding:20px;border:1px solid rgba(0,102,255,0.06);box-shadow:var(--soft-shadow);transition:transform var(--trans),box-shadow var(--trans);overflow:hidden}
+.avaliacao-full-card:hover{transform:translateY(-6px);box-shadow:var(--gentle-shadow);border-color:rgba(0,102,255,0.08)}
 
-.avaliacoes-subtitulo {
-    color: #6c757d;
-    font-size: 1.2rem;
-}
+.estadio-full-info{display:flex;align-items:center;gap:16px}
+.estadio-full-icon{width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(0,102,255,0.04),rgba(0,82,212,0.02));color:var(--primary-blue);border:1px solid rgba(0,102,255,0.06);font-size:1.4rem}
+.estadio-full-nome{font-weight:700;color:var(--gray-dark);margin:0;font-size:1.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stadium-inline-icon{margin-right:8px;color:var(--primary-blue);font-size:0.95em}
 
-.avaliacoes-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 25px;
-    margin-bottom: 50px;
-}
+.rating-full-display{display:inline-flex;align-items:center;gap:10px;padding:6px 12px;border-radius:10px;background:rgba(255,243,205,0.6);border:1px solid rgba(255,193,7,0.12)}
+.stars-full-container i{color:#FFC107;margin-right:4px}
+.rating-full-numero{font-weight:700;color:var(--gray-dark)}
 
-.avaliacao-card {
-    background: white;
-    border-radius: 15px;
-    padding: 25px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-    border-left: 5px solid #007bff;
-    transition: all 0.3s ease;
-    animation: fadeInUp 0.6s ease-out;
-    animation-fill-mode: both;
-}
+.comentario-full-wrapper{display:flex;gap:14px;align-items:flex-start}
+.comment-full-icon{color:var(--primary-blue);font-size:1.2rem;margin-top:4px}
+.comentario-full{color:var(--gray-medium);margin:0;line-height:1.6}
 
-.avaliacao-card:nth-child(2) {
-    border-left-color: #28a745;
-    animation-delay: 0.1s;
-}
+.avaliacao-full-footer{display:flex;justify-content:space-between;gap:12px;padding-top:12px;border-top:1px solid rgba(0,102,255,0.06);font-size:0.92rem;color:var(--gray-medium)}
 
-.avaliacao-card:nth-child(3) {
-    border-left-color: #ffc107;
-    animation-delay: 0.2s;
-}
+.pagination{display:flex;gap:12px;align-items:center;justify-content:center;margin-top:12px}
+.pagination-btn{padding:10px 18px;border-radius:10px;border:1px solid rgba(0,102,255,0.06);background:var(--gray-light);color:var(--gray-dark);text-decoration:none;font-weight:600;transition:transform var(--trans),box-shadow var(--trans)}
+.pagination-btn:hover{transform:translateY(-3px);box-shadow:var(--soft-shadow)}
+.next-btn{background:linear-gradient(90deg,var(--primary-blue),var(--secondary-blue));color:white;border:none}
+.next-btn:hover{transform:translateY(-3px);box-shadow:var(--gentle-shadow)}
 
-.avaliacao-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
+.empty-state{max-width:520px;margin:0 auto;padding:36px;border-radius:16px;background:linear-gradient(180deg,#ffffff,#fbfeff);box-shadow:var(--soft-shadow);border:1px solid rgba(0,102,255,0.06);text-align:center}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;background:linear-gradient(90deg,var(--primary-blue),var(--secondary-blue));color:white;text-decoration:none;font-weight:700}
 
-.avaliacao-header {
-    margin-bottom: 15px;
-    border-bottom: 1px solid #f1f3f4;
-    padding-bottom: 15px;
-}
-
-.estadio-nome {
-    color: #2c3e50;
-    font-size: 1.4rem;
-    font-weight: 600;
-    margin-bottom: 10px;
-}
-
-.rating-display {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.estrela {
-    font-size: 1.2rem;
-}
-
-.rating-numero {
-    color: #6c757d;
-    font-weight: 500;
-    font-size: 0.9rem;
-}
-
-.avaliacao-body {
-    margin-bottom: 20px;
-}
-
-.comentario {
-    color: #495057;
-    line-height: 1.6;
-    font-size: 1rem;
-    margin: 0;
-}
-
-.avaliacao-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 15px;
-    border-top: 1px solid #f1f3f4;
-}
-
-.data-avaliacao {
-    color: #6c757d;
-    font-size: 0.9rem;
-    font-weight: 500;
-}
-
-.navegacao {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    margin-top: 40px;
-    flex-wrap: wrap;
-}
-
-.nav-botao {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-    color: white;
-    text-decoration: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    min-width: 120px;
-    text-align: center;
-}
-
-.nav-botao:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
-    color: white;
-}
-
-.pagina-atual {
-    color: #2c3e50;
-    font-weight: 600;
-    padding: 10px 20px;
-    background: #f8f9fa;
-    border-radius: 8px;
-}
-
-.sem-avaliacoes {
-    text-align: center;
-    padding: 60px 20px;
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-}
-
-.vazio-icon {
-    font-size: 4rem;
-    margin-bottom: 20px;
-}
-
-.sem-avaliacoes h3 {
-    color: #2c3e50;
-    margin-bottom: 15px;
-    font-size: 1.5rem;
-}
-
-.sem-avaliacoes p {
-    color: #6c757d;
-    margin-bottom: 30px;
-    font-size: 1.1rem;
-}
-
-.botao-primario {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-    color: white;
-    text-decoration: none;
-    padding: 15px 30px;
-    border-radius: 10px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    display: inline-block;
-}
-
-.botao-primario:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
-    color: white;
-}
-
-/* Animações */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Responsividade */
-@media (max-width: 768px) {
-    .avaliacoes-container {
-        padding: 30px 15px;
-    }
-    
-    .avaliacoes-titulo {
-        font-size: 2rem;
-    }
-    
-    .avaliacoes-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .avaliacao-card {
-        padding: 20px;
-    }
-    
-    .estadio-nome {
-        font-size: 1.3rem;
-    }
-    
-    .navegacao {
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    .nav-botao {
-        width: 100%;
-        max-width: 200px;
-    }
-}
-
-@media (max-width: 480px) {
-    .avaliacoes-container {
-        padding: 20px 10px;
-    }
-    
-    .avaliacoes-titulo {
-        font-size: 1.8rem;
-    }
-    
-    .avaliacoes-subtitulo {
-        font-size: 1.1rem;
-    }
-    
-    .avaliacao-card {
-        padding: 15px;
-    }
-    
-    .vazio-icon {
-        font-size: 3rem;
-    }
-    
-    .sem-avaliacoes h3 {
-        font-size: 1.3rem;
-    }
-}
+@media(max-width:900px){.avaliacao-full-card{padding:16px}.estadio-full-icon{width:48px;height:48px}.estadio-full-nome{font-size:1.05rem}}
+@media(max-width:600px){.avaliacao-full-footer{flex-direction:column;align-items:flex-start}.comentario-full-wrapper{flex-direction:column;gap:10px}}
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.avaliacao-full-card').forEach((card, idx) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(10px)';
+        setTimeout(() => { card.style.transition = 'opacity 420ms ease, transform 420ms ease'; card.style.opacity = '1'; card.style.transform = 'translateY(0)'; }, idx * 90 + 120);
+
+        card.addEventListener('mouseenter', () => {
+            card.style.transform = 'translateY(-6px)';
+            card.style.boxShadow = '0 18px 40px rgba(0,102,255,0.08)';
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'translateY(0)';
+            card.style.boxShadow = '';
+        });
+    });
+});
+</script>
+
 {% endblock %}

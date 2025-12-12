@@ -1,183 +1,202 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block extra_head %}
-    {# Inclui a fonte Poppins para consistência visual com o design base #}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-<main class="form-container">
-    <h2 class="form-title">Adicionar Mídia - Partida {{ definicao.id }}</h2>
-
-    {# O 'form-card' é usado para dar o estilo de card ao formulário #}
-    <form method="post" enctype="multipart/form-data" class="form-card media-form">
-        {% csrf_token %}
-
-        <div class="form-group">
-            <label for="imagem" class="form-label">Selecionar imagem:</label>
-            <input type="file" id="imagem" name="imagem" accept="image/*" class="form-input-file">
+<main class="dashboard-container">
+    <header class="welcome-header fade-in-item">
+        <div class="eyebrow">
+            <i class="fas fa-photo-video"></i> Mídia
         </div>
+        <h1 class="page-title">Adicionar Mídia</h1>
+        <p class="page-subtitle">Envie fotos, vídeos ou áudios da partida</p>
+    </header>
 
-        <div class="form-group">
-            <label for="video" class="form-label">Selecionar vídeo:</label>
-            <input type="file" id="video" name="video" accept="video/*" class="form-input-file">
-        </div>
+    <div class="galeria-grid">
+        <article class="galeria-card fade-in-item" style="max-width:720px; margin:0 auto;">
+            <div class="galeria-card__header">
+                <div class="partida-info">
+                    <div class="partida-icon">
+                        <i class="fas fa-futbol"></i>
+                    </div>
+                    <div>
+                        <h3 class="partida-nome">Partida {{ definicao.partida.time_casa }} x {{ definicao.partida.time_visitante }}</h3>
+                        <p class="partida-desc">Definição #{{ definicao.id }} — {{ definicao.partida.data|date:"d/m/Y H:i" }}</p>
+                    </div>
+                </div>
+            </div>
 
-        <div class="form-group">
-            <label for="audio" class="form-label">Selecionar áudio:</label>
-            <input type="file" id="audio" name="audio" accept="audio/*" class="form-input-file">
-        </div>
+            <!-- Botões visuais (mantêm estilo) e formulários escondidos para upload funcional -->
+            <div class="media-buttons">
+                <form id="form-imagem" method="post" enctype="multipart/form-data" style="display:none;">
+                    {% csrf_token %}
+                    <input type="file" id="input-imagem" name="imagem" accept="image/*">
+                </form>
 
-        <div class="form-buttons">
-            {# Reutiliza a classe btn-submit para o botão primário "Enviar" #}
-            <button type="submit" class="btn-submit">Enviar</button>
-            {# Reutiliza a classe btn-cancel para o botão secundário "Cancelar" #}
-            <a href="{% url 'core:galeria' %}" class="btn-cancel">Cancelar</a>
-        </div>
-    </form>
+                <form id="form-video" method="post" enctype="multipart/form-data" style="display:none;">
+                    {% csrf_token %}
+                    <input type="file" id="input-video" name="video" accept="video/*">
+                </form>
+
+                <form id="form-audio" method="post" enctype="multipart/form-data" style="display:none;">
+                    {% csrf_token %}
+                    <input type="file" id="input-audio" name="audio" accept="audio/*">
+                </form>
+
+                <div class="visible-buttons">
+                    <button type="button" class="btn-jogo btn-media" data-target="input-imagem">
+                        <i class="fas fa-image"></i>
+                        <span class="btn-jogo__main">Adicionar Imagem</span>
+                        <span class="btn-jogo__sub">jpg, png</span>
+                    </button>
+
+                    <button type="button" class="btn-jogo btn-media" data-target="input-video">
+                        <i class="fas fa-video"></i>
+                        <span class="btn-jogo__main">Adicionar Vídeo</span>
+                        <span class="btn-jogo__sub">mp4, mov</span>
+                    </button>
+
+                    <button type="button" class="btn-jogo btn-media" data-target="input-audio">
+                        <i class="fas fa-microphone"></i>
+                        <span class="btn-jogo__main">Adicionar Áudio</span>
+                        <span class="btn-jogo__sub">mp3, wav</span>
+                    </button>
+                </div>
+
+                <div class="upload-status" aria-live="polite" role="status"></div>
+            </div>
+        </article>
+    </div>
 </main>
 
 <style>
-    /* --- Variáveis de Estilo (Consistente com o design de referência) --- */
-    :root {
-        --primary-bg: #f4f7f9;
-        --card-bg: #ffffff;
-        --text-primary: #1d2d35;
-        --text-secondary: #657786;
-        --button-green: #00adb5;
-        --button-green-hover: #00939a;
-        --button-cancel: #657786; /* Cinza para botão de Cancelar */
-        --button-cancel-hover: #4e5d6a;
-        --border-color: #e1e8ed;
-        --border-focus-color: #00adb5;
-        --shadow-color: rgba(0, 0, 0, 0.08);
-    }
+:root {
+    --primary-blue: #0066FF;
+    --secondary-blue: #0052D4;
+    --blue-light: #E8F3FF;
+    --gradient-primary: linear-gradient(135deg, #0066FF 0%, #0052D4 100%);
+    --gradient-accent: linear-gradient(135deg, #007AFF 0%, #0066FF 100%);
+    --btn-tone-1: #0066FF; /* principal */
+    --btn-tone-2: #0052D4; /* secundário */
+    --btn-tone-3: #00A3FF; /* acento mais claro */
+    --gray-light: #F8FAFC;
+    --gray-medium: #64748B;
+    --gray-dark: #334155;
+    --shadow-subtle: 0 6px 20px rgba(0, 102, 255, 0.08);
+}
 
-    /* --- Container Principal (Reutiliza classes) --- */
-    .form-container {
-        max-width: 600px; /* Mantém o max-width original */
-        margin: 2rem auto;
-        padding: 1rem;
-        font-family: 'Poppins', sans-serif;
-    }
+.dashboard-container { display:flex; flex-direction:column; gap:32px; height:100%; max-width:1200px; margin:0 auto; padding:18px; }
+.welcome-header { text-align:center; padding:22px 24px; background: rgba(255,255,255,0.98); backdrop-filter: blur(18px); border-radius:16px; box-shadow:var(--shadow-subtle); border:1px solid rgba(0,102,255,0.12); max-width:900px; margin:0 auto; position:relative; }
+.eyebrow{ display:inline-flex; align-items:center; gap:8px; color:var(--primary-blue); font-size:12px; font-weight:600; text-transform:uppercase; padding:6px 12px; background:var(--blue-light); border-radius:8px; margin-bottom:12px; }
+.page-title{ font-size:clamp(1.25rem,2.8vw,1.6rem); font-weight:800; color:#1A3A5F; margin:0 0 8px 0; }
+.page-subtitle{ font-size:0.95rem; color:var(--gray-medium); margin:0; }
 
-    .form-title {
-        text-align: center;
-        color: var(--text-primary);
-        margin-bottom: 2rem;
-        font-size: 2.25rem;
-    }
+.galeria-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:18px; width:100%; }
+.galeria-card{ background: rgba(255,255,255,0.96); backdrop-filter:blur(12px); border-radius:14px; padding:20px; box-shadow:var(--shadow-subtle); border:1px solid rgba(0,102,255,0.08); display:flex; flex-direction:column; gap:14px; transition:transform .28s ease, box-shadow .28s ease; }
+.galeria-card:hover{ transform:translateY(-6px); box-shadow:0 18px 40px rgba(0,102,255,0.12); }
 
-    /* --- Card do Formulário (Reutiliza classes) --- */
-    .form-card {
-        background-color: var(--card-bg);
-        border-radius: 12px;
-        padding: 2rem;
-        box-shadow: 0 4px 15px var(--shadow-color);
-        border: 1px solid var(--border-color);
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem; /* Espaçamento consistente */
-    }
+.partida-info{ display:flex; align-items:flex-start; gap:12px; }
+.partida-icon{ width:48px; height:48px; background:linear-gradient(135deg, rgba(0,102,255,0.06), rgba(0,82,212,0.06)); border-radius:10px; display:flex; align-items:center; justify-content:center; color:var(--primary-blue); font-size:1.2rem; border:1px solid rgba(0,102,255,0.10); }
+.partida-nome{ font-size:1.1rem; font-weight:700; color:#1A3A5F; margin:0; }
+.partida-desc{ font-size:0.82rem; color:var(--gray-medium); margin:0; }
 
-    .form-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
+.media-buttons{ display:flex; flex-direction:column; gap:12px; }
+.visible-buttons{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
 
-    .form-label {
-        font-weight: 500;
-        color: var(--text-primary);
-        font-size: 0.95rem;
-    }
+.btn-jogo{ background:var(--gray-light); border:1px solid rgba(0,102,255,0.08); border-radius:12px; padding:14px; display:flex; flex-direction:column; align-items:center; gap:8px; cursor:pointer; transition:transform .18s ease, box-shadow .18s ease, background .18s ease; }
+.btn-jogo i{ font-size:1.1rem; color:var(--primary-blue); }
+.btn-jogo__main{ font-weight:700; font-size:0.95rem; color:#12324A; }
+.btn-jogo__sub{ font-size:0.75rem; color:var(--gray-medium); }
 
-    /* --- Inputs de Arquivo (Customizados para o novo design) --- */
-    .form-input-file {
-        width: 100%;
-        padding: 0.8rem 1rem;
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        font-family: 'Poppins', sans-serif;
-        font-size: 1rem;
-        color: var(--text-primary);
-        background-color: #fdfdfd;
-        box-sizing: border-box;
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
+/* manter aparência ao mesmo tempo diferente nas tonalidades */
+.btn-media[data-target="input-imagem"]{ background: linear-gradient(180deg, rgba(0,102,255,0.06), rgba(0,102,255,0.03)); }
+.btn-media[data-target="input-video"]{ background: linear-gradient(180deg, rgba(0,163,255,0.06), rgba(0,163,255,0.03)); }
+.btn-media[data-target="input-audio"]{ background: linear-gradient(180deg, rgba(0,212,255,0.06), rgba(0,212,255,0.03)); }
 
-    /* Efeito de foco suave */
-    .form-input-file:focus {
-        outline: none;
-        border-color: var(--border-focus-color);
-        box-shadow: 0 0 0 3px rgba(0, 173, 181, 0.15);
-    }
+.btn-jogo:hover{ transform:translateY(-6px) scale(1.01); box-shadow:0 14px 32px rgba(0,102,255,0.10); }
 
-    /* Pequeno ajuste para o botão de seleção nativo em alguns browsers */
-    .form-input-file::-webkit-file-upload-button {
-        padding: 0.5rem 0.8rem;
-        border: none;
-        background-color: var(--button-green);
-        color: white;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-right: 10px;
-        transition: background-color 0.3s;
-    }
+.upload-status{ font-size:0.9rem; color:var(--gray-medium); min-height:20px; }
 
-    .form-input-file::-webkit-file-upload-button:hover {
-        background-color: var(--button-green-hover);
-    }
-
-    /* --- Botões (Adaptado) --- */
-    .form-buttons {
-        display: flex;
-        gap: 10px;
-        margin-top: 1rem;
-    }
-
-    /* Estilo para Botão Primário (Enviar) */
-    .btn-submit {
-        background-color: var(--button-green);
-        color: white;
-        border: none;
-        padding: 0.9rem 1.5rem;
-        border-radius: 8px;
-        cursor: pointer;
-        font-family: 'Poppins', sans-serif;
-        font-weight: 500;
-        font-size: 1rem;
-        flex-grow: 1;
-        text-align: center;
-        transition: all 0.3s ease;
-    }
-
-    .btn-submit:hover {
-        background-color: var(--button-green-hover);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0, 173, 181, 0.3);
-    }
-
-    /* Estilo para Botão Cancelar/Voltar */
-    .btn-cancel {
-        background-color: var(--button-cancel);
-        color: white;
-        padding: 0.9rem 1.5rem;
-        border-radius: 8px;
-        text-decoration: none;
-        cursor: pointer;
-        font-family: 'Poppins', sans-serif;
-        font-weight: 500;
-        font-size: 1rem;
-        flex-grow: 1;
-        text-align: center;
-        transition: background-color 0.3s ease;
-    }
-
-    .btn-cancel:hover {
-        background-color: var(--button-cancel-hover);
-    }
+/* Responsividade */
+@media (max-width:1024px){ .visible-buttons{ grid-template-columns:repeat(3,1fr); } }
+@media (max-width:768px){ .visible-buttons{ grid-template-columns:repeat(2,1fr); } .actions-row{ justify-content:space-between; } }
+@media (max-width:420px){ .visible-buttons{ grid-template-columns:1fr; } }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Delegation: botão -> input -> submit
+    document.querySelectorAll('.btn-media').forEach(btn => {
+        const targetId = btn.getAttribute('data-target');
+        const input = document.getElementById(targetId);
+        const form = input ? input.closest('form') : null;
+
+        // abrir seletor
+        btn.addEventListener('click', () => {
+            if (input) input.click();
+        });
+
+        // hover effects (entrada/saída) mantêm estética
+        btn.addEventListener('mouseenter', () => {
+            btn.style.transform = 'translateY(-6px) scale(1.02)';
+            btn.style.boxShadow = '0 18px 36px rgba(0,102,255,0.12)';
+        });
+        btn.addEventListener('mouseleave', () => {
+            btn.style.transform = '';
+            btn.style.boxShadow = '';
+        });
+
+        // quando arquivo selecionado, submeter o form automaticamente
+        if (input && form){
+            input.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                const status = document.querySelector('.upload-status');
+                if (!file) return;
+
+                // mostra nome do arquivo
+                status.textContent = `Pronto para enviar: ${file.name}`;
+
+                // cria FormData e envia com fetch (XHR) para a mesma URL atual
+                const fd = new FormData(form);
+                // se seu backend espera um campo "definicao_id" ou similar, adicione-o aqui:
+                // fd.append('definicao_id', '{{ definicao.id }}');
+
+                try {
+                    status.textContent = 'Enviando...';
+                    const resp = await fetch(window.location.href, {
+                        method: 'POST',
+                        headers: {
+                            // Django's CSRF token is already in the form as input. No extra header needed if cookie-based CSRF.
+                        },
+                        body: fd,
+                        credentials: 'same-origin'
+                    });
+
+                    if (!resp.ok) throw new Error(`Erro ${resp.status}`);
+
+                    // sucesso: atualiza status e opcionalmente recarrega
+                    status.textContent = 'Enviado com sucesso! Atualizando...';
+                    setTimeout(() => location.reload(), 800);
+                } catch (err) {
+                    console.error(err);
+                    status.textContent = 'Falha no envio. Tente novamente.';
+                }
+            });
+        }
+    });
+
+    // animação de entrada para o card
+    document.querySelectorAll('.galeria-card').forEach((card, idx) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(12px)';
+        setTimeout(() => { card.style.transition = 'opacity .45s ease, transform .45s ease'; card.style.opacity = '1'; card.style.transform = 'translateY(0)'; }, idx * 90 + 120);
+    });
+});
+</script>
+
 {% endblock %}

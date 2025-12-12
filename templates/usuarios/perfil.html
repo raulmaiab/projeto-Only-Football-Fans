@@ -1,202 +1,189 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% load static %}
 
 {% block extra_head %}
-<style>
-/* --- ESTILOS DE EDIÇÃO DE PERFIL (Ajustes Finais de Layout) --- */
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+    :root{
+        --primary-blue: #0066FF;
+        --secondary-blue: #0052D4;
+        --blue-light: #E8F3FF;
+        --bg-soft: #fbfdff;
+        --card-radius: 16px;
+        --shadow-soft: 0 8px 24px rgba(0,102,255,0.06);
+        --shadow-gentle: 0 12px 34px rgba(0,102,255,0.08);
+        --text-dark: #1A3A5F;
+        --muted: #64748B;
+        --trans: 260ms cubic-bezier(.2,.9,.3,1);
+    }
 
-.profile-edit-container {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    margin-top: 30px; 
-}
+    .profile-edit-container{
+        display:flex;
+        justify-content:center;
+        padding:28px 20px 60px;
+        font-family:'Poppins',sans-serif;
+        background: linear-gradient(180deg, #f7fbff 0%, #f2f7ff 100%);
+        min-height: calc(100vh - 80px);
+    }
 
-.profile-card {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 450px; 
-    height: fit-content; 
-    overflow: hidden;
-    font-family: 'Poppins', sans-serif;
-}
+    .profile-card{
+        width:100%;
+        max-width:720px;
+        background: linear-gradient(180deg,#ffffff,#fbfeff);
+        border-radius:var(--card-radius);
+        box-shadow:var(--shadow-soft);
+        overflow:hidden;
+        border:1px solid rgba(0,102,255,0.06);
+        transition: transform var(--trans), box-shadow var(--trans);
+    }
 
-/* Header Azul do Cartão - CORREÇÃO: Aumentamos a altura para cobrir o topo do avatar */
-.card-header-bg {
-    height: 120px; /* Aumentado de 90px para 120px */
-    background: var(--accent-blue); 
-    position: relative;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-}
+    .profile-card:hover{ transform: translateY(-6px); box-shadow: var(--shadow-gentle); }
 
-/* Avatar Wrapper para posicionamento */
-.profile-avatar-wrapper {
-    text-align: center;
-    /* CORREÇÃO CHAVE: Puxa o avatar mais para cima, colocando-o sobre a div azul */
-    margin-top: -50px; /* 100px (tamanho do avatar) / 2 = 50px */
-    /* Este espaço empurra o corpo do cartão para baixo, abaixo do avatar */
-    margin-bottom: 20px; 
-}
+    .card-header-bg{
+        background: linear-gradient(135deg, rgba(0,102,255,0.12), rgba(0,82,212,0.08));
+        height:120px;
+        border-top-left-radius:var(--card-radius);
+        border-top-right-radius:var(--card-radius);
+        position:relative;
+        display:flex;
+        align-items:flex-end;
+        padding:18px 28px;
+    }
 
-.profile-avatar {
-    display: inline-block;
-    width: 100px;
-    height: 100px;
-    background: #fff; 
-    /* Adicionando um z-index para garantir que fique acima do header, se necessário */
-    position: relative; 
-    z-index: 10; 
-    border-radius: 50%;
-    /* Alterando a borda para não ter a variável var(--content-bg) se ela for o fundo claro principal */
-    border: 5px solid #f0f0f0; /* Sugestão: Use a cor do fundo do corpo principal se var(--content-bg) for o cinza claro do fundo da página */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+    .card-header-title{
+        margin:0;
+        color:var(--text-dark);
+        font-weight:800;
+        font-size:1.2rem;
+        background: linear-gradient(90deg, #1A3A5F, var(--secondary-blue));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
 
-/* Ícone da pessoa */
-.profile-avatar i {
-    font-size: 3.8rem; 
-    color: var(--accent-blue);
-    line-height: 1; 
-}
+    .profile-avatar-wrapper{ display:flex; justify-content:center; margin-top:-56px; }
 
-/* Corpo do Formulário */
-.card-body {
-    padding: 0 40px 30px 40px; 
-    text-align: center;
-}
+    .profile-avatar{
+        width:112px;
+        height:112px;
+        border-radius:50%;
+        background:#fff;
+        border:6px solid #f3f6fb;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        box-shadow: 0 8px 30px rgba(0,102,255,0.06);
+        font-size:48px;
+        color:var(--primary-blue);
+    }
 
-.card-title {
-    color: var(--text-dark);
-    margin-top: 0;
-    margin-bottom: 30px;
-    font-size: 1.6rem;
-    font-weight: 700; 
-}
+    .card-body{
+        padding: 20px 36px 36px;
+        text-align:left;
+    }
 
-/* Grupos de Campo (Sem alterações relevantes) */
-.form-group {
-    text-align: left;
-    margin-bottom: 20px; 
-}
+    .card-title{
+        margin: 0 0 12px 0;
+        font-size:1.4rem;
+        color:var(--text-dark);
+        font-weight:800;
+        text-align:center;
+    }
 
-.form-group label {
-    display: block;
-    font-weight: 600;
-    color: var(--text-dark);
-    margin-bottom: 6px;
-    font-size: 0.95em;
-}
+    .form-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-top:14px; }
+    .form-group{ display:flex; flex-direction:column; }
+    .form-group label{ font-weight:600; color:var(--text-dark); margin-bottom:6px; font-size:0.95rem; }
+    .form-group input{ padding:10px 12px; border-radius:10px; border:1px solid rgba(17,24,39,0.06); font-size:1rem; }
+    .form-group input:focus{ outline:none; box-shadow:0 6px 18px rgba(0,102,255,0.06); border-color:var(--primary-blue); }
+    .form-full{ grid-column: 1 / -1; }
 
-.form-group input {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid var(--border-color-light);
-    border-radius: 8px;
-    font-size: 1em;
-    box-sizing: border-box; 
-    transition: border-color 0.3s, box-shadow 0.3s;
-}
+    .small-text-hint{ font-size:0.85rem; color:var(--muted); margin-top:6px; }
 
-.form-group input:focus {
-    border-color: var(--accent-blue);
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
-    outline: none;
-}
+    .save-button{ width:100%; padding:12px; border-radius:10px; background: linear-gradient(90deg,var(--primary-blue),var(--secondary-blue)); color:white; border:none; font-weight:700; margin-top:18px; cursor:pointer; box-shadow:0 8px 20px rgba(0,102,255,0.08); }
+    .save-button:hover{ transform:translateY(-2px); }
 
-.form-group input[disabled] {
-    background-color: #eef3f7; 
-    color: #888;
-    cursor: not-allowed;
-    border-color: #d1d9e0;
-}
+    .secondary-action-link{
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        gap:8px;
+        margin:18px auto 0;
+        width:fit-content;
+        color:#d13b3b;
+        font-weight:700;
+        text-decoration:none;
+        padding:10px 14px;
+        border-radius:8px;
+        transition:var(--trans);
+    }
 
-.small-text-hint {
-    font-size: 0.8em;
-    color: #6c757d;
-    margin-top: 5px;
-}
+    .secondary-action-link:hover{
+        color:white;
+        background: #b80909ff;f6b6a; /* vermelho mais suave */
+        transform:translateY(-2px);
+        box-shadow:0 4px 12px rgba(255,107,107,0.32);
+    }
 
-/* Botão de Salvar (Sem alterações relevantes) */
-.save-button {
-    width: 100%;
-    padding: 12px;
-    background-color: var(--accent-blue);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.1em;
-    cursor: pointer;
-    margin-top: 30px;
-    transition: background-color 0.2s;
-    font-weight: 600;
-}
-
-.save-button:hover {
-    background-color: var(--accent-blue-hover);
-}
-
-/* Link Secundário (Sem alterações relevantes) */
-.secondary-action-link {
-    display: block;
-    margin-top: 20px;
-    color: #6c757d;
-    text-decoration: none;
-    font-size: 0.9em;
-    font-weight: 500;
-}
-
-.secondary-action-link:hover {
-    color: var(--accent-blue);
-    text-decoration: underline;
-}
-</style>
+    @media (max-width:720px){ .form-grid{ grid-template-columns:1fr; } .profile-card{ max-width:520px; } }
+    @media (max-width:420px){ .profile-card{ margin:0 12px; } .card-body{ padding:18px; } }
+    </style>
 {% endblock %}
 
 {% block content %}
-<div class="profile-edit-container">
-    <div class="profile-card">
-        
-        <div class="card-header-bg"></div>
-        
+<main class="profile-edit-container">
+    <section class="profile-card fade-in-item">
+        <div class="card-header-bg">
+            <h3 class="card-header-title">Perfil do Torcedor</h3>
+        </div>
+
         <div class="profile-avatar-wrapper">
-            <div class="profile-avatar">
-                <i class="fa-solid fa-user-circle"></i> 
+            <div class="profile-avatar" aria-hidden="true">
+                <i class="fa-solid fa-user"></i>
             </div>
         </div>
 
         <div class="card-body">
             <h2 class="card-title">Configurações de Perfil</h2>
-            
+
             <form method="POST">
-                {% csrf_token %} 
+                {% csrf_token %}
+                <div class="form-grid">
+                    <div class="form-group form-full">
+                        <label for="id_nome">Nome</label>
+                        <input type="text" id="id_nome" name="nome" value="{{ form.initial.nome }}" placeholder="Seu nome completo" required>
+                    </div>
 
-                <div class="form-group">
-                    <label for="id_nome">Nome:</label>
-                    <input type="text" id="id_nome" name="nome" value="{{ form.initial.nome }}" placeholder="Seu nome completo" required>
-                </div>
+                    <div class="form-group">
+                        <label for="id_email">E-mail</label>
+                        <input type="email" id="id_email" name="email" value="{{ form.initial.email }}" disabled>
+                        <p class="small-text-hint">O email não pode ser editado diretamente por segurança.</p>
+                    </div>
 
-                <div class="form-group">
-                    <label for="id_email">E-mail:</label>
-                    <input type="email" id="id_email" name="email" value="{{ form.initial.email }}" placeholder="seu.email@exemplo.com" disabled>
-                    <p class="small-text-hint">O email não pode ser editado diretamente por segurança.</p>
-                </div>
+                    <div class="form-group">
+                        <label for="id_time">Time Favorito</label>
+                        <input type="text" id="id_time" name="time" value="{{ form.instance.time }}" placeholder="Ex: Náutico, Sport, Santa Cruz">
+                    </div>
 
-                <div class="form-group">
-                    <label for="id_time">Time Favorito:</label>
-                    <input type="text" id="id_time" name="time" value="{{ form.instance.time }}" placeholder="Ex: Náutico, Sport, Santa Cruz">
                 </div>
 
                 <button type="submit" class="save-button">Salvar Alterações</button>
+                <a href="{% url 'core:logout' %}" class="secondary-action-link">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Sair da Conta
+                </a>
             </form>
-            
-            <a href="{% url 'core:logout' %}" class="secondary-action-link">Sair da Conta</a>
-
         </div>
-    </div>
-</div>
+    </section>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.fade-in-item').forEach((el, i) => {
+        el.style.opacity = '0'; el.style.transform = 'translateY(8px)';
+        setTimeout(() => { el.style.transition = 'opacity 360ms ease, transform 360ms ease'; el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }, i * 80 + 120);
+    });
+});
+</script>
+
 {% endblock %}

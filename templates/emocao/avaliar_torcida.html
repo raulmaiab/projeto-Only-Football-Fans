@@ -4,153 +4,756 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
-    {# Opcional: Fonte para estrelas (usaremos Unicode, mas é bom ter uma fonte forte) #}
 {% endblock %}
 
 {% block content %}
-<main class="form-container">
-    <h2 class="form-title">🎉 Avalie a torcida do {{ time }}!</h2>
-
-    <form method="post" class="form-card form-avaliacao">
-        {% csrf_token %}
-
-        <div class="form-group">
-            <label class="form-label">Time em Campo:</label>
-            <input type="text" value="{{ time }}" disabled class="form-input" style="background-color: #f0f0f0; font-weight: 500;">
-            <input type="hidden" name="time" value="{{ time }}">
+<main class="dashboard-container">
+    
+    <!-- Header com efeito glass -->
+    <header class="welcome-header fade-in-item">
+        <div class="eyebrow">
+            <i class="fas fa-people-group"></i>Avaliar Torcida
         </div>
+        <h1 class="page-title">Avaliar a Torcida do {{ time }}</h1>
+        <p class="page-subtitle">Compartilhe sua experiência sobre a torcida durante o jogo</p>
+    </header>
 
-        <div class="form-group">
-            <label class="form-label label-rating">🔥 Emoção da Torcida:</label>
-            <div class="star-rating-group" dir="rtl">
-                {% for i in "54321" %}
-                    <input type="radio" id="emocao_{{ i }}" name="emocao" value="{{ i }}" required />
-                    <label for="emocao_{{ i }}" title="{{ i }} Estrelas"></label>
-                {% endfor %}
+    <!-- Formulário de avaliação -->
+    <section class="form-card fade-in-item">
+        <form method="post" class="avaliacao-form">
+            {% csrf_token %}
+
+            <!-- Time em campo -->
+            <div class="form-section">
+                <div class="form-header">
+                    <i class="fas fa-flag form-icon"></i>
+                    <h3>Time Avaliado</h3>
+                </div>
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <input type="text" value="{{ time }}" disabled class="form-input team-display">
+                        <label class="form-label">
+                            <i class="fas fa-shield-alt"></i> Time em Campo
+                        </label>
+                        <div class="input-underline"></div>
+                    </div>
+                    <input type="hidden" name="time" value="{{ time }}">
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            <label class="form-label label-rating">📣 Presença e Barulho:</label>
-            <div class="star-rating-group" dir="rtl">
-                {% for i in "54321" %}
-                    <input type="radio" id="presenca_{{ i }}" name="presenca" value="{{ i }}" required />
-                    <label for="presenca_{{ i }}" title="{{ i }} Estrelas"></label>
-                {% endfor %}
+            <!-- Avaliações com estrelas -->
+            <div class="form-section">
+                <div class="form-header">
+                    <i class="fas fa-fire form-icon"></i>
+                    <h3>Avaliação da Torcida</h3>
+                </div>
+
+                <!-- Emoção da Torcida -->
+                <div class="form-group rating-group">
+                    <div class="rating-header">
+                        <i class="fas fa-heart rating-icon"></i>
+                        <span class="rating-label">Emoção da Torcida</span>
+                    </div>
+                    <div class="star-rating-group" dir="rtl">
+                        {% for i in "54321" %}
+                            <input type="radio" id="emocao_{{ i }}" name="emocao" value="{{ i }}" required />
+                            <label for="emocao_{{ i }}" title="{{ i }} Estrela{{ i|pluralize:'s' }}">
+                                <i class="fas fa-star"></i>
+                            </label>
+                        {% endfor %}
+                    </div>
+                    <div class="rating-description">
+                        <span class="min-rating">Sem emoção</span>
+                        <span class="max-rating">Muito emocionante</span>
+                    </div>
+                </div>
+
+                <!-- Presença e Barulho -->
+                <div class="form-group rating-group">
+                    <div class="rating-header">
+                        <i class="fas fa-volume-up rating-icon"></i>
+                        <span class="rating-label">Presença e Barulho</span>
+                    </div>
+                    <div class="star-rating-group" dir="rtl">
+                        {% for i in "54321" %}
+                            <input type="radio" id="presenca_{{ i }}" name="presenca" value="{{ i }}" required />
+                            <label for="presenca_{{ i }}" title="{{ i }} Estrela{{ i|pluralize:'s' }}">
+                                <i class="fas fa-star"></i>
+                            </label>
+                        {% endfor %}
+                    </div>
+                    <div class="rating-description">
+                        <span class="min-rating">Silenciosa</span>
+                        <span class="max-rating">Muito barulhenta</span>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            <label for="comentario" class="form-label">✍️ Seu Comentário:</label>
-            <textarea id="comentario" name="comentario" rows="4" placeholder="Descreva o espetáculo nas arquibancadas! Fizeram a diferença?" class="form-input"></textarea>
-        </div>
+            <!-- Comentários -->
+            <div class="form-section">
+                <div class="form-header">
+                    <i class="fas fa-comment-dots form-icon"></i>
+                    <h3>Seus Comentários</h3>
+                </div>
+                
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <textarea id="comentario" name="comentario" rows="4" class="form-input textarea" placeholder=" "></textarea>
+                        <label for="comentario" class="form-label">
+                            <i class="fas fa-edit"></i> Descreva o espetáculo nas arquibancadas
+                        </label>
+                        <div class="input-underline"></div>
+                    </div>
+                    <div class="char-counter">
+                        <span id="char-count">0</span>/500 caracteres
+                    </div>
+                </div>
+            </div>
 
-        <div class="form-buttons">
-            <button type="submit" class="btn-submit">Enviar Review</button>
-            <a href="{% url 'core:lista_partidas' %}" class="btn-cancel">Cancelar Avaliação</a>
-        </div>
-    </form>
+            <!-- Botões de ação -->
+            <div class="form-buttons">
+                <a href="{% url 'core:lista_partidas' %}" class="action-btn secondary-btn">
+                    <i class="fas fa-times"></i>
+                    Cancelar
+                </a>
+                <button type="submit" class="action-btn primary-btn">
+                    <i class="fas fa-paper-plane"></i>
+                    Enviar Avaliação
+                </button>
+            </div>
+        </form>
+    </section>
+
 </main>
 
 <style>
-    /* --- Variáveis de Estilo (Consistente com o design de referência) --- */
-    :root {
-        --card-bg: #ffffff;
-        --text-primary: #1d2d35;
-        --button-green: #28a745; 
-        --button-green-hover: #218838;
-        --button-cancel: #657786;
-        --button-cancel-hover: #4e5d6a;
-        --border-color: #e1e8ed;
-        --border-focus-color: #00adb5;
-        --shadow-color: rgba(0, 0, 0, 0.08);
-        --star-color: gold; /* Cor das estrelas preenchidas */
-    }
+/* Variáveis consistentes */
+:root {
+    --primary-blue: #0066FF;
+    --secondary-blue: #0052D4;
+    --blue-light: #E8F3FF;
+    --blue-lighter: #F0F7FF;
+    --gradient-primary: linear-gradient(135deg, #0066FF 0%, #0052D4 100%);
+    --gradient-accent: linear-gradient(135deg, #007AFF 0%, #0066FF 100%);
+    --gradient-subtle: linear-gradient(135deg, rgba(0, 102, 255, 0.1) 0%, rgba(0, 82, 212, 0.1) 100%);
+    --star-color: #FFC107;
+    --star-color-hover: #FFD54F;
+    --star-color-empty: #E0E6F0;
+    --success-green: #10B981;
+    --warning-yellow: #F59E0B;
+    --danger-red: #EF4444;
+    --gray-light: #F8FAFC;
+    --gray-medium: #64748B;
+    --gray-dark: #334155;
+}
 
-    /* --- Container Principal e Card --- */
-    .form-container { max-width: 700px; margin: 2rem auto; padding: 1rem; font-family: 'Poppins', sans-serif; }
-    .form-title { text-align: center; color: var(--text-primary); margin-bottom: 2rem; font-size: 2.25rem; }
-    .form-card { background-color: var(--card-bg); border-radius: 12px; padding: 2rem; box-shadow: 0 4px 15px var(--shadow-color); border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 1.5rem; }
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gentleFloat {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-3px) scale(1.005); }
+}
+
+@keyframes gentleGlow {
+    0%, 100% { box-shadow: 0 6px 20px rgba(0, 102, 255, 0.08); }
+    50% { box-shadow: 0 8px 30px rgba(0, 102, 255, 0.12); }
+}
+
+@keyframes starPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.fade-in-item {
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out forwards;
+}
+
+.fade-in-item:nth-child(1) { animation-delay: 0.1s; }
+.fade-in-item:nth-child(2) { animation-delay: 0.3s; }
+
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    height: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header Section */
+.welcome-header {
+    text-align: center;
+    padding: 25px 30px;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    box-shadow: 0 6px 20px rgba(0, 102, 255, 0.1);
+    border: 1px solid rgba(0, 102, 255, 0.15);
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.welcome-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--gradient-primary);
+}
+
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary-blue);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    padding: 6px 14px;
+    background: var(--blue-light);
+    border-radius: 6px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(0, 102, 255, 0.2);
+}
+
+.page-title {
+    font-size: clamp(1.5rem, 3vw, 1.8rem);
+    font-weight: 800;
+    line-height: 1.1;
+    color: #1A3A5F;
+    margin: 0 0 12px 0;
+    background: linear-gradient(90deg, #1A3A5F, var(--secondary-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.page-subtitle {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--gray-medium);
+    margin: 0;
+    opacity: 0.9;
+}
+
+/* Form Card */
+.form-card {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 6px 20px rgba(0, 102, 255, 0.1);
+    border: 1px solid rgba(0, 102, 255, 0.15);
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    animation: gentleFloat 6s ease-in-out infinite, gentleGlow 8s ease-in-out infinite;
+}
+
+.form-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--gradient-primary);
+}
+
+.avaliacao-form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Form Sections */
+.form-section {
+    background: var(--gray-light);
+    border-radius: 16px;
+    padding: 25px;
+    border: 1px solid rgba(0, 102, 255, 0.1);
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.form-section:hover {
+    border-color: rgba(0, 102, 255, 0.2);
+    box-shadow: 0 5px 15px rgba(0, 102, 255, 0.05);
+    transform: translateY(-2px);
+}
+
+.form-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.form-icon {
+    width: 50px;
+    height: 50px;
+    background: var(--gradient-subtle);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-blue);
+    font-size: 1.3rem;
+    border: 1px solid rgba(0, 102, 255, 0.15);
+    transition: all 0.5s ease;
+}
+
+.form-section:hover .form-icon {
+    transform: scale(1.05) rotate(5deg);
+    background: var(--gradient-primary);
+    color: white;
+    border-color: transparent;
+}
+
+.form-header h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1A3A5F;
+    margin: 0;
+}
+
+/* Input Groups */
+.form-group {
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.form-input {
+    width: 100%;
+    padding: 16px 0 8px;
+    background: transparent;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    color: var(--gray-dark);
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    outline: none;
+}
+
+.form-input.textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.form-input.team-display {
+    background: var(--blue-light);
+    border-radius: 10px;
+    padding: 12px 15px;
+    font-weight: 600;
+    color: var(--primary-blue);
+    cursor: not-allowed;
+}
+
+.input-underline {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: rgba(0, 102, 255, 0.2);
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.form-input:focus ~ .input-underline,
+.input-wrapper:focus-within .input-underline {
+    height: 3px;
+    background: var(--gradient-primary);
+}
+
+.form-label {
+    position: absolute;
+    top: 16px;
+    left: 0;
+    color: var(--gray-medium);
+    font-size: 1rem;
+    pointer-events: none;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-label i {
+    font-size: 0.9rem;
+}
+
+.form-input:focus + .form-label,
+.form-input:not(:placeholder-shown) + .form-label {
+    top: -2px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary-blue);
+}
+
+/* Star Rating System */
+.rating-group {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid rgba(0, 102, 255, 0.1);
+    margin-bottom: 20px;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rating-group:hover {
+    border-color: rgba(0, 102, 255, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 102, 255, 0.08);
+    transform: translateY(-2px);
+}
+
+.rating-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.rating-icon {
+    color: var(--primary-blue);
+    font-size: 1.1rem;
+}
+
+.rating-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gray-dark);
+}
+
+.star-rating-group {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 15px;
+    direction: rtl;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.star-rating-group > input {
+    display: none;
+}
+
+.star-rating-group > label {
+    cursor: pointer;
+    color: var(--star-color-empty);
+    font-size: 2.5rem;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 5px;
+    position: relative;
+}
+
+.star-rating-group > label i {
+    display: block;
+    width: 1em;
+    height: 1em;
+}
+
+/* Efeito de hover suave */
+.star-rating-group > label:hover,
+.star-rating-group > label:hover ~ label {
+    color: var(--star-color-hover);
+    transform: scale(1.1);
+    animation: starPulse 0.3s ease-out;
+}
+
+/* Efeito de seleção suave */
+.star-rating-group > input:checked ~ label {
+    color: var(--star-color);
+}
+
+/* Manter seleção após hover */
+.star-rating-group:not(:hover) > input:checked ~ label {
+    color: var(--star-color);
+}
+
+.rating-description {
+    display: flex;
+    justify-content: space-between;
+    max-width: 400px;
+    margin: 0 auto;
+    color: var(--gray-medium);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.min-rating {
+    color: var(--danger-red);
+}
+
+.max-rating {
+    color: var(--success-green);
+}
+
+/* Character Counter */
+.char-counter {
+    text-align: right;
+    font-size: 0.85rem;
+    color: var(--gray-medium);
+    margin-top: 8px;
+}
+
+.char-counter span {
+    font-weight: 600;
+    color: var(--primary-blue);
+}
+
+/* Form Buttons */
+.form-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 32px;
+    border-radius: 12px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    border: none;
+    cursor: pointer;
+    min-width: 160px;
+    text-align: center;
+}
+
+.primary-btn {
+    background: var(--gradient-primary);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 102, 255, 0.2);
+    flex: 1;
+}
+
+.primary-btn:hover {
+    background: var(--gradient-accent);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 102, 255, 0.3);
+}
+
+.primary-btn:active {
+    transform: translateY(-1px) scale(1.01);
+}
+
+.secondary-btn {
+    background: var(--gray-light);
+    color: var(--gray-dark);
+    border: 1px solid rgba(0, 102, 255, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 102, 255, 0.1);
+    flex: 1;
+}
+
+.secondary-btn:hover {
+    background: #E5E7EB;
+    border-color: var(--primary-blue);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 102, 255, 0.15);
+}
+
+.secondary-btn:active {
+    transform: translateY(-1px) scale(1.01);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .dashboard-container {
+        gap: 30px;
+        padding: 15px;
+    }
     
-    /* Grupos e Labels */
-    .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
-    .form-label { font-weight: 500; color: var(--text-primary); font-size: 0.95rem; }
-
-    /* Inputs Padrão e Textarea */
-    .form-input { 
-        width: 100%; padding: 0.8rem 1rem; border: 1px solid var(--border-color); 
-        border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 1rem; 
-        color: var(--text-primary); background-color: #fdfdfd; box-sizing: border-box; 
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    .welcome-header {
+        padding: 22px;
+        max-width: 500px;
     }
-    .form-input:focus { outline: none; border-color: var(--border-focus-color); box-shadow: 0 0 0 3px rgba(0, 173, 181, 0.15); }
-
-    /* --- ESTILOS DO SISTEMA DE ESTRELAS --- */
-    .label-rating {
-        margin-bottom: 0.5rem; /* Ajusta o espaçamento acima das estrelas */
+    
+    .form-card {
+        padding: 25px;
     }
-
-    .star-rating-group {
-        /* Configura o container para exibir os radio buttons na ordem reversa, 
-           o que é crucial para a técnica CSS do seletor ~ (irmão geral) */
-        display: flex;
-        unicode-bidi: bidi-override;
-        direction: rtl; /* Força a renderização da direita para a esquerda */
-        justify-content: flex-end;
+    
+    .form-section {
+        padding: 20px;
     }
-
-    .star-rating-group > input {
-        /* Esconde os radio buttons nativos, mantendo a funcionalidade */
-        display: none;
+    
+    .form-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.2rem;
     }
-
+    
+    .form-header h3 {
+        font-size: 1.2rem;
+    }
+    
     .star-rating-group > label {
-        /* Estiliza os labels para aparecerem como estrelas */
-        display: inline-block;
-        padding: 0 4px; /* Espaçamento entre as estrelas */
-        font-size: 2rem; /* Tamanho das estrelas */
-        color: #ccc; /* Cor das estrelas vazias (cinza claro) */
-        cursor: pointer;
-        transition: color 0.3s;
+        font-size: 2rem;
     }
-
-    /* Desenha a estrela (usando o caractere Unicode) */
-    .star-rating-group > label:before {
-        content: "\2605"; /* Unicode da estrela preenchida */
+    
+    .form-buttons {
+        flex-direction: column;
     }
-
-    /* 1. Efeito de Hover: Preenche a estrela atual e todas as anteriores */
-    .star-rating-group > label:hover,
-    .star-rating-group > label:hover ~ label {
-        color: var(--star-color);
+    
+    .action-btn {
+        width: 100%;
+        max-width: 100%;
     }
+}
 
-    /* 2. Efeito de Click/Checked: Preenche a estrela selecionada e todas as anteriores */
-    .star-rating-group > input:checked ~ label {
-        color: var(--star-color);
+@media (max-width: 480px) {
+    .dashboard-container {
+        gap: 25px;
+        padding: 10px;
     }
-
-    /* 3. Manter Hover após Seleção (Resetar o Hover): Garante que, ao passar o mouse, 
-       o estado checked não seja sobreposto de forma indesejada */
-    .star-rating-group:not(:hover) > input:checked ~ label {
-        color: var(--star-color);
+    
+    .welcome-header {
+        padding: 18px;
     }
-
-    /* --- Estilos dos Botões (Mantidos e Reforçados) --- */
-    .form-buttons { display: flex; gap: 10px; margin-top: 1rem; }
-
-    .btn-submit {
-        background-color: var(--button-green); color: white; border: none; padding: 0.9rem 1.5rem;
-        border-radius: 8px; cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 500;
-        font-size: 1rem; flex-grow: 1; text-align: center; text-decoration: none; transition: all 0.3s ease;
+    
+    .eyebrow {
+        font-size: 12px;
+        padding: 6px 12px;
     }
-    .btn-submit:hover { background-color: var(--button-green-hover); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3); }
-
-    .btn-cancel {
-        background-color: var(--button-cancel); color: white; padding: 0.9rem 1.5rem; border-radius: 8px;
-        text-decoration: none; cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 500;
-        font-size: 1rem; flex-grow: 1; text-align: center; transition: background-color 0.3s ease;
+    
+    .page-title {
+        font-size: 1.3rem;
     }
-    .btn-cancel:hover { background-color: var(--button-cancel-hover); }
+    
+    .page-subtitle {
+        font-size: 0.9rem;
+    }
+    
+    .form-card {
+        padding: 20px;
+    }
+    
+    .form-section {
+        padding: 18px;
+    }
+    
+    .star-rating-group > label {
+        font-size: 1.8rem;
+        padding: 3px;
+    }
+    
+    .action-btn {
+        padding: 14px 24px;
+        font-size: 0.95rem;
+    }
+}
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Contador de caracteres para o textarea
+    const textarea = document.getElementById('comentario');
+    const charCount = document.getElementById('char-count');
+    
+    if (textarea && charCount) {
+        textarea.addEventListener('input', function() {
+            const currentLength = this.value.length;
+            charCount.textContent = currentLength;
+            
+            if (currentLength > 500) {
+                charCount.style.color = '#EF4444';
+                this.value = this.value.substring(0, 500);
+                charCount.textContent = 500;
+            } else if (currentLength > 450) {
+                charCount.style.color = '#F59E0B';
+            } else {
+                charCount.style.color = '#0066FF';
+            }
+        });
+    }
+
+    // Efeito de hover suave nas estrelas
+    const starGroups = document.querySelectorAll('.star-rating-group');
+    starGroups.forEach(group => {
+        const stars = group.querySelectorAll('label');
+        stars.forEach(star => {
+            star.addEventListener('mouseenter', function() {
+                this.style.transition = 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+                this.style.animation = 'starPulse 0.3s ease-out';
+            });
+            
+            star.addEventListener('mouseleave', function() {
+                this.style.animation = '';
+            });
+            
+            star.addEventListener('click', function() {
+                // Efeito de clique sutil
+                this.style.transform = 'scale(0.9)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+    });
+
+    // Efeito de hover suave nas seções do formulário
+    const formSections = document.querySelectorAll('.form-section');
+    formSections.forEach(section => {
+        let hoverTimeout;
+        
+        section.addEventListener('mouseenter', () => {
+            clearTimeout(hoverTimeout);
+            section.style.transition = 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+            section.style.transform = 'translateY(-2px)';
+        });
+        
+        section.addEventListener('mouseleave', () => {
+            hoverTimeout = setTimeout(() => {
+                section.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    });
+
+    // Efeito de hover suave no formulário principal
+    const formCard = document.querySelector('.form-card');
+    if (formCard) {
+        formCard.addEventListener('mouseenter', () => {
+            formCard.style.animation = 'gentleFloat 3s ease-in-out infinite, gentleGlow 4s ease-in-out infinite';
+        });
+        
+        formCard.addEventListener('mouseleave', () => {
+            setTimeout(() => {
+                formCard.style.animation = 'gentleFloat 6s ease-in-out infinite, gentleGlow 8s ease-in-out infinite';
+            }, 300);
+        });
+    }
+
+    // Foco automático no primeiro campo interativo
+    const firstStar = document.querySelector('.star-rating-group label');
+    if (firstStar) {
+        setTimeout(() => {
+            firstStar.focus();
+        }, 300);
+    }
+});
+</script>
+
 {% endblock %}

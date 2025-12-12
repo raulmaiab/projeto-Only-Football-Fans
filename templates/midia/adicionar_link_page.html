@@ -19,38 +19,40 @@
     </div>
     {% endif %}
 
-    <form method="post" action="{% url 'core:adicionar_link_page' %}" class="form-card fade-in-item">
-        {% csrf_token %}
-        
-        <div class="form-group">
-            <input type="text" id="id_nome_do_jogo" name="nome_do_jogo" class="form-input" placeholder=" " required>
-            <label for="id_nome_do_jogo" class="form-label">
-                <i class="fas fa-tag"></i>
-                Nome do Jogo ou Evento
-            </label>
-        </div>
-        
-        <div class="form-group">
-            <input type="url" id="id_url" name="url" class="form-input" placeholder=" " required>
-            <label for="id_url" class="form-label">
-                <i class="fas fa-link"></i>
-                Link do Vídeo ou Página
-            </label>
-            <div id="url-status-icon"></div>
-        </div>
-        
-        <div class="form-buttons">
-            <a href="{% url 'core:lista_links' %}" class="btn-cancel">
-                <i class="fas fa-arrow-left"></i>
-                Voltar
-            </a>
-            <button type="submit" class="btn-submit">
-                <i class="fas fa-save"></i>
-                Salvar Link
-            </button>
-        </div>
-
-    </form>
+    <div class="form-card-wrapper fade-in-item">
+        <div class="form-card-top-line"></div>
+        <form method="post" action="{% url 'core:adicionar_link_page' %}" class="form-card">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <input type="text" id="id_nome_do_jogo" name="nome_do_jogo" class="form-input" placeholder=" " required>
+                <label for="id_nome_do_jogo" class="form-label">
+                    <i class="fas fa-tag"></i>
+                    Nome do Jogo ou Evento
+                </label>
+            </div>
+            
+            <div class="form-group">
+                <input type="url" id="id_url" name="url" class="form-input" placeholder=" " required>
+                <label for="id_url" class="form-label">
+                    <i class="fas fa-link"></i>
+                    Link do Vídeo ou Página
+                </label>
+                <div id="url-status-icon"></div>
+            </div>
+            
+            <div class="form-buttons">
+                <a href="{% url 'core:lista_links' %}" class="btn-cancel">
+                    <i class="fas fa-arrow-left"></i>
+                    Voltar
+                </a>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-save"></i>
+                    Salvar Link
+                </button>
+            </div>
+        </form>
+    </div>
 </main>
 
 <style>
@@ -142,26 +144,31 @@
     color: #721c24;
 }
 
-.form-card {
+.form-card-wrapper {
     background: white;
     border-radius: var(--radius-xl);
-    padding: 35px 30px;
     box-shadow: 0 15px 35px rgba(3, 16, 40, 0.12);
     border: 1px solid rgba(0, 102, 255, 0.1);
     max-width: 500px;
     width: 100%;
     position: relative;
+    overflow: hidden;
 }
 
-.form-card::before {
-    content: '';
+.form-card-top-line {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
+    top: 0.1px;
+    left: 11px;
+    right: 11px;
+    height: 3px;
     background: var(--gradient-accent);
     border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+.form-card {
+    padding: 35px 30px;
+    position: relative;
+    z-index: 1;
 }
 
 .form-group {
@@ -299,8 +306,11 @@
         min-height: calc(100vh - 70px);
     }
     
-    .form-card {
+    .form-card-wrapper {
         max-width: 450px;
+    }
+    
+    .form-card {
         padding: 30px 25px;
     }
 }
@@ -323,10 +333,17 @@
         font-size: 0.95rem;
     }
     
-    .form-card {
+    .form-card-wrapper {
         max-width: 400px;
-        padding: 25px 20px;
         border-radius: var(--radius-lg);
+    }
+    
+    .form-card-top-line {
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+    
+    .form-card {
+        padding: 25px 20px;
     }
     
     .form-group {
@@ -349,11 +366,14 @@
         font-size: 0.9rem;
     }
     
-    .form-card {
+    .form-card-wrapper {
         max-width: 100%;
-        padding: 22px 18px;
         border-radius: var(--radius-lg);
         box-shadow: 0 10px 25px rgba(3, 16, 40, 0.08);
+    }
+    
+    .form-card {
+        padding: 22px 18px;
     }
     
     .form-input {
@@ -386,9 +406,12 @@
         padding-top: 20px;
     }
     
+    .form-card-wrapper {
+        margin: 10px 0;
+    }
+    
     .form-card {
         padding: 25px 20px;
-        margin: 10px 0;
     }
     
     .page-header {
@@ -409,6 +432,10 @@
     .form-container {
         padding: 15px 10px;
         padding-top: 15px;
+    }
+    
+    .form-card-wrapper {
+        border-radius: var(--radius-lg);
     }
     
     .form-card {

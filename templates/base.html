@@ -125,16 +125,17 @@
             transform: translateY(-2px);
         }
 
-        /* Nova marca centralizada no header - CORRIGIDO */
+        /* Marca centralizada no header - CORREÇÃO: position absolute para centralizar sempre */
         .header-brand {
             position: absolute;
             left: 50%;
-            transform: translateX(-50%);
+            top: 50%;
+            transform: translate(-50%, -50%);
             display: flex;
             align-items: center;
             gap: 12px;
             text-decoration: none;
-            transition: left 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            z-index: 1;
         }
 
         .header-brand-logo {
@@ -346,16 +347,6 @@
             width: 100%;
         }
 
-        /* CORREÇÃO: Quando sidebar está escondida, a marca fica centralizada */
-        body.sidebar-hidden .header-brand {
-            left: 50%;
-        }
-
-        /* Quando sidebar está visível, a marca fica centralizada no espaço disponível */
-        body:not(.sidebar-hidden) .header-brand {
-            left: calc(50% + (var(--sidebar-width)/2));
-        }
-
         /* Hover area para sidebar */
         #sidebar-hover-area {
             position: fixed;
@@ -451,11 +442,6 @@
                 padding: 12px 15px;
                 font-size: 0.95rem;
             }
-            
-            /* CORREÇÃO MOBILE: Mantém centralizado em mobile */
-            body:not(.sidebar-hidden) .header-brand {
-                left: 50%;
-            }
         }
 
         @media (max-width: 480px) {
@@ -544,7 +530,7 @@
             <i class="fa-solid fa-bars"></i>
         </span>
 
-        <!-- Nova marca centralizada e clicável -->
+        <!-- Marca centralizada e clicável - AGORA COM POSITION ABSOLUTE -->
         <a href="{% url 'core:home' %}" class="header-brand" title="Página Inicial">
             <div class="header-brand-logo">
                 <i class="fa-solid fa-futbol"></i>
@@ -626,13 +612,11 @@
 
         menuToggleButton.addEventListener('click', function() {
             bodyElement.classList.toggle('sidebar-hidden');
-            updateHeaderBrandPosition();
         });
 
         // Abre ao aproximar a lateral
         hoverArea.addEventListener('mouseenter', function() {
             bodyElement.classList.remove('sidebar-hidden');
-            updateHeaderBrandPosition();
         });
 
         // Fecha ao clicar fora em mobile
@@ -642,42 +626,20 @@
                 !event.target.closest('.sidebar') && 
                 !event.target.closest('#menuToggle')) {
                 bodyElement.classList.add('sidebar-hidden');
-                updateHeaderBrandPosition();
             }
         });
-
-        // Função para atualizar posição da marca
-        function updateHeaderBrandPosition() {
-            const sidebarHidden = bodyElement.classList.contains('sidebar-hidden');
-            const headerBrand = document.querySelector('.header-brand');
-            
-            if (sidebarHidden) {
-                headerBrand.style.left = '50%';
-            } else {
-                // Calcula a posição correta considerando a sidebar
-                const sidebarWidth = getComputedStyle(document.documentElement)
-                    .getPropertyValue('--sidebar-width');
-                headerBrand.style.left = `calc(50% + (${sidebarWidth}/2))`;
-            }
-        }
 
         // Detecta mudança de tamanho de tela
         window.addEventListener('resize', function() {
             if (window.innerWidth > 768) {
                 bodyElement.classList.remove('sidebar-hidden');
-            } else {
-                // Em mobile, força centralizado independente do estado
-                const headerBrand = document.querySelector('.header-brand');
-                headerBrand.style.left = '50%';
             }
-            updateHeaderBrandPosition();
         });
 
         // Inicializa sidebar visível em desktop
         if (window.innerWidth > 768) {
             bodyElement.classList.remove('sidebar-hidden');
         }
-        updateHeaderBrandPosition();
     </script>
 
     {% block extra_scripts %}{% endblock %}

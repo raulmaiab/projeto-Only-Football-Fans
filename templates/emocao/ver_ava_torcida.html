@@ -1,64 +1,221 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block extra_head %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+{% endblock %}
 
 {% block content %}
-<main class="form-container" style="max-width: 800px;">
-    <h2 class="form-title">Review das Torcidas</h2>
-    
-    <div class="form-card">
-        <div class="info-linha">
-            <h3>{{ partida.time_casa }} x {{ partida.time_visitante }}</h3>
-            <p class="data">{{ partida.data|date:"d/m/Y H:i" }}</p>
+<main class="dashboard-container">
+    <header class="welcome-header fade-in-item">
+        <div class="eyebrow">
+            <i class="fas fa-users"></i>Avaliações
         </div>
+        <h1 class="page-title">Avaliação da Torcida</h1>
+        <p class="page-subtitle">Visualize a avaliação detalhada da torcida para esta partida</p>
+    </header>
 
-        {% if avaliacoes %}
-            <div class="avaliacoes-container">
-            {% for avaliacao in avaliacoes %}
-                <div class="avaliacao-individual">
-                    <h4>Torcida: {{ avaliacao.time }}</h4>
-                    <p><strong>🔥 Emoção:</strong> {{ avaliacao.emocao }} / 5</p>
-                    <p><strong>📣 Presença:</strong> {{ avaliacao.presenca }} / 5</p>
-                    {% if avaliacao.comentario_torcida %}
+    <div class="galeria-grid">
+        <article class="galeria-card fade-in-item" style="max-width:800px; margin:0 auto;">
+            {% if messages %}
+                <div class="messages-container" style="margin-bottom:1rem;">
+                    {% for message in messages %}
+                        <div class="message {{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if avaliacao_torcida %}
+                <div class="galeria-card__header info-linha">
+                    <div class="partida-info">
+                        <div class="partida-icon">
+                            <i class="fas fa-futbol"></i>
+                        </div>
+                        <div>
+                            <h3 class="partida-nome">{{ avaliacao_torcida.partida.time_casa }} x {{ avaliacao_torcida.partida.time_visitante }}</h3>
+                            <p class="partida-desc">Avaliado em {{ avaliacao_torcida.partida.data|date:"d/m/Y H:i" }}</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-left:auto; display:flex; gap:8px; align-items:center;">
+                        <a href="{% url 'core:lista_partidas' %}" class="btn-primary small-btn">Voltar</a>
+                        <a href="{% url 'core:ver_avaliacao' avaliacao_torcida.partida.id %}" class="btn-add-media small-btn-outline">Ver Avaliação</a>
+                    </div>
+                </div>
+
+                <div class="imagem-container" style="min-height:140px;">
+                    {% with definicao_item=avaliacao_torcida.partida.definicoes.first %}
+                        {% with imagem_item=definicao_item.imagem_recente %}
+                            {% if imagem_item and imagem_item.arquivo %}
+                                <img class="partida-imagem" src="{{ imagem_item.arquivo.url }}" alt="Imagem da partida">
+                            {% else %}
+                                <div class="placeholder-container">
+                                    <i class="fas fa-users placeholder-icon"></i>
+                                    <span class="placeholder-text">Sem imagem da torcida</span>
+                                </div>
+                            {% endif %}
+                        {% endwith %}
+                    {% endwith %}
+                </div>
+
+                <div class="avaliacao-detalhes">
+                    <p><strong>Usuário:</strong> {{ avaliacao_torcida.usuario.username }}</p>
+                    <p><strong>Nota da Torcida:</strong> ⭐ {{ avaliacao_torcida.nota }}/5</p>
+
+                    {% if avaliacao_torcida.melhor_apoiador %}
+                        <p><strong>Destaque:</strong> {{ avaliacao_torcida.melhor_apoiador }}</p>
+                    {% endif %}
+
+                    {% if avaliacao_torcida.comentario %}
                         <p><strong>Comentário:</strong></p>
-                        <div class="comentario">{{ avaliacao.comentario_torcida }}</div>
+                        <div class="comentario">{{ avaliacao_torcida.comentario }}</div>
+                    {% else %}
+                        <p><em>Sem comentário registrado.</em></p>
                     {% endif %}
                 </div>
-            {% endfor %}
-            </div>
-        {% else %}
-            <p>Nenhuma avaliação de torcida encontrada para esta partida.</p>
-        {% endif %}
 
-        <div class="form-buttons" style="margin-top: 2rem;">
-            <a href="{% url 'core:ver_avaliacao' partida.id %}" class="btn-cancel">Voltar</a>
-        </div>
+                <div class="galeria-actions">
+                    <div class="jogo-buttons">
+                        <button class="btn-jogo">
+                            <i class="fas fa-flag"></i>
+                            <span class="btn-jogo__main">Comportamento</span>
+                            <span class="btn-jogo__sub">Avaliar</span>
+                        </button>
+                        <button class="btn-jogo">
+                            <i class="fas fa-volume-up"></i>
+                            <span class="btn-jogo__main">Barulho</span>
+                            <span class="btn-jogo__sub">Intensidade</span>
+                        </button>
+                        <button class="btn-jogo">
+                            <i class="fas fa-handshake"></i>
+                            <span class="btn-jogo__main">Fair Play</span>
+                            <span class="btn-jogo__sub">Conduta</span>
+                        </button>
+                    </div>
+
+                    <a href="{% url 'core:avaliar_torcida' avaliacao_torcida.partida.id %}" class="btn-add-media">
+                        <i class="fas fa-plus-circle"></i>
+                        Avaliar Torcida
+                    </a>
+                </div>
+
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon"><i class="fas fa-users"></i></div>
+                    <h3>Nenhuma avaliação encontrada</h3>
+                    <p>Peça à torcida para registrar uma avaliação nesta partida.</p>
+                    <a href="{% url 'core:lista_partidas' %}" class="btn-primary">
+                        <i class="fas fa-arrow-left"></i> Voltar para Lista
+                    </a>
+                </div>
+            {% endif %}
+        </article>
     </div>
 </main>
 
 <style>
-    :root {
-        --card-bg: #ffffff;
-        --text-primary: #1d2d35;
-        --text-secondary: #657786;
-        --button-cancel: #657786;
-        --button-cancel-hover: #4e5d6a;
-        --border-color: #e1e8ed;
-        --shadow-color: rgba(0, 0, 0, 0.08);
-    }
-    .form-container { max-width: 700px; margin: 2rem auto; padding: 1rem; font-family: 'Poppins', sans-serif; }
-    .form-title { text-align: center; color: var(--text-primary); margin-bottom: 2rem; font-size: 2rem; }
-    .form-card { background-color: var(--card-bg); border-radius: 12px; padding: 2rem; box-shadow: 0 4px 15px var(--shadow-color); border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 1.5rem; }
-    .info-linha { display: flex; justify-content: space-between; align-items: center; }
-    .info-linha h3 { font-size: 1.3rem; color: var(--text-primary); margin: 0; }
-    .data { color: var(--text-secondary); font-size: 0.9rem; }
-    
-    .avaliacoes-container { display: flex; flex-direction: column; gap: 1.5rem; }
-    .avaliacao-individual { border-top: 1px solid var(--border-color); padding-top: 1.5rem; }
-    .avaliacao-individual h4 { margin: 0 0 0.5rem 0; font-size: 1.1rem; color: var(--text-primary); }
-    .avaliacao-individual p { margin: 0.3rem 0; }
-    .comentario { background-color: #f8f9fa; padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); color: var(--text-secondary); line-height: 1.5; margin-top: 0.5rem; }
+/* Importa as mesmas variáveis e estilos da página de mídia (cores, tamanhos e animações) */
+:root {
+    --primary-blue: #0066FF;
+    --secondary-blue: #0052D4;
+    --blue-light: #E8F3FF;
+    --blue-lighter: #F0F7FF;
+    --gradient-primary: linear-gradient(135deg, #0066FF 0%, #0052D4 100%);
+    --gradient-accent: linear-gradient(135deg, #007AFF 0%, #0066FF 100%);
+    --gradient-subtle: linear-gradient(135deg, rgba(0, 102, 255, 0.1) 0%, rgba(0, 82, 212, 0.1) 100%);
+    --gray-light: #F8FAFC;
+    --gray-medium: #64748B;
+    --gray-dark: #334155;
+    --shadow-subtle: 0 6px 20px rgba(0, 102, 255, 0.08);
+    --shadow-elevated: 0 12px 35px rgba(0, 102, 255, 0.15);
+}
 
-    .form-buttons { display: flex; gap: 10px; margin-top: 1rem; }
-    .btn-cancel { background-color: var(--button-cancel); color: white; padding: 0.9rem 1.5rem; border-radius: 8px; text-decoration: none; cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 500; font-size: 1rem; flex-grow: 1; text-align: center; transition: background-color 0.3s ease; }
-    .btn-cancel:hover { background-color: var(--button-cancel-hover); }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes subtleFloat { 0%,100%{ transform: translateY(0) scale(1);} 50%{ transform: translateY(-3px) scale(1.005);} }
+@keyframes gentleGlow { 0%,100%{ box-shadow: var(--shadow-subtle);} 50%{ box-shadow: 0 8px 30px rgba(0,102,255,0.12);} }
+
+.fade-in-item { opacity: 0; animation: fadeIn 0.8s ease-out forwards; }
+
+.dashboard-container { display:flex; flex-direction:column; gap:40px; height:100%; max-width:1200px; margin:0 auto; padding:20px; }
+
+.welcome-header { text-align:center; padding:25px 30px; background: rgba(255,255,255,0.98); backdrop-filter: blur(20px); border-radius:20px; box-shadow:var(--shadow-subtle); border:1px solid rgba(0,102,255,0.15); max-width:800px; margin:0 auto; }
+.welcome-header::before{ content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--gradient-primary); }
+.eyebrow{ display:inline-flex; align-items:center; gap:8px; color:var(--primary-blue); font-size:13px; font-weight:600; text-transform:uppercase; padding:6px 14px; background:var(--blue-light); border-radius:6px; margin-bottom:15px; border:1px solid rgba(0,102,255,0.2);} 
+.page-title{ font-size:clamp(1.5rem,3vw,1.8rem); font-weight:800; line-height:1.1; color:#1A3A5F; margin:0 0 12px 0; background:linear-gradient(90deg,#1A3A5F,var(--secondary-blue)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.page-subtitle{ font-size:1rem; color:var(--gray-medium); margin:0; opacity:0.9; }
+
+.galeria-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(350px,1fr)); gap:25px; width:100%; }
+.galeria-card{ background: rgba(255,255,255,0.95); backdrop-filter:blur(20px); border-radius:16px; padding:25px; box-shadow:var(--shadow-subtle); border:1px solid rgba(0,102,255,0.1); transition:all 0.5s cubic-bezier(0.16,1,0.3,1); display:flex; flex-direction:column; gap:20px; }
+.galeria-card:hover{ transform:translateY(-5px); box-shadow:var(--shadow-elevated); border-color:rgba(0,102,255,0.2); animation:subtleFloat 3s ease-in-out infinite, gentleGlow 4s ease-in-out infinite; }
+
+.partida-info{ display:flex; align-items:flex-start; gap:15px; }
+.partida-icon{ width:50px; height:50px; background:var(--gradient-subtle); border-radius:12px; display:flex; align-items:center; justify-content:center; color:var(--primary-blue); font-size:1.3rem; border:1px solid rgba(0,102,255,0.15); }
+.partida-nome{ font-size:1.3rem; font-weight:700; color:#1A3A5F; margin:0 0 5px 0; }
+.partida-desc{ font-size:0.85rem; color:var(--gray-medium); margin:0; font-weight:500; }
+
+.imagem-container{ width:100%; border-radius:12px; overflow:hidden; background:var(--gray-light); min-height:200px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(0,102,255,0.1); }
+.partida-imagem{ width:100%; height:200px; object-fit:cover; transition:transform 0.5s ease; }
+.placeholder-container{ display:flex; flex-direction:column; align-items:center; gap:10px; padding:40px 20px; }
+.placeholder-icon{ font-size:2.5rem; color:var(--gray-medium); opacity:0.5; }
+.placeholder-text{ color:var(--gray-medium); font-size:0.9rem; font-weight:500; }
+
+.avaliacao-detalhes p{ margin:0.5rem 0; color:var(--gray-dark); }
+.comentario{ background-color:#f8f9fa; padding:1rem; border-radius:8px; border:1px solid rgba(0,0,0,0.06); color:var(--gray-medium); line-height:1.5; }
+
+.galeria-actions{ display:flex; flex-direction:column; gap:20px; margin-top:auto; padding-top:15px; border-top:1px solid rgba(0,102,255,0.1); }
+.jogo-buttons{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.btn-jogo{ background:var(--gray-light); border:1px solid rgba(0,102,255,0.15); border-radius:10px; padding:12px 8px; cursor:pointer; font-family:'Poppins',sans-serif; font-weight:500; display:flex; flex-direction:column; align-items:center; gap:4px; }
+.btn-jogo__main{ font-size:0.85rem; font-weight:600; color:var(--gray-dark);} 
+.btn-jogo__sub{ font-size:0.7rem; color:var(--gray-medium);} 
+.btn-add-media{ background:var(--gradient-primary); color:white; padding:14px; border-radius:10px; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:10px; box-shadow:0 4px 15px rgba(0,102,255,0.2); }
+.btn-add-media:hover{ background:var(--gradient-accent); transform:translateY(-3px); }
+
+.empty-state{ background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-radius:20px; padding:50px 30px; text-align:center; box-shadow:var(--shadow-subtle); border:1px solid rgba(0,102,255,0.1); max-width:500px; margin:0 auto; }
+.empty-icon{ font-size:3.5rem; color:var(--primary-blue); margin-bottom:20px; }
+
+/* Small helpers kept from original form */
+.form-buttons{ display:flex; gap:10px; margin-top:1rem; }
+.btn-primary, .btn-primary.small-btn{ display:inline-flex; align-items:center; gap:10px; padding:10px 18px; background:var(--gradient-primary); color:white; border-radius:12px; text-decoration:none; font-weight:600; }
+.small-btn{ padding:8px 12px; font-size:0.9rem; }
+.small-btn-outline{ background:transparent; color:var(--primary-blue); border:1px solid rgba(0,102,255,0.12); padding:8px 12px; border-radius:10px; text-decoration:none; }
+
+.message{ padding:10px 15px; border-radius:6px; margin-bottom:8px; font-weight:500; font-family:'Poppins',sans-serif; }
+.message.success{ background-color:#d4edda; color:#155724; }
+
+/* Responsividade mantida */
+@media (max-width:768px){ .galeria-grid{ grid-template-columns:1fr; } .partida-icon{ width:45px;height:45px;} .partida-nome{ font-size:1.2rem;} .jogo-buttons{ grid-template-columns:repeat(2,1fr);} }
+
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const cards = document.querySelectorAll('.galeria-card');
+    cards.forEach((card, index) => {
+        setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'translateY(0)'; }, index * 100 + 100);
+    });
+
+    cards.forEach(card => {
+        let hoverAnimation;
+        card.addEventListener('mouseenter', () => {
+            if (hoverAnimation) clearTimeout(hoverAnimation);
+            card.style.transition = 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+            card.style.transform = 'translateY(-5px)';
+            card.style.boxShadow = '0 12px 35px rgba(0, 102, 255, 0.15)';
+            card.style.borderColor = 'rgba(0, 102, 255, 0.2)';
+        });
+        card.addEventListener('mouseleave', () => {
+            card.style.transition = 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+            card.style.transform = 'translateY(0)';
+            card.style.boxShadow = '0 6px 20px rgba(0, 102, 255, 0.08)';
+            card.style.borderColor = 'rgba(0, 102, 255, 0.1)';
+            card.style.animation = '';
+            hoverAnimation = setTimeout(() => { card.style.animation = 'subtleFloat 3s ease-in-out infinite, gentleGlow 4s ease-in-out infinite'; }, 300);
+        });
+        setTimeout(() => { card.style.animation = 'subtleFloat 3s ease-in-out infinite, gentleGlow 4s ease-in-out infinite'; }, 500);
+    });
+});
+</script>
+
 {% endblock %}

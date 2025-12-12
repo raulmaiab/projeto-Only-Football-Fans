@@ -1,427 +1,562 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<main class="partidas-container">
+<main class="dashboard-container">
 
-    <div class="page-header">
-        <h1 class="page-title">Histórico de Partidas</h1>
-        <p class="page-subtitle">Todas as partidas que você registrou</p>
-    </div>
+    <!-- Header com efeito glass -->
+    <header class="welcome-header fade-in-item">
+        <div class="eyebrow">
+            <i class="fas fa-history"></i>Histórico
+        </div>
+        <h1 class="page-title">Suas Partidas Registradas</h1>
+        <p class="page-subtitle">Acompanhe todas as partidas que você já assistiu e avalie sua experiência</p>
+    </header>
 
     {% if messages %}
-    <div class="messages-container fade-in-item">
-        {% for message in messages %}
-            <div class="message {{ message.tags }}">{{ message }}</div>
-        {% endfor %}
-    </div>
+        <div class="messages-container fade-in-item">
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
     {% endif %}
 
-    <div class="search-bar-wrapper fade-in-item">
-        <div class="search-icon">
-            <i class="fas fa-search"></i>
+    <!-- Barra de busca -->
+    <div class="search-container fade-in-item">
+        <div class="search-wrapper">
+            <i class="fas fa-search search-icon"></i>
+            <input type="search" id="search-partidas" class="search-input" placeholder="Buscar por time, estádio ou data...">
         </div>
-        <input type="search" id="search-partidas" class="form-input-search" placeholder="Buscar por time...">
     </div>
 
+    <!-- Grid de partidas -->
     {% if partidas %}
         <div class="partidas-grid">
-        {% for partida in partidas %}
-            <div class="partida-card fade-in-item" data-search="{{ partida.time_casa }} {{ partida.time_visitante }}">
-                
-                <div class="partida-info-scoreboard">
-                    <span class="time time-casa">{{ partida.time_casa|default:"Time A" }}</span>
-                    <span class="vs">VS</span>
-                    <span class="time time-visitante">{{ partida.time_visitante|default:"Time B" }}</span>
-                </div>
+            {% for partida in partidas %}
+                <div class="partida-card fade-in-item" data-search="{{ partida.time_casa }} {{ partida.time_visitante }} {% if partida.estadio %}{{ partida.estadio }}{% endif %} {{ partida.data|date:'d/m/Y' }}">
+                    
+                    <!-- Header do card -->
+                    <div class="card-header">
+                        <div class="card-badge">
+                            <i class="fas fa-calendar-alt"></i>
+                            {{ partida.data|date:"d/m/Y" }}
+                        </div>
+                        <div class="card-time">
+                            <i class="fas fa-clock"></i>
+                            {{ partida.data|time:"H:i" }}
+                        </div>
+                    </div>
 
-                <div class="partida-meta">
-                    <span class="meta-item">
-                        <i class="fas fa-calendar-alt"></i>
-                        {{ partida.data|date:"d/m/y" }}
-                    </span>
-                    <span class="meta-item">
-                        <i class="fas fa-clock"></i>
-                        {{ partida.data|time:"H:i" }}
-                    </span>
-                    <span class="meta-item">
+                    <!-- Placar -->
+                    <div class="placar-section">
+                        <div class="time-wrapper">
+                            <div class="time-name">{{ partida.time_casa|default:"Time A" }}</div>
+                        </div>
+                        
+                        <div class="vs-container">
+                            <div class="vs-circle">
+                                <span class="vs-text">VS</span>
+                            </div>
+                        </div>
+                        
+                        <div class="time-wrapper">
+                            <div class="time-name">{{ partida.time_visitante|default:"Time B" }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Estádio -->
+                    <div class="estadio-info">
                         <i class="fas fa-location-dot"></i>
-                        {% if partida.estadio %}{{ partida.estadio }}{% else %}Não informado{% endif %}
-                    </span>
+                        <span>{% if partida.estadio %}{{ partida.estadio }}{% else %}Estádio não informado{% endif %}</span>
+                    </div>
+
+                    <!-- Botão de ação -->
+                    <div class="card-actions">
+                        {% if partida.id in partidas_avaliadas %}
+                            <a href="{% url 'core:ver_avaliacao' partida.id %}" class="action-btn view-btn">
+                                <i class="fas fa-eye"></i>
+                                Ver Avaliação
+                            </a>
+                        {% else %}
+                            <a href="{% url 'core:avaliar_partida' partida.id %}" class="action-btn evaluate-btn">
+                                <i class="fas fa-star"></i>
+                                Avaliar Partida
+                            </a>
+                        {% endif %}
+                    </div>
+
                 </div>
-                
-                <div class="partida-action">
-                    {% if partida.id in partidas_avaliadas %}
-                        <a href="{% url 'core:ver_avaliacao' partida.id %}" class="btn-avaliar btn-secondary">
-                            <i class="fas fa-eye"></i>
-                            Ver Avaliação
-                        </a>
-                    {% else %}
-                        <a href="{% url 'core:avaliar_partida' partida.id %}" class="btn-avaliar btn-primary">
-                            <i class="fas fa-star"></i>
-                            Avaliar Partida
-                        </a>
-                    {% endif %}
-                </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
         </div>
     {% else %}
         <div class="empty-state fade-in-item">
             <div class="empty-icon">
                 <i class="fas fa-futbol"></i>
             </div>
-            <h4>Nenhuma partida registrada</h4>
-            <p>Você ainda não registrou nenhuma partida. <a href="{% url 'core:registrar_partida' %}">Clique aqui</a> para adicionar a primeira!</p>
+            <h3>Nenhuma partida registrada</h3>
+            <p>Você ainda não registrou nenhuma partida. Comece agora mesmo!</p>
+            <a href="{% url 'core:registrar_partida' %}" class="btn-primary">
+                <i class="fas fa-plus"></i>
+                Registrar Primeira Partida
+            </a>
         </div>
     {% endif %}
 
+    <!-- Mensagem de nenhum resultado -->
     <div id="no-results-message" class="empty-state hidden">
         <div class="empty-icon">
             <i class="fas fa-search"></i>
         </div>
-        <h4>Nenhuma partida encontrada</h4>
-        <p>Sua busca não retornou resultados. Tente um termo diferente.</p>
+        <h3>Nenhuma partida encontrada</h3>
+        <p>Sua busca não retornou resultados. Tente outro termo.</p>
     </div>
 
 </main>
 
 <style>
+/* Variáveis consistentes com as outras páginas */
 :root {
-    --primary-blue: #0066FF;
-    --primary-dark: #031028;
-    --secondary-blue: #1A4FA0;
-    --accent-blue: #00C2FF;
-    --light-blue: #E8F3FF;
-    --white: #FFFFFF;
-    --gray-light: #F5F8FF;
-    --gray-medium: #6B7EA8;
-    --gradient-primary: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
-    --gradient-accent: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
-    --shadow-lg: 0 25px 50px -12px rgba(3, 16, 40, 0.25);
-    --shadow-xl: 0 35px 70px -15px rgba(3, 16, 40, 0.35);
-    --radius-xl: 24px;
-    --radius-lg: 16px;
-    --radius-md: 12px;
-    --radius-sm: 8px;
-    --transition-smooth: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    --success-text: #28a745;
-    --error-text: #dc3545;
+    --primary-blue: ##0066FF;
+    --secondary-blue: #0066FF;
+    --blue-light: #EBF5FF;
+    --gradient-primary: linear-gradient(135deg, #4A90E2 0%, #6BA8E9 100%);
+    --gradient-accent: linear-gradient(135deg, #5AA0FF 0%, #7BB5FF 100%);
+    --gradient-subtle: linear-gradient(135deg, rgba(74, 144, 226, 0.1) 0%, rgba(107, 168, 233, 0.1) 100%);
+    --success-green: #10B981;
+    --warning-yellow: #F59E0B;
+    --danger-red: #EF4444;
+    --gray-light: #F8FAFC;
+    --gray-medium: #64748B;
+    --gray-dark: #334155;
 }
 
-.partidas-container {
-    min-height: calc(100vh - 80px);
-    padding: 30px 20px;
-    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+}
+
+.fade-in-item {
+    opacity: 0;
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+.fade-in-item:nth-child(1) { animation-delay: 0.1s; }
+.fade-in-item:nth-child(2) { animation-delay: 0.2s; }
+.fade-in-item:nth-child(3) { animation-delay: 0.3s; }
+
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    height: 100%;
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Header Section */
+.welcome-header {
+    text-align: center;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 8px 30px rgba(74, 144, 226, 0.08);
+    border: 1px solid rgba(74, 144, 226, 0.1);
+    position: relative;
     overflow: hidden;
 }
 
-.page-header {
-    text-align: center;
-    margin-bottom: 30px;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
+.welcome-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+}
+
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary-blue);
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 8px 16px;
+    background: var(--blue-light);
+    border-radius: var(--radius-md);
+    margin-bottom: 20px;
+    border: 1px solid rgba(74, 144, 226, 0.2);
 }
 
 .page-title {
-    font-size: 2rem;
-    font-weight: 900;
-    color: #051831;
-    margin: 0 0 8px 0;
-    background: linear-gradient(90deg, #051831, var(--secondary-blue));
+    font-size: clamp(1.8rem, 3vw, 2.2rem);
+    font-weight: 800;
+    line-height: 1.1;
+    color: #1A3A5F;
+    margin: 0 0 15px 0;
+    background: linear-gradient(90deg, #1A3A5F, var(--secondary-blue));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 .page-subtitle {
-    font-size: 1rem;
-    font-weight: 500;
+    font-size: 1.1rem;
+    line-height: 1.6;
     color: var(--gray-medium);
     margin: 0;
-    line-height: 1.4;
+    opacity: 0.9;
 }
 
+/* Mensagens */
 .messages-container {
-    max-width: 800px;
-    margin: 0 auto 25px auto;
+    margin-bottom: 20px;
 }
 
 .message {
-    padding: 12px 16px;
-    border-radius: var(--radius-md);
-    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.95);
+    border-left: 4px solid var(--primary-blue);
+    color: var(--gray-dark);
+    padding: 16px 20px;
+    border-radius: var(--radius-lg);
+    font-size: 0.95rem;
     font-weight: 500;
-    font-size: 0.9rem;
-    text-align: center;
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(0, 102, 255, 0.2);
-    color: #051831;
-    box-shadow: 0 2px 8px rgba(3, 16, 40, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(74, 144, 226, 0.2);
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.05);
 }
 
 .message.success {
-    background: rgba(40, 167, 69, 0.1);
-    border-color: rgba(40, 167, 69, 0.3);
-    color: #155724;
+    border-left-color: var(--success-green);
+    background: rgba(16, 185, 129, 0.1);
 }
 
 .message.warning {
-    background: rgba(255, 193, 7, 0.1);
-    border-color: rgba(255, 193, 7, 0.3);
-    color: #856404;
+    border-left-color: var(--warning-yellow);
+    background: rgba(245, 158, 11, 0.1);
 }
 
 .message.error {
-    background: rgba(220, 53, 69, 0.1);
-    border-color: rgba(220, 53, 69, 0.3);
-    color: #721c24;
+    border-left-color: var(--danger-red);
+    background: rgba(239, 68, 68, 0.1);
 }
 
-.search-bar-wrapper {
+/* Barra de busca */
+.search-container {
     max-width: 600px;
-    margin: 0 auto 30px auto;
+    margin: 0 auto;
+}
+
+.search-wrapper {
     position: relative;
 }
 
 .search-icon {
     position: absolute;
-    left: 16px;
+    left: 20px;
     top: 50%;
     transform: translateY(-50%);
     color: var(--gray-medium);
     z-index: 2;
-    font-size: 0.95rem;
 }
 
-.form-input-search {
+.search-input {
     width: 100%;
-    padding: 14px 16px 14px 42px;
-    border: 1px solid rgba(0, 102, 255, 0.2);
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: var(--radius-md);
-    font-size: 0.95rem;
-    color: #051831;
+    padding: 18px 20px 18px 50px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(74, 144, 226, 0.2);
+    border-radius: var(--radius-lg);
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    color: var(--gray-dark);
     transition: var(--transition-smooth);
-    font-family: 'Inter', sans-serif;
-    box-shadow: 0 2px 8px rgba(3, 16, 40, 0.1);
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.05);
 }
 
-.form-input-search::placeholder {
-    color: var(--gray-medium);
-}
-
-.form-input-search:focus {
+.search-input:focus {
     outline: none;
     border-color: var(--primary-blue);
     background: white;
-    box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1), 0 4px 12px rgba(0, 102, 255, 0.1);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1), 0 6px 20px rgba(74, 144, 226, 0.1);
 }
 
-.form-input-search:focus + .search-icon {
-    color: var(--primary-blue);
-}
-
+/* Grid de partidas */
 .partidas-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 25px;
 }
 
+/* Card de partida */
 .partida-card {
-    background: white;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-radius: var(--radius-lg);
     padding: 25px;
-    border: 1px solid rgba(0, 102, 255, 0.1);
+    box-shadow: 0 8px 30px rgba(74, 144, 226, 0.08);
+    border: 1px solid rgba(74, 144, 226, 0.1);
     transition: var(--transition-smooth);
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    box-shadow: 0 4px 12px rgba(3, 16, 40, 0.08);
+    gap: 20px;
+    height: 100%;
 }
 
 .partida-card:hover {
-    transform: translateY(-5px);
-    border-color: var(--accent-blue);
-    box-shadow: 0 8px 25px rgba(0, 102, 255, 0.15);
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(74, 144, 226, 0.15);
+    border-color: rgba(74, 144, 226, 0.3);
 }
 
-.partida-info-scoreboard {
+/* Header do card */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(74, 144, 226, 0.1);
+}
+
+.card-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--blue-light);
+    border-radius: var(--radius-md);
+    color: var(--primary-blue);
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: 1px solid rgba(74, 144, 226, 0.2);
+}
+
+.card-time {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--gray-medium);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Seção do placar */
+.placar-section {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 15px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid rgba(0, 102, 255, 0.1);
+    gap: 20px;
+    padding: 20px 0;
 }
 
-.partida-info-scoreboard .time {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #051831;
+.time-wrapper {
     flex: 1;
-    text-align: center;
-    line-height: 1.3;
+    display: flex;
+    justify-content: center;
 }
 
-.partida-info-scoreboard .vs {
-    font-size: 0.9rem;
+.time-name {
+    font-size: 1.2rem;
     font-weight: 700;
-    color: var(--accent-blue);
-    padding: 6px 12px;
-    background: rgba(0, 194, 255, 0.1);
-    border-radius: var(--radius-sm);
+    color: #1A3A5F;
+    text-align: center;
+    padding: 10px 15px;
+    background: var(--blue-light);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(74, 144, 226, 0.2);
+    min-width: 120px;
 }
 
-.partida-meta {
+.vs-container {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.meta-item {
-    display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 10px;
-    font-size: 0.85rem;
-    color: var(--gray-medium);
 }
 
-.meta-item i {
-    width: 16px;
-    color: var(--primary-blue);
-    font-size: 0.9rem;
-}
-
-.partida-action {
-    margin-top: 5px;
-}
-
-.btn-avaliar {
+.vs-circle {
+    width: 60px;
+    height: 60px;
+    background: var(--gradient-primary);
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    width: 100%;
-    padding: 12px;
-    border-radius: var(--radius-md);
+    color: white;
+    font-weight: 800;
     font-size: 0.9rem;
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
+}
+
+/* Informações do estádio */
+.estadio-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px;
+    background: var(--gray-light);
+    border-radius: var(--radius-md);
+    color: var(--gray-medium);
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid rgba(74, 144, 226, 0.1);
+}
+
+.estadio-info i {
+    color: var(--primary-blue);
+}
+
+/* Botões de ação */
+.card-actions {
+    margin-top: auto;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 14px;
+    border-radius: var(--radius-md);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
     font-weight: 600;
     text-decoration: none;
     transition: var(--transition-smooth);
-    font-family: 'Inter', sans-serif;
     border: none;
     cursor: pointer;
 }
 
-.btn-primary {
+.evaluate-btn {
     background: var(--gradient-primary);
-    color: var(--white);
+    color: white;
 }
 
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 102, 255, 0.3);
-    background: linear-gradient(135deg, #005CE6, var(--secondary-blue));
+.evaluate-btn:hover {
+    background: var(--gradient-accent);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(74, 144, 226, 0.2);
 }
 
-.btn-secondary {
-    background: #f8f9fa;
-    color: #051831;
-    border: 1px solid rgba(0, 102, 255, 0.2);
+.view-btn {
+    background: var(--gray-light);
+    color: var(--gray-dark);
+    border: 1px solid rgba(74, 144, 226, 0.2);
 }
 
-.btn-secondary:hover {
-    background: #e9ecef;
+.view-btn:hover {
+    background: #E5E7EB;
     border-color: var(--primary-blue);
-    color: #051831;
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(74, 144, 226, 0.1);
 }
 
+/* Estado vazio */
 .empty-state {
-    max-width: 500px;
-    margin: 40px auto;
-    padding: 40px 30px;
-    text-align: center;
-    background: white;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-radius: var(--radius-xl);
-    border: 1px solid rgba(0, 102, 255, 0.1);
-    box-shadow: 0 4px 12px rgba(3, 16, 40, 0.08);
+    padding: 50px 30px;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(74, 144, 226, 0.08);
+    border: 1px solid rgba(74, 144, 226, 0.1);
+    max-width: 500px;
+    margin: 0 auto;
 }
 
 .empty-icon {
-    font-size: 3rem;
+    font-size: 3.5rem;
     color: var(--primary-blue);
     margin-bottom: 20px;
+    opacity: 0.9;
 }
 
-.empty-state h4 {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: #051831;
-    margin: 0 0 10px 0;
+.empty-state h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1A3A5F;
+    margin: 0 0 15px 0;
 }
 
 .empty-state p {
-    font-size: 0.95rem;
     color: var(--gray-medium);
-    margin: 0;
-    line-height: 1.5;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0 0 25px 0;
 }
 
-.empty-state p a {
-    color: var(--primary-blue);
-    text-decoration: none;
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    background: var(--gradient-primary);
+    color: white;
+    border-radius: var(--radius-lg);
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
     font-weight: 600;
+    text-decoration: none;
     transition: var(--transition-smooth);
+    border: none;
+    cursor: pointer;
 }
 
-.empty-state p a:hover {
-    color: var(--secondary-blue);
-    text-decoration: underline;
+.btn-primary:hover {
+    background: var(--gradient-accent);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(74, 144, 226, 0.2);
 }
 
 .hidden {
     display: none !important;
 }
 
-.fade-in-item {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-
-.fade-in-item.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
 /* Responsividade */
 @media (max-width: 1024px) {
-    .partidas-container {
-        padding: 25px 15px;
-        min-height: calc(100vh - 70px);
+    .dashboard-container {
+        gap: 30px;
+        padding: 15px;
+    }
+    
+    .welcome-header {
+        padding: 25px;
     }
     
     .partidas-grid {
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 18px;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 20px;
     }
     
-    .page-title {
-        font-size: 1.8rem;
+    .partida-card {
+        padding: 22px;
     }
 }
 
 @media (max-width: 768px) {
-    .partidas-container {
-        padding: 20px 12px;
-        min-height: calc(100vh - 60px);
+    .dashboard-container {
+        gap: 25px;
+        padding: 12px;
     }
     
-    .page-header {
-        margin-bottom: 25px;
+    .welcome-header {
+        padding: 20px;
+    }
+    
+    .eyebrow {
+        font-size: 12px;
+        padding: 6px 12px;
     }
     
     .page-title {
@@ -429,122 +564,78 @@
     }
     
     .page-subtitle {
-        font-size: 0.95rem;
+        font-size: 1rem;
     }
     
     .partidas-grid {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 16px;
+        grid-template-columns: 1fr;
+        gap: 18px;
     }
     
-    .partida-card {
-        padding: 22px 20px;
+    .time-name {
+        font-size: 1.1rem;
+        min-width: 100px;
     }
     
-    .search-bar-wrapper {
-        margin-bottom: 25px;
+    .vs-circle {
+        width: 50px;
+        height: 50px;
+        font-size: 0.8rem;
     }
     
-    .form-input-search {
-        padding: 12px 14px 12px 38px;
-        font-size: 0.9rem;
+    .empty-state {
+        padding: 40px 25px;
     }
     
-    .search-icon {
-        left: 14px;
-        font-size: 0.9rem;
+    .empty-icon {
+        font-size: 3rem;
     }
 }
 
 @media (max-width: 480px) {
-    .partidas-container {
-        padding: 15px 10px;
+    .dashboard-container {
+        gap: 20px;
+        padding: 10px;
+    }
+    
+    .welcome-header {
+        padding: 18px;
     }
     
     .page-title {
         font-size: 1.4rem;
     }
     
-    .page-subtitle {
-        font-size: 0.9rem;
+    .partida-card {
+        padding: 20px;
+        gap: 16px;
     }
     
-    .partidas-grid {
-        grid-template-columns: 1fr;
+    .placar-section {
+        flex-direction: column;
         gap: 15px;
     }
     
-    .partida-card {
-        padding: 20px 18px;
+    .time-wrapper {
+        width: 100%;
     }
     
-    .partida-info-scoreboard .time {
-        font-size: 1rem;
+    .time-name {
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .vs-circle {
+        width: 45px;
+        height: 45px;
     }
     
     .empty-state {
         padding: 30px 20px;
-        margin: 30px auto;
     }
     
     .empty-icon {
         font-size: 2.5rem;
-    }
-    
-    .empty-state h4 {
-        font-size: 1.2rem;
-    }
-}
-
-@media (max-height: 700px) {
-    .partidas-container {
-        min-height: calc(100vh - 60px);
-        padding: 20px 15px;
-    }
-    
-    .page-header {
-        margin-bottom: 20px;
-    }
-    
-    .search-bar-wrapper {
-        margin-bottom: 20px;
-    }
-    
-    .partidas-grid {
-        gap: 15px;
-    }
-}
-
-@media (max-height: 600px) {
-    .partidas-container {
-        padding: 15px 10px;
-    }
-    
-    .page-title {
-        font-size: 1.5rem;
-        margin-bottom: 5px;
-    }
-    
-    .page-subtitle {
-        font-size: 0.9rem;
-    }
-    
-    .partida-card {
-        padding: 18px 16px;
-        gap: 12px;
-    }
-    
-    .partida-info-scoreboard {
-        padding-bottom: 12px;
-    }
-    
-    .partida-info-scoreboard .time {
-        font-size: 1rem;
-    }
-    
-    .btn-avaliar {
-        padding: 10px;
-        font-size: 0.85rem;
     }
 }
 </style>
@@ -555,15 +646,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const animatedItems = document.querySelectorAll('.fade-in-item');
     animatedItems.forEach((item, index) => {
         setTimeout(() => {
-            item.classList.add('is-visible');
-        }, 100 + index * 50);
+            item.style.opacity = '1';
+            item.style.transform = 'translateY(0)';
+        }, index * 100 + 100);
     });
 
     // Filtro de busca
     const searchInput = document.getElementById('search-partidas');
     const allPartidas = document.querySelectorAll('.partida-card');
     const noResultsMessage = document.getElementById('no-results-message');
-    const originalEmptyMessage = document.querySelector('.partidas-grid .empty-state');
+    const originalEmptyMessage = document.querySelector('.empty-state');
+    const partidasGrid = document.querySelector('.partidas-grid');
 
     if (searchInput && allPartidas.length > 0) {
         searchInput.addEventListener('input', () => {
@@ -574,38 +667,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 const searchText = card.dataset.search.toLowerCase();
                 
                 if (searchText.includes(query)) {
-                    card.classList.remove('hidden');
+                    card.style.display = 'flex';
                     visibleCount++;
                 } else {
-                    card.classList.add('hidden');
+                    card.style.display = 'none';
                 }
             });
 
+            // Gerencia a mensagem de "nenhum resultado"
             if (visibleCount === 0 && query !== '') {
                 noResultsMessage.classList.remove('hidden');
-                if (originalEmptyMessage) originalEmptyMessage.classList.add('hidden');
+                if (originalEmptyMessage) originalEmptyMessage.style.display = 'none';
+                if (partidasGrid) partidasGrid.style.display = 'none';
             } else {
                 noResultsMessage.classList.add('hidden');
                 if (originalEmptyMessage && query === '') {
-                    originalEmptyMessage.classList.remove('hidden');
+                    originalEmptyMessage.style.display = 'block';
                 }
+                if (partidasGrid) partidasGrid.style.display = 'grid';
             }
         });
     }
 
-    // Ajustar altura para não ter scroll
-    function adjustContainerHeight() {
-        const container = document.querySelector('.partidas-container');
-        const headerHeight = document.querySelector('header')?.offsetHeight || 80;
-        const windowHeight = window.innerHeight;
+    // Efeito hover nos cards
+    const cards = document.querySelectorAll('.partida-card');
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            card.style.transform = 'translateY(-10px) scale(1.02)';
+        });
         
-        container.style.minHeight = `calc(${windowHeight}px - ${headerHeight}px)`;
-    }
-
-    // Executar no carregamento e redimensionamento
-    window.addEventListener('load', adjustContainerHeight);
-    window.addEventListener('resize', adjustContainerHeight);
-    setTimeout(adjustContainerHeight, 100);
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'translateY(0) scale(1)';
+        });
+    });
 });
 </script>
 

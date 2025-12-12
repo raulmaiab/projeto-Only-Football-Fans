@@ -2,218 +2,203 @@
 {% load static %}
 
 {% block extra_head %}
-    {# Mantemos o link para a fonte do Google Fonts, pois o estilo depende dela #}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-<section class="gallery-container">
-    <h2 class="gallery-title">Minha Galeria</h2>
+<main class="dashboard-container">
+    <header class="welcome-header fade-in-item">
+        <div class="eyebrow">
+            <i class="fas fa-camera-retro"></i>Minha Galeria
+        </div>
+        <h1 class="page-title">Minha Galeria de Mídia</h1>
+        <p class="page-subtitle">Todas as suas fotos, vídeos e áudios das partidas registradas</p>
+    </header>
 
     {% if partidas %}
-        <div class="partidas-grid">
+        <div class="galeria-grid">
             {% for partida in partidas %}
-                <article class="partida-card">
-                    <div class="partida-card__header">
-                        <h3 class="partida-card__title">{{ partida }}</h3>
-                        <p class="partida-card__description">Resumo ou destaque da partida.</p>
-                    </div>
-
-                    {# --- INÍCIO DA CORREÇÃO --- #}
-                    
-                    {% with definicao_item=partida.definicoes.first %}
-                        
-                        {# AQUI ESTÁ A LINHA CORRIGIDA: #}
-                        {% with imagem_item=definicao_item.imagem_recente %} 
-                        
-                            {% if imagem_item and imagem_item.arquivo %}
-                                <img class="partida-card__image" src="{{ imagem_item.arquivo.url }}" alt="Imagem do jogo {{ partida }}">
-                            
-                            {% else %}
-                                <img class="partida-card__image" src="{% static 'images/placeholder.jpg' %}" alt="Sem imagem para {{ partida }}">
-                            
-                            {% endif %}
-                        {% endwith %}
-                    {% endwith %}
-                    {# --- FIM DA CORREÇÃO --- #}
-
-                    <div class="partida-card__actions">
-                        <div class="partida-card__game-buttons">
-                            <button class="btn-game">Jogo 1 <br><span>fotos/vídeos</span></button>
-                            <button class="btn-game">Jogo 2 <br><span>fotos/vídeos</span></button>
-                            <button class="btn-game">Jogo 3 <br><span>fotos/vídeos</span></button>
+                <article class="galeria-card fade-in-item">
+                    <div class="galeria-card__header">
+                        <div class="partida-info">
+                            <div class="partida-icon">
+                                <i class="fas fa-futbol"></i>
+                            </div>
+                            <div>
+                                <h3 class="partida-nome">{{ partida }}</h3>
+                                <p class="partida-desc">Partida registrada em {{ partida.data|date:"d/m/Y" }}</p>
+                            </div>
                         </div>
 
-                        <a href="{% url 'core:adicionar_midia' partida.id %}" class="btn-add-media">
-                            Adicionar mídia
-                        </a>
+                        <div class="card-actions">
+                            <!-- botão mais responsivo -->
+                            <a href="{% url 'core:adicionar_midia' partida.id %}" class="btn-add-media small responsive-add">
+                                <i class="fas fa-plus-circle"></i>
+                                <span>Adicionar mídia</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="imagem-container">
+                        {% with definicao_item=partida.definicoes.first %}
+                            {% with imagem_item=definicao_item.imagem_recente %}
+                                {% if imagem_item and imagem_item.arquivo %}
+                                    <img class="partida-imagem" src="{{ imagem_item.arquivo.url }}" alt="Imagem do jogo {{ partida }}">
+                                {% else %}
+                                    <div class="placeholder-container">
+                                        <i class="fas fa-image placeholder-icon"></i>
+                                        <span class="placeholder-text">Nenhuma imagem disponível</span>
+                                    </div>
+                                {% endif %}
+                            {% endwith %}
+                        {% endwith %}
+                    </div>
+
+                    <div class="galeria-actions">
+                        <div class="jogo-buttons">
+                            <!-- direcionam para adicionar_midia com query param tipo -->
+                            <a class="btn-jogo btn-fotos" href="{% url 'core:adicionar_midia' partida.id %}?tipo=imagem">
+                                <i class="fas fa-image"></i>
+                                <span class="btn-jogo__main">Fotos</span>
+                                <span class="btn-jogo__sub">Adicionar / Ver</span>
+                            </a>
+
+                            <a class="btn-jogo btn-videos" href="{% url 'core:adicionar_midia' partida.id %}?tipo=video">
+                                <i class="fas fa-video"></i>
+                                <span class="btn-jogo__main">Vídeos</span>
+                                <span class="btn-jogo__sub">Adicionar / Ver</span>
+                            </a>
+
+                            <!-- torcida trocada por áudio -->
+                            <a class="btn-jogo btn-audio" href="{% url 'core:adicionar_midia' partida.id %}?tipo=audio">
+                                <i class="fas fa-microphone"></i>
+                                <span class="btn-jogo__main">Áudio</span>
+                                <span class="btn-jogo__sub">Adicionar / Ver</span>
+                            </a>
+                        </div>
                     </div>
                 </article>
             {% endfor %}
         </div>
     {% else %}
-        <p class="no-partidas-message">Nenhuma partida registrada.</p>
+        <div class="empty-state fade-in-item">
+            <div class="empty-icon"><i class="fas fa-images"></i></div>
+            <h3>Nenhuma partida registrada</h3>
+            <p>Registre sua primeira partida para começar a construir sua galeria!</p>
+            <a href="{% url 'core:registrar_partida' %}" class="btn-primary">
+                <i class="fas fa-plus"></i>
+                Registrar Primeira Partida
+            </a>
+        </div>
     {% endif %}
-</section>
+</main>
 
 <style>
-    /* --- Variáveis de Cor e Estilos Globais --- */
-    :root {
-        --primary-bg: #f4f7f9;
-        --card-bg: #ffffff;
-        --text-primary: #1d2d35;
-        --text-secondary: #657786;
-        --button-dark: #222831;
-        --button-dark-hover: #393e46;
-        --button-green: #00adb5;
-        --button-green-hover: #00939a;
-        --border-color: #e1e8ed;
-        --shadow-color: rgba(0, 0, 0, 0.08);
-    }
+:root{
+    --primary-blue:#0066FF;
+    --secondary-blue:#0052D4;
+    --blue-light:#E8F3FF;
+    --muted:#f7fbff;
+    --gray-light:#F8FAFC;
+    --gray-medium:#64748B;
+    --gray-dark:#334155;
+    --card-radius:14px;
+    --shadow-subtle:0 8px 24px rgba(0,102,255,0.06);
+}
 
-    /* --- Container Principal --- */
-    .gallery-container {
-        max-width: 900px;
-        margin: 2rem auto;
-        padding: 1rem;
-        font-family: 'Poppins', sans-serif;
-    }
+/* container */
+.dashboard-container{max-width:1200px;margin:0 auto;padding:18px;gap:28px;display:flex;flex-direction:column}
+.welcome-header{padding:20px;border-radius:16px;background:rgba(255,255,255,0.96);backdrop-filter:blur(12px);box-shadow:var(--shadow-subtle);border:1px solid rgba(0,102,255,0.08);text-align:center}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:8px;background:var(--blue-light);color:var(--primary-blue);font-weight:600;font-size:12px}
+.page-title{font-size:clamp(1.3rem,2.6vw,1.6rem);font-weight:800;margin:8px 0}
+.page-subtitle{color:var(--gray-medium);margin:0}
 
-    .gallery-title {
-        text-align: center;
-        color: var(--text-primary);
-        margin-bottom: 2rem;
-        font-size: 2.25rem;
-    }
+/* grid */
+.galeria-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+.galeria-card{background:linear-gradient(180deg,rgba(255,255,255,0.98),#ffffff);border-radius:var(--card-radius);padding:18px;box-shadow:var(--shadow-subtle);border:1px solid rgba(0,102,255,0.06);display:flex;flex-direction:column;gap:12px;transition:transform .28s ease,box-shadow .28s ease}
+.galeria-card:hover{transform:translateY(-6px);box-shadow:0 22px 44px rgba(0,102,255,0.08)}
 
-    /* --- Grid de Partidas --- */
-    .partidas-grid {
-        display: grid;
-        grid-template-columns: 1fr; /* 1 coluna por padrão */
-        gap: 1.5rem;
-    }
+.galeria-card__header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.partida-info{display:flex;align-items:center;gap:12px}
+.partida-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(0,102,255,0.04),rgba(0,82,212,0.02));color:var(--primary-blue);border:1px solid rgba(0,102,255,0.06)}
+.partida-nome{font-weight:700;color:var(--gray-dark);margin:0}
+.partida-desc{color:var(--gray-medium);font-size:0.82rem;margin:0}
 
-    /* --- Card de Partida --- */
-    .partida-card {
-        background-color: var(--card-bg);
-        border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 4px 15px var(--shadow-color);
-        border: 1px solid var(--border-color);
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
+/* tornar botão adicionar mais responsivo */
+.card-actions .btn-add-media.small{padding:8px 12px;font-size:0.95rem;border-radius:10px}
+.btn-add-media.small.responsive-add{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;background:linear-gradient(90deg,var(--primary-blue),var(--secondary-blue));color:white;text-decoration:none;border-radius:10px;box-shadow:0 8px 22px rgba(0,102,255,0.12);transition:transform .18s ease,box-shadow .18s ease}
+.btn-add-media.small.responsive-add i{font-size:1rem}
 
-    .partida-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-    }
+/* hover subtle */
+.btn-add-media.small.responsive-add:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(0,102,255,0.14)}
 
-    .partida-card__header {
-        margin-bottom: 0.5rem;
-    }
+/* image */
+.imagem-container{border-radius:10px;overflow:hidden;background:var(--muted);min-height:160px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(0,102,255,0.06)}
+.partida-imagem{width:100%;height:160px;object-fit:cover;transition:transform .45s ease}
+.galeria-card:hover .partida-imagem{transform:scale(1.03)}
 
-    .partida-card__title {
-        color: var(--text-primary);
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin: 0 0 0.25rem 0;
-    }
+.placeholder-container{display:flex;flex-direction:column;align-items:center;gap:8px;padding:28px}
+.placeholder-icon{font-size:2rem;color:var(--gray-medium)}
 
-    .partida-card__description {
-        font-size: 0.95rem;
-        color: var(--text-secondary);
-        margin: 0;
-    }
+/* actions */
+.galeria-actions{display:flex;flex-direction:column}
+.jogo-buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.btn-jogo{display:flex;flex-direction:column;align-items:center;padding:12px;border-radius:10px;background:var(--gray-light);border:1px solid rgba(0,102,255,0.06);text-decoration:none;color:inherit;transition:transform .18s ease,box-shadow .18s ease;background-clip:padding-box}
+.btn-jogo i{color:var(--primary-blue);font-size:1rem}
+.btn-jogo__main{font-weight:700;margin-top:6px}
+.btn-jogo__sub{font-size:0.75rem;color:var(--gray-medium)}
+.btn-jogo:hover{transform:translateY(-6px);box-shadow:0 14px 30px rgba(0,102,255,0.06);background:linear-gradient(180deg,rgba(0,102,255,0.02),rgba(0,102,255,0.01))}
 
-    .partida-card__image {
-        width: 100%;
-        height: auto;
-        border-radius: 8px;
-        object-fit: cover;
-    }
+/* pequena diferenciação de tom para cada botão */
+.btn-fotos{background:linear-gradient(180deg,rgba(0,102,255,0.03),rgba(0,102,255,0.01));}
+.btn-videos{background:linear-gradient(180deg,rgba(0,163,255,0.03),rgba(0,163,255,0.01));}
+.btn-audio{background:linear-gradient(180deg,rgba(0,212,255,0.03),rgba(0,212,255,0.01));}
 
-    /* --- Seção de Ações e Botões --- */
-    .partida-card__actions {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        align-items: center;
-        gap: 1rem;
-        border-top: 1px solid var(--border-color);
-        padding-top: 1.5rem;
-        margin-top: 0.5rem;
-    }
+/* empty */
+.empty-state{max-width:520px;margin:0 auto;padding:40px;border-radius:14px;text-align:center;background:rgba(255,255,255,0.98);box-shadow:var(--shadow-subtle);border:1px solid rgba(0,102,255,0.06)}
+.empty-icon{font-size:2.6rem;color:var(--primary-blue);margin-bottom:12px}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;background:linear-gradient(90deg,var(--primary-blue),var(--secondary-blue));color:white;text-decoration:none;font-weight:700}
+.btn-primary:hover{transform:translateY(-3px)}
 
-    .partida-card__game-buttons {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem;
-    }
-
-    .btn-game, .btn-add-media {
-        border: none;
-        padding: 0.6rem 1rem;
-        border-radius: 8px;
-        cursor: pointer;
-        font-family: 'Poppins', sans-serif;
-        font-weight: 500;
-        text-decoration: none;
-        text-align: center;
-        transition: all 0.3s ease;
-    }
-
-    .btn-game {
-        background-color: var(--button-dark);
-        color: #fff;
-    }
-
-    .btn-game span {
-        font-size: 0.75em;
-        color: #ccc;
-        display: block;
-        margin-top: 2px;
-    }
-
-    .btn-game:hover {
-        background-color: var(--button-dark-hover);
-        transform: translateY(-2px);
-    }
-
-    .btn-add-media {
-        background-color: var(--button-green);
-        color: white;
-    }
-
-    .btn-add-media:hover {
-        background-color: var(--button-green-hover);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0, 173, 181, 0.3);
-    }
-
-    .no-partidas-message {
-        text-align: center;
-        color: var(--text-secondary);
-        padding: 2rem;
-        background-color: var(--card-bg);
-        border-radius: 12px;
-    }
-
-    /* --- Responsividade --- */
-    @media (max-width: 600px) {
-        .partida-card__actions {
-            flex-direction: column;
-            align-items: stretch; /* Faz os botões ocuparem a largura total */
-        }
-
-        .btn-add-media {
-            width: 100%;
-            box-sizing: border-box; /* Garante que padding não afete a largura */
-        }
-    }
+/* responsive */
+@media(max-width:900px){.galeria-grid{grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}}
+@media(max-width:680px){.jogo-buttons{grid-template-columns:repeat(2,1fr)}.partida-icon{width:40px;height:40px}}
+@media(max-width:520px){
+    .card-actions{display:flex;align-items:center;gap:10px}
+    .card-actions .btn-add-media.small.responsive-add{flex:1 1 auto;padding:12px;justify-content:center}
+}
+@media(max-width:420px){.jogo-buttons{grid-template-columns:1fr}.partida-nome{font-size:1rem}.imagem-container{min-height:140px}.partida-imagem{height:140px}}
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // cards entrance
+    document.querySelectorAll('.galeria-card').forEach((card, i) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(12px)';
+        setTimeout(() => { card.style.transition = 'opacity .45s ease, transform .45s ease'; card.style.opacity = '1'; card.style.transform = 'translateY(0)'; }, i * 80 + 120);
+
+        card.addEventListener('mouseenter', () => { card.style.transform = 'translateY(-8px)'; card.style.boxShadow = '0 22px 44px rgba(0,102,255,0.08)'; });
+        card.addEventListener('mouseleave', () => { card.style.transform = 'translateY(0)'; card.style.boxShadow = ''; });
+    });
+
+    // botão adicionar mídia: torna mais responsivo em touch e desktop
+    document.querySelectorAll('.btn-add-media.responsive-add').forEach(btn => {
+        btn.addEventListener('mouseenter', () => { btn.style.transform = 'translateY(-4px)'; btn.style.boxShadow = '0 14px 34px rgba(0,102,255,0.14)'; });
+        btn.addEventListener('mouseleave', () => { btn.style.transform = ''; btn.style.boxShadow = ''; });
+    });
+
+    // garantir que os botões de fotos, vídeos e áudio utilizem comportamento suave ao clicar (navegação)
+    document.querySelectorAll('.btn-jogo').forEach(b => {
+        b.addEventListener('click', (e) => {
+            // permite navegação normal; mantém animação antes da troca de página
+            e.currentTarget.style.transform = 'translateY(-6px)';
+        });
+    });
+
+});
+</script>
+
 {% endblock %}

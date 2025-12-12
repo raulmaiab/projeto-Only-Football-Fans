@@ -1,15 +1,16 @@
 {% extends 'base.html' %}
 
-{% block extra_head %}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
-{% endblock %}
-
 {% block content %}
-<main class="form-container">
+<main class="dashboard-container">
     
-    <h2 class="form-title fade-in-item">Avaliar Partida:<br>{{ partida.time_casa }} x {{ partida.time_visitante }}</h2>
+    <!-- Header com efeito glass -->
+    <header class="welcome-header fade-in-item">
+        <div class="eyebrow">
+            <i class="fas fa-star"></i>Avaliar Partida
+        </div>
+        <h1 class="page-title">{{ partida.time_casa }} x {{ partida.time_visitante }}</h1>
+        <p class="page-subtitle">Compartilhe sua experiência e avaliação do jogo</p>
+    </header>
 
     {% if messages %}
         <div class="messages-container fade-in-item">
@@ -19,275 +20,619 @@
         </div>
     {% endif %}
 
-    <form method="post" class="form-card fade-in-item">
-        {% csrf_token %}
+    <!-- Formulário de avaliação -->
+    <section class="form-card fade-in-item">
+        <form method="post" class="avaliacao-form">
+            {% csrf_token %}
 
-        <div class="form-group star-rating-section">
-            <label class="form-label"> Sua Nota para o Jogo:</label>
-            <div class="star-rating-group" dir="rtl">
-                {% for i in "54321" %} {# De "543210" para "54321" #}
-                    <input type="radio" id="nota_{{ i }}" name="nota" value="{{ i }}" required />
-                    <label for="nota_{{ i }}" title="{{ i }} Estrela{{ i|pluralize:'s' }}"></label>
-                {% endfor %}
+            <!-- Avaliação com estrelas -->
+            <div class="form-section">
+                <div class="form-header">
+                    <i class="fas fa-star form-icon"></i>
+                    <h3>Sua Avaliação do Jogo</h3>
                 </div>
-        </div>
+                <div class="form-group star-rating-section">
+                    <div class="star-rating-group" dir="rtl">
+                        {% for i in "54321" %}
+                            <input type="radio" id="nota_{{ i }}" name="nota" value="{{ i }}" required />
+                            <label for="nota_{{ i }}" title="{{ i }} Estrela{{ i|pluralize:'s' }}">
+                                <i class="fas fa-star"></i>
+                            </label>
+                        {% endfor %}
+                    </div>
+                    <div class="rating-label">
+                        <span class="min-rating">Ruim</span>
+                        <span class="max-rating">Excelente</span>
+                    </div>
+                </div>
+            </div>
 
-        <div class="form-group">
-            <input type="text" id="melhor_jogador" name="melhor_jogador" class="form-input" placeholder=" "> {# placeholder=" " é crucial #}
-            <label for="melhor_jogador" class="form-label">🏆 Melhor jogador:</label>
-        </div>
+            <!-- Destaques do jogo -->
+            <div class="form-section">
+                <div class="form-header">
+                    <i class="fas fa-trophy form-icon"></i>
+                    <h3>Destaques do Jogo</h3>
+                </div>
+                
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <input type="text" id="melhor_jogador" name="melhor_jogador" 
+                               class="form-input" placeholder=" " autocomplete="off">
+                        <label for="melhor_jogador" class="form-label">
+                            <i class="fas fa-crown"></i> Melhor jogador
+                        </label>
+                        <div class="input-underline"></div>
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <input type="text" id="pior_jogador" name="pior_jogador" class="form-input" placeholder=" "> {# placeholder=" " é crucial #}
-            <label for="pior_jogador" class="form-label">👎 Pior jogador:</label>
-        </div>
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <input type="text" id="pior_jogador" name="pior_jogador" 
+                               class="form-input" placeholder=" " autocomplete="off">
+                        <label for="pior_jogador" class="form-label">
+                            <i class="fas fa-thumbs-down"></i> Pior jogador
+                        </label>
+                        <div class="input-underline"></div>
+                    </div>
+                </div>
+            </div>
 
-        <div class="form-group">
-             <textarea id="comentario_avaliacao" name="comentario_avaliacao" rows="4" class="form-input" placeholder=" "></textarea> {# placeholder=" " é crucial #}
-            <label for="comentario_avaliacao" class="form-label">📝 Seu Comentário:</label>
-        </div>
+            <!-- Comentários -->
+            <div class="form-section">
+                <div class="form-header">
+                    <i class="fas fa-comment-dots form-icon"></i>
+                    <h3>Seus Comentários</h3>
+                </div>
+                
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <textarea id="comentario_avaliacao" name="comentario_avaliacao" 
+                                 rows="4" class="form-input textarea" placeholder=" "></textarea>
+                        <label for="comentario_avaliacao" class="form-label">
+                            <i class="fas fa-edit"></i> Conte como foi sua experiência
+                        </label>
+                        <div class="input-underline"></div>
+                    </div>
+                    <div class="char-counter">
+                        <span id="char-count">0</span>/500 caracteres
+                    </div>
+                </div>
+            </div>
 
-        <div class="form-buttons">
-            <a href="{% url 'core:lista_partidas' %}" class="btn-cancel">Voltar</a>
-            <button type="submit" class="btn-submit">Enviar Avaliação</button>
-        </div>
-    </form>
+            <!-- Botões de ação -->
+            <div class="form-buttons">
+                <a href="{% url 'core:lista_partidas' %}" class="btn-cancel">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </a>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-paper-plane"></i> Enviar Avaliação
+                </button>
+            </div>
+        </form>
+    </section>
+
+</main>
 
 <style>
-    /* --- Herança de Variáveis (do base.html) --- */
-    :root {
-        /* --card-bg, --text-primary, --text-secondary, --accent-blue, --button-green, etc. */
-        --star-color-empty: #ccc;
-        --star-color-filled: #ffc107; /* Amarelo/Dourado */
-        --button-extra-green: #28a745; /* Verde para Avaliar Torcida */
-        --button-extra-green-hover: #1e7e34;
-        --alert-bg: #fff3cd; 
-        --alert-border: #ffeeba;
-        --alert-text: #856404;
-    }
+/* Variáveis atualizadas - mantendo consistência */
+:root {
+    --primary-blue: #0066FF;
+    --secondary-blue: #0066FF;
+    --blue-light: #EBF5FF;
+    --gradient-primary: linear-gradient(135deg, #4A90E2 0%, #6BA8E9 100%);
+    --gradient-accent: linear-gradient(135deg, #5AA0FF 0%, #7BB5FF 100%);
+    --gradient-subtle: linear-gradient(135deg, rgba(74, 144, 226, 0.1) 0%, rgba(107, 168, 233, 0.1) 100%);
+    --star-color-empty: #E0E6F0;
+    --star-color-filled: #FFC107;
+    --star-color-hover: #FFD54F;
+    --success-green: #10B981;
+    --warning-yellow: #F59E0B;
+    --danger-red: #EF4444;
+    --gray-light: #F8FAFC;
+    --gray-medium: #64748B;
+    --gray-dark: #334155;
+}
 
-    /* --- Animação --- */
-    @keyframes slideInUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .fade-in-item {
-        opacity: 0;
-        animation: slideInUp 0.5s ease-out forwards;
-    }
-    .form-title { animation-delay: 0.1s; }
-    .messages-container { animation-delay: 0.15s; }
-    .form-card { animation-delay: 0.2s; }
-    .secondary-action { animation-delay: 0.3s; }
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+}
 
-    /* --- Layout Principal --- */
-    .form-container {
-        max-width: 700px;
-        margin: 2rem auto;
-        padding: 1rem;
-        font-family: 'Poppins', sans-serif;
-    }
-    .form-title {
-        text-align: center;
-        color: var(--text-dark);
-        margin-bottom: 2rem;
-        font-size: 2rem;
-        line-height: 1.3; /* Para quebra de linha */
-    }
+.fade-in-item {
+    opacity: 0;
+    animation: fadeIn 0.6s ease-out forwards;
+}
 
-    /* --- Mensagens --- */
-    .messages-container { margin-bottom: 1.5rem; }
-    .message.alert {
-        background-color: var(--alert-bg);
-        border-left: 5px solid var(--star-color-filled);
-        color: var(--alert-text);
+.fade-in-item:nth-child(1) { animation-delay: 0.1s; }
+.fade-in-item:nth-child(2) { animation-delay: 0.2s; }
+.fade-in-item:nth-child(3) { animation-delay: 0.3s; }
+
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    height: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header Section */
+.welcome-header {
+    text-align: center;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 8px 30px rgba(74, 144, 226, 0.08);
+    border: 1px solid rgba(74, 144, 226, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+}
+
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary-blue);
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 8px 16px;
+    background: var(--blue-light);
+    border-radius: var(--radius-md);
+    margin-bottom: 20px;
+    border: 1px solid rgba(74, 144, 226, 0.2);
+}
+
+.page-title {
+    font-size: clamp(1.8rem, 3vw, 2.2rem);
+    font-weight: 800;
+    line-height: 1.1;
+    color: #1A3A5F;
+    margin: 0 0 15px 0;
+    background: linear-gradient(90deg, #1A3A5F, var(--secondary-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.page-subtitle {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--gray-medium);
+    margin: 0;
+    opacity: 0.9;
+}
+
+/* Mensagens */
+.messages-container {
+    margin-bottom: 20px;
+}
+
+.message.alert {
+    background: rgba(255, 193, 7, 0.1);
+    border-left: 4px solid var(--star-color-filled);
+    color: var(--gray-dark);
+    padding: 16px 20px;
+    border-radius: var(--radius-lg);
+    font-size: 0.95rem;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 193, 7, 0.2);
+}
+
+/* Form Card */
+.form-card {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: var(--radius-xl);
+    padding: 40px;
+    box-shadow: 0 8px 30px rgba(74, 144, 226, 0.08);
+    border: 1px solid rgba(74, 144, 226, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.form-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+}
+
+.avaliacao-form {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+/* Form Sections */
+.form-section {
+    background: var(--gray-light);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    border: 1px solid rgba(74, 144, 226, 0.1);
+    transition: var(--transition-smooth);
+}
+
+.form-section:hover {
+    border-color: rgba(74, 144, 226, 0.2);
+    box-shadow: 0 5px 15px rgba(74, 144, 226, 0.05);
+}
+
+.form-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.form-icon {
+    width: 50px;
+    height: 50px;
+    background: var(--gradient-subtle);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-blue);
+    font-size: 1.5rem;
+    border: 1px solid rgba(74, 144, 226, 0.15);
+}
+
+.form-header h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1A3A5F;
+    margin: 0;
+}
+
+/* Star Rating System */
+.star-rating-section {
+    text-align: center;
+}
+
+.star-rating-group {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 15px;
+    direction: rtl;
+}
+
+.star-rating-group > input {
+    display: none;
+}
+
+.star-rating-group > label {
+    cursor: pointer;
+    color: var(--star-color-empty);
+    font-size: 2.8rem;
+    transition: all 0.3s ease;
+    padding: 5px;
+    position: relative;
+}
+
+.star-rating-group > label i {
+    display: block;
+    width: 1em;
+    height: 1em;
+}
+
+.star-rating-group > label:hover,
+.star-rating-group > label:hover ~ label {
+    color: var(--star-color-hover);
+    transform: scale(1.1);
+}
+
+.star-rating-group > input:checked ~ label {
+    color: var(--star-color-filled);
+}
+
+.rating-label {
+    display: flex;
+    justify-content: space-between;
+    max-width: 400px;
+    margin: 0 auto;
+    color: var(--gray-medium);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.min-rating {
+    color: var(--danger-red);
+}
+
+.max-rating {
+    color: var(--success-green);
+}
+
+/* Input Groups */
+.form-group {
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.form-input {
+    width: 100%;
+    padding: 16px 0 8px;
+    background: transparent;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    color: var(--gray-dark);
+    transition: var(--transition-smooth);
+    outline: none;
+}
+
+.form-input.textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.input-underline {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: rgba(74, 144, 226, 0.2);
+    transition: var(--transition-smooth);
+}
+
+.form-input:focus ~ .input-underline,
+.input-wrapper:focus-within .input-underline {
+    height: 3px;
+    background: var(--gradient-primary);
+}
+
+.form-label {
+    position: absolute;
+    top: 16px;
+    left: 0;
+    color: var(--gray-medium);
+    font-size: 1rem;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-label i {
+    font-size: 0.9rem;
+}
+
+.form-input:focus + .form-label,
+.form-input:not(:placeholder-shown) + .form-label {
+    top: -2px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary-blue);
+}
+
+/* Character Counter */
+.char-counter {
+    text-align: right;
+    font-size: 0.85rem;
+    color: var(--gray-medium);
+    margin-top: 8px;
+}
+
+.char-counter span {
+    font-weight: 600;
+    color: var(--primary-blue);
+}
+
+/* Form Buttons */
+.form-buttons {
+    display: flex;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.btn-cancel, .btn-submit {
+    flex: 1;
+    padding: 18px 30px;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.btn-cancel {
+    background: var(--gray-light);
+    color: var(--gray-medium);
+    border: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+.btn-cancel:hover {
+    background: #E5E7EB;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(107, 114, 128, 0.1);
+}
+
+.btn-submit {
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+}
+
+.btn-submit:hover {
+    background: var(--gradient-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(74, 144, 226, 0.2);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .dashboard-container {
         padding: 15px;
-        border-radius: 8px;
-        font-size: 0.95rem;
-        font-weight: 500;
-    }
-
-    /* --- Card --- */
-    .form-card {
-        background-color: var(--card-bg, #fff);
-        border-radius: 12px;
-        padding: 2rem 2.5rem;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        border: 1px solid var(--border-color-light, #e1e8ed);
-        display: flex;
-        flex-direction: column;
-        gap: 2rem; /* Mais espaço entre os grupos */
-    }
-
-    /* --- Sistema de Estrelas --- */
-    .star-rating-section .form-label {
-        font-weight: 600; /* Destaque */
-        margin-bottom: 0.5rem;
-        color: var(--text-dark);
-        display: block; /* Garante que fique acima */
-    }
-    .star-rating-group {
-        display: flex;
-        unicode-bidi: bidi-override;
-        direction: rtl; /* Direita para esquerda */
-        justify-content: flex-start; /* Alinha à esquerda no container */
-    }
-    .star-rating-group > input {
-        display: none; /* Esconde os radios */
-    }
-    .star-rating-group > label {
-        display: inline-block;
-        padding: 0 4px;
-        font-size: 2.5rem; /* Estrelas maiores */
-        color: var(--star-color-empty);
-        cursor: pointer;
-        transition: color 0.2s ease-out;
-    }
-    .star-rating-group > label:before {
-        content: "\2605"; /* Unicode da estrela */
-    }
-    /* Efeito Hover */
-    .star-rating-group > label:hover,
-    .star-rating-group > label:hover ~ label {
-        color: var(--star-color-filled);
-    }
-    /* Efeito Selecionado */
-    .star-rating-group > input:checked ~ label {
-        color: var(--star-color-filled);
-    }
-    /* Manter hover após seleção (reset) */
-    .star-rating-group:not(:hover) > input:checked ~ label {
-        color: var(--star-color-filled);
-    }
-
-    /* --- Float Label --- */
-    .form-group {
-        position: relative;
-    }
-    .form-input { /* Aplica-se a input e textarea */
-        width: 100%;
-        padding: 10px 5px;
-        background-color: transparent;
-        border: none;
-        border-bottom: 2px solid var(--border-color-light, #ddd);
-        font-family: 'Poppins', sans-serif;
-        font-size: 1.1rem;
-        color: var(--text-dark);
-        box-sizing: border-box;
-        transition: border-color 0.3s ease;
-        resize: vertical; /* Permite redimensionar textarea verticalmente */
-    }
-    .form-label {
-        position: absolute;
-        top: 10px;
-        left: 5px;
-        color: var(--text-secondary, #657786);
-        font-size: 1.1rem;
-        pointer-events: none;
-        transition: all 0.2s ease-out;
-        display: flex; /* Para alinhar o ícone */
-        align-items: center;
-        gap: 0.4rem;
-    }
-    /* Efeito Float */
-    .form-input:focus + .form-label,
-    .form-input:not(:placeholder-shown) + .form-label {
-        top: -16px;
-        left: 0;
-        font-size: 0.9rem;
-        font-weight: 500;
-        color: var(--accent-blue, #007bff);
-    }
-    .form-input:focus {
-        outline: none;
-        border-bottom-color: var(--accent-blue, #007bff);
+        gap: 25px;
     }
     
-    /* Input type number (Nota - embora agora seja estrelas, deixamos um fallback) */
-    input[type="number"].form-input {
-        padding: 0.8rem 1rem;
-        border: 1px solid var(--border-color-light, #ddd);
-        border-radius: 8px;
-        background-color: #fdfdfd;
+    .welcome-header {
+        padding: 25px;
     }
-    input[type="number"].form-input:focus {
-         border-color: var(--accent-blue, #007bff);
-         box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
-         border-bottom-color: var(--accent-blue, #007bff); /* Mantem consistencia */
+    
+    .form-card {
+        padding: 25px;
     }
-
-
-    /* --- Botões --- */
+    
+    .form-section {
+        padding: 20px;
+    }
+    
+    .form-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+    
+    .form-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
+    }
+    
+    .star-rating-group > label {
+        font-size: 2.2rem;
+    }
+    
     .form-buttons {
-        display: flex;
-        gap: 1rem;
-        margin-top: 1rem; /* Espaço acima dos botões do form */
+        flex-direction: column;
     }
-    .btn-submit, .btn-cancel {
-        flex: 1;
-        padding: 0.9rem 1.5rem;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-family: 'Poppins', sans-serif;
-        font-weight: 500;
-        font-size: 1rem;
-        text-align: center;
-        text-decoration: none;
-        transition: all 0.3s ease;
+    
+    .btn-cancel, .btn-submit {
+        padding: 16px 20px;
     }
-    /* Botão Enviar (Verde Padrão do Projeto) */
-    .btn-submit {
-        background-color: var(--button-green, #00adb5);
-        color: white;
-    }
-    .btn-submit:hover {
-        background-color: var(--button-green-hover, #00939a);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0, 173, 181, 0.3);
-    }
-    /* Botão Voltar (Cinza) */
-    .btn-cancel {
-        background-color: #6c757d;
-        color: white;
-    }
-    .btn-cancel:hover {
-        background-color: #5a6268;
-    }
+}
 
-    /* --- Botão Ação Secundária (Avaliar Torcida) --- */
-    .secondary-action {
-        margin-top: 1.5rem; /* Espaço acima */
-        text-align: center;
+@media (max-width: 480px) {
+    .dashboard-container {
+        padding: 10px;
+        gap: 20px;
     }
-    .btn-secondary-action {
-        display: inline-block; /* Não ocupa largura total */
-        background-color: var(--button-extra-green, #28a745);
-        color: white;
-        padding: 0.9rem 2rem;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: 500;
-        font-size: 1rem;
-        transition: all 0.3s ease;
+    
+    .welcome-header {
+        padding: 20px;
     }
-    .btn-secondary-action:hover {
-        background-color: var(--button-extra-green-hover, #1e7e34);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+    
+    .eyebrow {
+        font-size: 12px;
+        padding: 6px 12px;
     }
+    
+    .page-title {
+        font-size: 1.6rem;
+    }
+    
+    .form-card {
+        padding: 20px;
+    }
+    
+    .form-section {
+        padding: 15px;
+    }
+    
+    .star-rating-group > label {
+        font-size: 1.8rem;
+    }
+}
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    /* Animação em Cascata */
+    // Animação em cascata
     const animatedItems = document.querySelectorAll('.fade-in-item');
     animatedItems.forEach((item, index) => {
         setTimeout(() => {
-            item.classList.add('is-visible');
-        }, index * 100 + 100); 
+            item.style.opacity = '1';
+        }, index * 100 + 100);
     });
+
+    // Contador de caracteres para o textarea
+    const textarea = document.getElementById('comentario_avaliacao');
+    const charCount = document.getElementById('char-count');
+    
+    if (textarea && charCount) {
+        textarea.addEventListener('input', function() {
+            const currentLength = this.value.length;
+            charCount.textContent = currentLength;
+            
+            if (currentLength > 500) {
+                charCount.style.color = '#EF4444';
+                this.value = this.value.substring(0, 500);
+                charCount.textContent = 500;
+            } else if (currentLength > 450) {
+                charCount.style.color = '#F59E0B';
+            } else {
+                charCount.style.color = '#4A90E2';
+            }
+        });
+    }
+
+    // Melhor feedback visual para as estrelas
+    const stars = document.querySelectorAll('.star-rating-group label');
+    stars.forEach(star => {
+        star.addEventListener('mouseenter', function() {
+            this.style.animation = 'float 0.3s ease-out';
+        });
+        
+        star.addEventListener('mouseleave', function() {
+            this.style.animation = '';
+        });
+        
+        star.addEventListener('click', function() {
+            // Adiciona um efeito de clique
+            this.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+        });
+    });
+
+    // Foco automático no primeiro campo
+    const firstInput = document.querySelector('.form-input');
+    if (firstInput) {
+        setTimeout(() => {
+            firstInput.focus();
+        }, 300);
+    }
 });
 </script>
 
