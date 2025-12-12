@@ -2,27 +2,47 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Edição de Perfil O.F.F.</title>
+    <title>Edição de Perfil - O.F.F.</title>
     <style>
-        /* CSS COMBINADO */
+        /* CSS para as Correções */
         
-        /* Estilos base (Simulando o corpo da aplicação) */
+        /* Estilos base */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            background-color: #f4f7fa; /* Cor de fundo principal clara */
-            display: flex; /* Para simular a estrutura com navegação, se necessário */
+            background-color: #f4f7fa; 
+            display: flex;
+            justify-content: flex-start; /* Alinha o conteúdo principal após o menu lateral (simulado) */
         }
         
-        /* A área do menu lateral não está incluída, mas assumimos que o conteúdo é a direita dela */
+        /* 4. CORREÇÃO: Estilo do Menu Hamburguer (Simulando a barra superior) */
+        .main-content {
+            flex-grow: 1;
+        }
 
-        /* Container principal (para centralizar o cartão) */
-        .content-container {
-            flex-grow: 1; /* Ocupa o espaço restante */
-            padding: 30px;
+        .menu-hamburger {
+            padding: 15px 30px; 
+            text-align: left;
+            position: absolute; /* Ajuste se o seu menu lateral for fixo */
+            top: 0;
+            left: 200px; /* Assume que o menu lateral tem 200px de largura */
+        }
+
+        .hamburger-icon {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #333; 
+        }
+
+        /* Container principal para o conteúdo da página */
+        .content-container.profile-page {
+            padding-top: 50px; /* Espaço para o menu hamburguer/topo */
+            padding-bottom: 50px;
             display: flex;
-            justify-content: center; /* Centraliza o cartão horizontalmente */
-            min-height: 100vh; /* Para garantir que o corpo ocupe a tela */
+            justify-content: center;
+            width: 100%;
         }
 
         /* Estilo do Cartão de Perfil */
@@ -31,52 +51,53 @@
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 450px; /* Largura igual à da imagem original */
-            height: fit-content; /* Se ajusta ao conteúdo */
+            max-width: 400px; 
+            height: fit-content; 
             overflow: hidden;
         }
 
-        /* Cor de fundo do cabeçalho (Azul degradê) */
+        /* Cor de fundo do cabeçalho */
         .card-header-bg {
-            height: 120px;
-            background: linear-gradient(135deg, #1e90ff, #007bff); /* Azul mais vibrante */
+            height: 90px;
+            background: linear-gradient(135deg, #1e90ff, #007bff); 
             position: relative;
-            display: flex;
-            justify-content: center;
         }
 
-        /* Avatar (Círculo branco centralizado) */
+        /* 3. CORREÇÃO: Avatar reposicionado para não sobrepor o Título */
+        .profile-avatar-wrapper {
+            text-align: center;
+            margin-top: -45px; 
+            margin-bottom: 20px; 
+        }
+
         .profile-avatar {
-            position: absolute;
-            top: 50%;
-            transform: translateY(10%); /* Ajuste fino para a posição */
+            display: inline-block;
             width: 90px;
             height: 90px;
-            background: #f0f0f0;
+            background: #f0f0f0; 
             border-radius: 50%;
-            border: 5px solid #fff;
+            border: 5px solid #fff; 
         }
 
         /* Corpo do Cartão - Onde o formulário está */
         .card-body {
-            padding: 30px 40px;
+            padding: 10px 40px 30px 40px; 
             text-align: center;
         }
 
-        .card-body h2 {
+        .card-title {
             color: #333;
             margin-top: 0;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             font-size: 1.5em;
             font-weight: 600;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 15px;
+            padding-bottom: 10px;
         }
 
         /* Estilo dos Campos do Formulário */
         .form-group {
             text-align: left;
-            margin-bottom: 20px;
+            margin-bottom: 15px; 
         }
 
         .form-group label {
@@ -84,30 +105,33 @@
             font-weight: 600;
             color: #555;
             margin-bottom: 5px;
+            font-size: 0.95em;
         }
 
         .form-group input {
             width: 100%;
-            padding: 10px 15px;
+            padding: 10px 10px;
             border: 1px solid #ddd;
             border-radius: 6px;
             font-size: 1em;
-            box-sizing: border-box; /* Garante que o padding não aumente o width total */
+            box-sizing: border-box; 
             transition: border-color 0.3s;
         }
-
+        
         .form-group input:focus {
             border-color: #007bff;
             outline: none;
         }
-        
+
+        /* 2. CORREÇÃO: Estilo para E-mail Desabilitado */
         .form-group input[disabled] {
-            background-color: #f7f7f7;
-            color: #aaa;
+            background-color: #e9ecef; /* Fundo cinza claro para indicar que não é editável */
+            color: #888;
             cursor: not-allowed;
+            border-color: #e9ecef;
         }
 
-        /* Estilo do Botão Salvar (Azul principal) */
+        /* Botão Salvar */
         .save-button {
             width: 100%;
             padding: 12px;
@@ -117,7 +141,7 @@
             border-radius: 6px;
             font-size: 1.1em;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 25px;
             transition: background-color 0.3s;
             font-weight: bold;
         }
@@ -126,10 +150,10 @@
             background-color: #0056b3;
         }
 
-        /* Link para Alterar Senha */
+        /* 1. CORREÇÃO: Link Alterar Senha */
         .change-password-link {
             display: block;
-            margin-top: 20px;
+            margin-top: 15px;
             color: #007bff;
             text-decoration: none;
             font-size: 0.9em;
@@ -138,40 +162,51 @@
         .change-password-link:hover {
             text-decoration: underline;
         }
-
     </style>
 </head>
 <body>
 
-    <div class="content-container">
-        <div class="profile-card edit-mode">
-            <div class="card-header-bg">
-                <div class="profile-avatar"></div>
-            </div>
+    <div class="main-content">
+        <div class="menu-hamburger">
+            <button class="hamburger-icon" onclick="toggleSidebar()">
+                <span>&#9776;</span> 
+            </button>
+        </div>
 
-            <div class="card-body">
-                <h2>Editar Perfil</h2>
-                <form method="POST">
-                    <div class="form-group">
-                        <label for="id_nome">Nome:</label>
-                        <input type="text" id="id_nome" name="nome" value="Vitor Roberto" placeholder="Seu nome completo" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="id_email">E-mail:</label>
-                        <input type="email" id="id_email" name="email" value="vitorroberto02@gmail.com" placeholder="seu.email@exemplo.com" required disabled>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="id_time">Time Favorito:</label>
-                        <input type="text" id="id_time" name="time" value="Náutico" placeholder="Ex: Náutico, Sport, Santa Cruz">
-                    </div>
-
-                    <button type="submit" class="save-button">Salvar Alterações</button>
-                </form>
+        <div class="content-container profile-page">
+            <div class="profile-card edit-mode">
                 
-                <a href="#" class="change-password-link">Alterar Senha</a>
+                <div class="card-header-bg"></div>
+                
+                <div class="profile-avatar-wrapper">
+                    <div class="profile-avatar"></div>
+                </div>
 
+                <div class="card-body">
+                    <h2 class="card-title">Editar Perfil</h2>
+                    
+                    <form method="POST">
+                        <div class="form-group">
+                            <label for="id_nome">Nome:</label>
+                            <input type="text" id="id_nome" name="nome" value="Vitor Roberto" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_email">E-mail:</label>
+                            <input type="email" id="id_email" name="email" value="vitorroberto02@gmail.com" disabled>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_time">Time Favorito:</label>
+                            <input type="text" id="id_time" name="time" value="Náutico">
+                        </div>
+
+                        <button type="submit" class="save-button">Salvar Alterações</button>
+                    </form>
+                    
+                    <a href="{% url 'change_password' %}" class="change-password-link">Alterar Senha</a>
+
+                </div>
             </div>
         </div>
     </div>

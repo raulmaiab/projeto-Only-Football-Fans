@@ -547,4 +547,5 @@ def perfil(request):
     else:
         form = EditarPerfilForm(user=request.user, instance=request.user)
 
-    return render(request, 'perfil.html', {'form': form})
+    return render(request, 'usuarios/perfil.html', {'form': form})
+
