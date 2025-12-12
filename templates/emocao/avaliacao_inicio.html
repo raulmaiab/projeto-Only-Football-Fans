@@ -41,7 +41,19 @@
 
 <style>
 /* Remove rolagem global para esta página */
-body {
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+.avaliacao-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%);
     overflow: hidden;
 }
 
@@ -55,20 +67,10 @@ body {
     animation: float 6s ease-in-out infinite;
 }
 
-.avaliacao-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    padding: 20px;
-    gap: 40px;
-}
-
 .avaliacao-header {
     text-align: center;
     max-width: 600px;
-    margin-bottom: 10px;
+    margin-bottom: 40px;
 }
 
 .eyebrow {
@@ -124,16 +126,14 @@ body {
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    background: rgba(255, 255, 255, 0.95);
+    background: white;
     padding: 40px 30px;
     border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-lg);
+    box-shadow: 0 8px 30px rgba(3, 16, 40, 0.08);
     transition: var(--transition-smooth);
     width: 280px;
     height: 260px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 102, 255, 0.1);
     overflow: hidden;
 }
 
@@ -150,7 +150,7 @@ body {
 
 .botao-card:hover {
     transform: translateY(-10px);
-    box-shadow: var(--shadow-xl);
+    box-shadow: 0 15px 40px rgba(0, 102, 255, 0.15);
 }
 
 .botao-card:hover::before {
@@ -226,7 +226,7 @@ body {
     display: flex;
     gap: 30px;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 40px;
     flex-wrap: wrap;
 }
 
@@ -235,9 +235,10 @@ body {
     align-items: center;
     gap: 15px;
     padding: 15px 20px;
-    background: rgba(255, 255, 255, 0.9);
+    background: white;
     border-radius: var(--radius-lg);
     border: 1px solid rgba(0, 102, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(3, 16, 40, 0.05);
     transition: var(--transition-smooth);
     min-width: 200px;
 }
@@ -302,6 +303,12 @@ body {
     .avaliacao-container {
         gap: 30px;
         padding: 15px;
+        justify-content: flex-start;
+        padding-top: 40px;
+    }
+    
+    .avaliacao-header {
+        margin-bottom: 30px;
     }
     
     .botoes-grid {
@@ -365,6 +372,7 @@ body {
 @media (max-width: 480px) {
     .avaliacao-container {
         gap: 25px;
+        padding-top: 30px;
     }
     
     .eyebrow {
@@ -400,6 +408,11 @@ body {
 }
 
 @media (max-width: 360px) {
+    .avaliacao-container {
+        padding: 15px;
+        padding-top: 25px;
+    }
+    
     .botao-card {
         width: 240px;
         height: 200px;
@@ -416,6 +429,50 @@ body {
     
     .stat-item {
         width: 240px;
+    }
+}
+
+/* Para telas muito altas */
+@media (min-height: 800px) {
+    .avaliacao-container {
+        justify-content: center;
+    }
+}
+
+/* Para telas muito baixas */
+@media (max-height: 600px) {
+    .avaliacao-container {
+        justify-content: flex-start;
+        padding-top: 20px;
+        min-height: 100vh;
+    }
+    
+    .avaliacao-header {
+        margin-bottom: 25px;
+    }
+    
+    .botoes-grid {
+        margin: 10px 0;
+    }
+    
+    .botao-card {
+        width: 240px;
+        height: 200px;
+        padding: 25px 20px;
+    }
+    
+    .card-icon {
+        font-size: 2.2rem;
+        margin-bottom: 15px;
+    }
+    
+    .card-content h3 {
+        font-size: 1.2rem;
+        margin-bottom: 8px;
+    }
+    
+    .card-content p {
+        font-size: 0.9rem;
     }
 }
 </style>

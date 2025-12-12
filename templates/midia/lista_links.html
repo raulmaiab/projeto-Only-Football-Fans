@@ -10,7 +10,10 @@
 {% block content %}
 <main class="links-container">
     
-    <h2 class="form-title fade-in-item">{{ page_title }}</h2>
+    <div class="page-header">
+        <h1 class="page-title">{{ page_title }}</h1>
+        <p class="page-subtitle">Gerencie todos os seus links de partidas</p>
+    </div>
     
     {% if messages %}
     <div class="messages-container fade-in-item">
@@ -24,308 +27,564 @@
 
     <div class="header-actions fade-in-item">
         <a href="{% url 'core:adicionar_link_page' %}" class="btn-add-link">
-            🔗 Adicionar Novo Link 
+            <i class="fas fa-plus-circle"></i>
+            Adicionar Novo Link
         </a>
     </div>
     
     <div class="search-bar-wrapper fade-in-item">
-        <input type="search" id="search-links" class="form-input-search" placeholder="🔍 Buscar...">
+        <div class="search-icon">
+            <i class="fas fa-search"></i>
+        </div>
+        <input type="search" id="search-links" class="form-input-search" placeholder="Buscar links...">
     </div>
     
-    <h3 class="grid-title fade-in-item">Seus Links Cadastrados</h3>
     <div class="links-grid">
     {% for link in links %}
-        <div class="link-card fade-in-item">
+        <div class="link-card fade-in-item" data-search="{{ link.nome_do_jogo|default:link.titulo }}">
             <div class="link-header">
                 <h5>{{ link.nome_do_jogo|default:link.titulo }}</h5>
             </div>
             <div class="link-meta">
-                <small>Adicionado em: {{ link.criado_em|date:"d/m/Y" }}</small>
+                <span class="meta-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    {{ link.criado_em|date:"d/m/Y" }}
+                </span>
             </div>
             <div class="link-action">
                 <a href="{{ link.url }}" target="_blank" class="btn-view-link">
-                    Assistir / Ver Link
+                    <i class="fas fa-external-link-alt"></i>
+                    Acessar Link
                 </a>
             </div>
         </div>
     {% empty %}
         <div class="empty-state fade-in-item">
-            <div class="empty-icon">📎</div>
+            <div class="empty-icon">
+                <i class="fas fa-link"></i>
+            </div>
             <h4>Nenhum link encontrado</h4>
             <p>Você ainda não adicionou nenhum link. Clique no botão "Adicionar Novo Link" para começar!</p>
         </div>
     {% endfor %}
 
     <div id="no-results-message" class="empty-state hidden">
-        <div class="empty-icon">🧐</div>
+        <div class="empty-icon">
+            <i class="fas fa-search"></i>
+        </div>
         <h4>Nenhum link encontrado</h4>
         <p>Sua busca não retornou resultados. Tente um termo diferente.</p>
     </div>
-    </div> </main>
-
+    </div>
+</main>
 
 <style>
-    /* --- Variáveis de Estilo (Consistentes) --- */
-    :root {
-        --card-bg: #ffffff;
-        --text-primary: #1d2d35;
-        --text-secondary: #657786;
-        --border-color: #e1e8ed;
-        --shadow-color: rgba(0, 0, 0, 0.08);
-        --destaque-color: #007bff; /* Azul do sidebar */
-        --destaque-hover: #0056b3;
-        --button-green: #00adb5; /* Verde do 'registrar' */
-        --button-green-hover: #00939a;
-        --success-bg: #d4edda;
-        --success-text: #155724;
-        --info-bg: #d1ecf1;
-        --info-text: #0c5460;
-    }
+:root {
+    --primary-blue: #0066FF;
+    --primary-dark: #031028;
+    --secondary-blue: #1A4FA0;
+    --accent-blue: #00C2FF;
+    --light-blue: #E8F3FF;
+    --white: #FFFFFF;
+    --gray-light: #F5F8FF;
+    --gray-medium: #6B7EA8;
+    --gradient-primary: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    --gradient-accent: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+    --shadow-lg: 0 25px 50px -12px rgba(3, 16, 40, 0.25);
+    --shadow-xl: 0 35px 70px -15px rgba(3, 16, 40, 0.35);
+    --radius-xl: 24px;
+    --radius-lg: 16px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+    --transition-smooth: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    --success-text: #28a745;
+    --error-text: #dc3545;
+}
 
-    /* --- JS 1: Animação em Cascata --- */
-    .fade-in-item {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-    }
-    .fade-in-item.is-visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    /* --- JS 3: Classe de Ocultar para Busca --- */
-    .hidden {
-        display: none !important;
-    }
+.links-container {
+    min-height: calc(100vh - 80px);
+    padding: 30px 20px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+    overflow: hidden;
+}
 
-    /* --- Container Principal --- */
+.page-header {
+    text-align: center;
+    margin-bottom: 30px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #051831;
+    margin: 0 0 8px 0;
+    background: linear-gradient(90deg, #051831, var(--secondary-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.page-subtitle {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--gray-medium);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.messages-container {
+    max-width: 800px;
+    margin: 0 auto 25px auto;
+}
+
+.message {
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    margin-bottom: 10px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 102, 255, 0.2);
+    color: #051831;
+    box-shadow: 0 2px 8px rgba(3, 16, 40, 0.1);
+}
+
+.message.success {
+    background: rgba(40, 167, 69, 0.1);
+    border-color: rgba(40, 167, 69, 0.3);
+    color: #155724;
+}
+
+.message.warning {
+    background: rgba(255, 193, 7, 0.1);
+    border-color: rgba(255, 193, 7, 0.3);
+    color: #856404;
+}
+
+.message.error {
+    background: rgba(220, 53, 69, 0.1);
+    border-color: rgba(220, 53, 69, 0.3);
+    color: #721c24;
+}
+
+.header-actions {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.btn-add-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--gradient-primary);
+    color: white;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: var(--transition-smooth);
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 102, 255, 0.2);
+}
+
+.btn-add-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 102, 255, 0.3);
+    background: linear-gradient(135deg, #005CE6, var(--secondary-blue));
+}
+
+.btn-add-link i {
+    font-size: 1.1rem;
+}
+
+.search-bar-wrapper {
+    max-width: 600px;
+    margin: 0 auto 30px auto;
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-medium);
+    z-index: 2;
+    font-size: 0.95rem;
+}
+
+.form-input-search {
+    width: 100%;
+    padding: 14px 16px 14px 42px;
+    border: 1px solid rgba(0, 102, 255, 0.2);
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    color: #051831;
+    transition: var(--transition-smooth);
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 2px 8px rgba(3, 16, 40, 0.1);
+}
+
+.form-input-search::placeholder {
+    color: var(--gray-medium);
+}
+
+.form-input-search:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1), 0 4px 12px rgba(0, 102, 255, 0.1);
+}
+
+.form-input-search:focus + .search-icon {
+    color: var(--primary-blue);
+}
+
+.links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.link-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 25px;
+    border: 1px solid rgba(0, 102, 255, 0.1);
+    transition: var(--transition-smooth);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-shadow: 0 4px 12px rgba(3, 16, 40, 0.08);
+}
+
+.link-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-blue);
+    box-shadow: 0 8px 25px rgba(0, 102, 255, 0.15);
+}
+
+.link-header h5 {
+    margin: 0 0 10px 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #051831;
+    line-height: 1.3;
+}
+
+.link-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    color: var(--gray-medium);
+}
+
+.meta-item i {
+    width: 16px;
+    color: var(--primary-blue);
+    font-size: 0.9rem;
+}
+
+.link-action {
+    margin-top: 5px;
+}
+
+.btn-view-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px;
+    background: #f8f9fa;
+    color: #051831;
+    border: 1px solid rgba(0, 102, 255, 0.2);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: var(--transition-smooth);
+    font-family: 'Inter', sans-serif;
+}
+
+.btn-view-link:hover {
+    background: #e9ecef;
+    border-color: var(--primary-blue);
+    color: #051831;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 102, 255, 0.1);
+}
+
+.empty-state {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 40px 30px;
+    text-align: center;
+    background: white;
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(0, 102, 255, 0.1);
+    box-shadow: 0 4px 12px rgba(3, 16, 40, 0.08);
+    grid-column: 1 / -1;
+}
+
+.empty-icon {
+    font-size: 3rem;
+    color: var(--primary-blue);
+    margin-bottom: 20px;
+}
+
+.empty-state h4 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #051831;
+    margin: 0 0 10px 0;
+}
+
+.empty-state p {
+    font-size: 0.95rem;
+    color: var(--gray-medium);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.fade-in-item {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in-item.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
     .links-container {
-        max-width: 1100px;
-        margin: 0 auto;
-        padding: 1rem;
-        font-family: 'Poppins', sans-serif;
-    }
-    .form-title {
-        text-align: center;
-        color: var(--text-primary);
-        margin: 1rem 0 2rem 0;
-        font-size: 2.25rem;
-        font-weight: 700;
-    }
-    .grid-title {
-        color: var(--text-primary);
-        margin: 2rem 0 1rem 0;
-        font-weight: 600;
-        border-bottom: 2px solid var(--border-color);
-        padding-bottom: 0.5rem;
-    }
-
-    /* --- Mensagens do Django (Customizadas) --- */
-    .messages-container { margin-bottom: 1.5rem; }
-    .message {
-        padding: 10px 15px; border-radius: 6px; margin-bottom: 8px; font-weight: 500;
-    }
-    .message.success { background-color: var(--success-bg); color: var(--success-text); }
-    .message.info { background-color: var(--info-bg); color: var(--info-text); }
-    .message.warning { background-color: #fff3cd; color: #856404; }
-    .message.error { background-color: #f8d7da; color: #721c24; }
-
-    /* --- Botão de Adicionar --- */
-    .header-actions {
-        text-align: center;
-        margin-bottom: 2rem;
-    }
-    .btn-add-link {
-        background-color: var(--destaque-color);
-        color: white;
-        text-decoration: none;
-        padding: 0.8rem 1.8rem;
-        border-radius: 8px;
-        font-weight: 500;
-        font-size: 1.1rem;
-        transition: all 0.3s ease;
-    }
-    .btn-add-link:hover {
-        background-color: var(--destaque-hover);
-        box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-        transform: translateY(-2px);
-    }
-
-    /* --- JS 3: Barra de Busca --- */
-    .search-bar-wrapper {
-        margin-bottom: 1.5rem;
-    }
-    .form-input-search {
-        width: 100%;
-        padding: 0.8rem 1rem;
-        border: 2px solid var(--border-color);
-        border-radius: 8px;
-        font-family: 'Poppins', sans-serif;
-        font-size: 1rem;
-        color: var(--text-primary);
-        box-sizing: border-box;
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-    .form-input-search:focus {
-        outline: none;
-        border-color: var(--destaque-color);
-        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
-    }
-
-    /* --- Grid de Cards --- */
-    .links-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 1.5rem;
-        /* Perspective removido */
-    }
-
-    /* --- Card Individual (Sem 3D) --- */
-    .link-card {
-        background-color: var(--card-bg);
-        border-radius: 12px;
-        box-shadow: 0 4px 15px var(--shadow-color);
-        border: 1px solid var(--border-color);
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding: 1.5rem; /* Padding aplicado diretamente no card */
-        
-        /* Transição simples de hover */
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .link-card:hover {
-        transform: translateY(-5px); /* Efeito "lift" no hover */
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        padding: 25px 15px;
+        min-height: calc(100vh - 70px);
     }
     
-    .link-header { flex-grow: 1; }
-    .link-header h5 {
-        margin: 0 0 0.5rem 0;
-        font-size: 1.25rem;
-        font-weight: 600;
-        color: var(--text-primary);
-        text-transform: uppercase;
+    .links-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 18px;
     }
+    
+    .page-title {
+        font-size: 1.8rem;
+    }
+}
 
-    .link-meta {
-        margin-bottom: 1.5rem;
+@media (max-width: 768px) {
+    .links-container {
+        padding: 20px 12px;
+        min-height: calc(100vh - 60px);
     }
-    .link-meta small {
-        color: var(--text-secondary);
+    
+    .page-header {
+        margin-bottom: 25px;
+    }
+    
+    .page-title {
+        font-size: 1.6rem;
+    }
+    
+    .page-subtitle {
+        font-size: 0.95rem;
+    }
+    
+    .links-grid {
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 16px;
+    }
+    
+    .link-card {
+        padding: 22px 20px;
+    }
+    
+    .search-bar-wrapper {
+        margin-bottom: 25px;
+    }
+    
+    .form-input-search {
+        padding: 12px 14px 12px 38px;
         font-size: 0.9rem;
     }
-
-    .link-action a.btn-view-link {
-        display: block;
-        text-align: center;
-        background-color: var(--button-green);
-        color: white;
-        text-decoration: none;
-        padding: 0.7rem 1rem;
-        border-radius: 8px;
-        font-weight: 500;
-        transition: all 0.3s ease;
+    
+    .search-icon {
+        left: 14px;
+        font-size: 0.9rem;
     }
-    .link-action a.btn-view-link:hover {
-        background-color: var(--button-green-hover);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0, 173, 181, 0.3);
-    }
+}
 
-    /* --- Estado de Vazio --- */
+@media (max-width: 480px) {
+    .links-container {
+        padding: 15px 10px;
+    }
+    
+    .page-title {
+        font-size: 1.4rem;
+    }
+    
+    .page-subtitle {
+        font-size: 0.9rem;
+    }
+    
+    .links-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .link-card {
+        padding: 20px 18px;
+    }
+    
     .empty-state {
-        grid-column: 1 / -1; /* Ocupa a linha inteira do grid */
-        text-align: center;
-        padding: 3rem 2rem;
-        background-color: #f9fafb;
-        border-radius: 12px;
-        border: 2px dashed var(--border-color);
+        padding: 30px 20px;
+        margin: 30px auto;
     }
+    
     .empty-icon {
-        font-size: 3rem;
-        line-height: 1;
-        margin-bottom: 1rem;
+        font-size: 2.5rem;
     }
+    
     .empty-state h4 {
-        color: var(--text-primary);
-        font-size: 1.3rem;
-        margin: 0 0 0.5rem 0;
+        font-size: 1.2rem;
     }
-    .empty-state p {
-        color: var(--text-secondary);
-        margin: 0;
-    }
-</style>
+}
 
+@media (max-height: 700px) {
+    .links-container {
+        min-height: calc(100vh - 60px);
+        padding: 20px 15px;
+    }
+    
+    .page-header {
+        margin-bottom: 20px;
+    }
+    
+    .search-bar-wrapper {
+        margin-bottom: 20px;
+    }
+    
+    .links-grid {
+        gap: 15px;
+    }
+}
+
+@media (max-height: 600px) {
+    .links-container {
+        padding: 15px 10px;
+    }
+    
+    .page-title {
+        font-size: 1.5rem;
+        margin-bottom: 5px;
+    }
+    
+    .page-subtitle {
+        font-size: 0.9rem;
+    }
+    
+    .link-card {
+        padding: 18px 16px;
+        gap: 12px;
+    }
+    
+    .link-header h5 {
+        font-size: 1rem;
+        margin-bottom: 8px;
+    }
+    
+    .btn-view-link {
+        padding: 10px;
+        font-size: 0.85rem;
+    }
+    
+    .btn-add-link {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+}
+</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-
-    /* ================================
-    JS 1: ANIMAÇÃO EM CASCATA
-    ================================
-    */
+    // Animação em cascata
     const animatedItems = document.querySelectorAll('.fade-in-item');
     animatedItems.forEach((item, index) => {
         setTimeout(() => {
             item.classList.add('is-visible');
-        }, index * 100); // Atraso mais rápido para listas
+        }, 100 + index * 50);
     });
 
-
-    /* ================================
-    JS 2: EFEITO TILT 3D (REMOVIDO)
-    ================================
-    */
-    // O código do TILT foi removido daqui.
-
-
-    /* ================================
-    JS 3: FILTRO/BUSCA EM TEMPO REAL
-    ================================
-    */
+    // Filtro de busca
     const searchInput = document.getElementById('search-links');
     const allLinks = document.querySelectorAll('.link-card');
     const noResultsMessage = document.getElementById('no-results-message');
-    // Seleciona a mensagem original de "lista vazia", se ela existir
     const originalEmptyMessage = document.querySelector('.links-grid .empty-state');
 
-    // Só ativa a busca se houver uma barra de busca e links na página
     if (searchInput && allLinks.length > 0) {
-        
         searchInput.addEventListener('input', () => {
             const query = searchInput.value.toLowerCase().trim();
             let visibleCount = 0;
 
-            allLinks.forEach(link => {
-                const titleElement = link.querySelector('h5');
-                const title = titleElement ? titleElement.textContent.toLowerCase() : '';
+            allLinks.forEach(card => {
+                const searchText = card.dataset.search.toLowerCase();
                 
-                if (title.includes(query)) {
-                    link.classList.remove('hidden');
+                if (searchText.includes(query)) {
+                    card.classList.remove('hidden');
                     visibleCount++;
                 } else {
-                    link.classList.add('hidden');
+                    card.classList.add('hidden');
                 }
             });
 
-            // Gerencia a mensagem de "nenhum resultado"
             if (visibleCount === 0 && query !== '') {
                 noResultsMessage.classList.remove('hidden');
+                if (originalEmptyMessage) originalEmptyMessage.classList.add('hidden');
             } else {
                 noResultsMessage.classList.add('hidden');
+                if (originalEmptyMessage && query === '') {
+                    originalEmptyMessage.classList.remove('hidden');
+                }
             }
-            
-            // Se a busca estiver vazia, esconde a msg de "sem resultados"
-            // e deixa a msg original (se existir) tomar conta
-            if (query === '' && originalEmptyMessage) {
-                 noResultsMessage.classList.add('hidden');
-            }
-            
         });
     }
 
-}); // Fim do DOMContentLoaded
+    // Ajustar altura para não ter scroll
+    function adjustContainerHeight() {
+        const container = document.querySelector('.links-container');
+        const headerHeight = document.querySelector('header')?.offsetHeight || 80;
+        const windowHeight = window.innerHeight;
+        
+        container.style.minHeight = `calc(${windowHeight}px - ${headerHeight}px)`;
+    }
+
+    // Executar no carregamento e redimensionamento
+    window.addEventListener('load', adjustContainerHeight);
+    window.addEventListener('resize', adjustContainerHeight);
+    setTimeout(adjustContainerHeight, 100);
+});
 </script>
 
 {% endblock content %}

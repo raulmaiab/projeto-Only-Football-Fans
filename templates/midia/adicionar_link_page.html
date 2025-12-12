@@ -1,17 +1,13 @@
 {% extends "base.html" %} 
 {% load static %}
 
-{% block extra_head %}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-{% endblock %}
-
 {% block content %}
 <main class="form-container">
     
-    <h2 class="form-title fade-in-item">{{ page_title }}</h2>
-    <p class="form-subtitle fade-in-item">Preencha os campos para salvar um novo link no seu diário.</p>
+    <div class="page-header">
+        <h1 class="page-title">Adicionar Novo Link</h1>
+        <p class="page-subtitle">Salve links de jogos, highlights e momentos especiais</p>
+    </div>
 
     {% if messages %}
     <div class="messages-container fade-in-item">
@@ -27,214 +23,438 @@
         {% csrf_token %}
         
         <div class="form-group">
-            <label for="id_nome_do_jogo" class="form-label">Nome do Jogo ou Evento 🏷️</label>
-            <input type="text" id="id_nome_do_jogo" name="nome_do_jogo" class="form-input" required>
+            <input type="text" id="id_nome_do_jogo" name="nome_do_jogo" class="form-input" placeholder=" " required>
+            <label for="id_nome_do_jogo" class="form-label">
+                <i class="fas fa-tag"></i>
+                Nome do Jogo ou Evento
+            </label>
         </div>
         
         <div class="form-group">
+            <input type="url" id="id_url" name="url" class="form-input" placeholder=" " required>
             <label for="id_url" class="form-label">
-                Link Relacionado 🔗
-                <span id="url-status-icon"></span> 
+                <i class="fas fa-link"></i>
+                Link do Vídeo ou Página
             </label>
-            <input type="url" id="id_url" name="url" class="form-input" placeholder="Ex: https://www.youtube.com/watch?v=..." required>
+            <div id="url-status-icon"></div>
         </div>
         
         <div class="form-buttons">
-            <a href="{% url 'core:lista_links' %}" class="btn-cancel">Voltar</a>
-            <button type="submit" class="btn-submit">Salvar Link</button>
+            <a href="{% url 'core:lista_links' %}" class="btn-cancel">
+                <i class="fas fa-arrow-left"></i>
+                Voltar
+            </a>
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-save"></i>
+                Salvar Link
+            </button>
         </div>
 
     </form>
 </main>
 
-
 <style>
-    /* --- Variáveis de Estilo (Herdadas do base.html) --- */
-    :root {
-        /* As variáveis --card-bg, --text-primary, --button-green, etc.
-           já estão disponíveis globalmente pelo base.html */
-    }
+:root {
+    --primary-blue: #0066FF;
+    --primary-dark: #031028;
+    --secondary-blue: #1A4FA0;
+    --accent-blue: #00C2FF;
+    --light-blue: #E8F3FF;
+    --white: #FFFFFF;
+    --gray-light: #F5F8FF;
+    --gray-medium: #6B7EA8;
+    --gradient-primary: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    --gradient-accent: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+    --shadow-lg: 0 25px 50px -12px rgba(3, 16, 40, 0.25);
+    --shadow-xl: 0 35px 70px -15px rgba(3, 16, 40, 0.35);
+    --radius-xl: 24px;
+    --radius-lg: 16px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+    --transition-smooth: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    --success-text: #28a745;
+    --error-text: #dc3545;
+}
 
-    /* --- JS 1: Animação em Cascata --- */
-    @keyframes slideInUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .fade-in-item {
-        opacity: 0;
-        animation: slideInUp 0.5s ease-out forwards;
-    }
-    /* Atraso em cascata */
-    .form-title { animation-delay: 0.1s; }
-    .form-subtitle { animation-delay: 0.2s; }
-    .messages-container { animation-delay: 0.2s; }
-    .form-card { animation-delay: 0.3s; }
+.form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 80px);
+    padding: 30px 20px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+    overflow: hidden;
+}
 
+.page-header {
+    text-align: center;
+    margin-bottom: 30px;
+    max-width: 600px;
+}
 
-    /* --- Layout Principal --- */
+.page-title {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #051831;
+    margin: 0 0 8px 0;
+    background: linear-gradient(90deg, #051831, var(--secondary-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.page-subtitle {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--gray-medium);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.messages-container {
+    max-width: 500px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.message {
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    margin-bottom: 10px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 102, 255, 0.2);
+    color: #051831;
+    box-shadow: 0 2px 8px rgba(3, 16, 40, 0.1);
+}
+
+.message.success {
+    background: rgba(40, 167, 69, 0.1);
+    border-color: rgba(40, 167, 69, 0.3);
+    color: #155724;
+}
+
+.message.error {
+    background: rgba(220, 53, 69, 0.1);
+    border-color: rgba(220, 53, 69, 0.3);
+    color: #721c24;
+}
+
+.form-card {
+    background: white;
+    border-radius: var(--radius-xl);
+    padding: 35px 30px;
+    box-shadow: 0 15px 35px rgba(3, 16, 40, 0.12);
+    border: 1px solid rgba(0, 102, 255, 0.1);
+    max-width: 500px;
+    width: 100%;
+    position: relative;
+}
+
+.form-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-accent);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 22px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid rgba(0, 102, 255, 0.2);
+    background: #f8fafc;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    color: #051831;
+    transition: var(--transition-smooth);
+    font-family: 'Inter', sans-serif;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+}
+
+.form-input.is-valid {
+    border-color: var(--success-text);
+}
+
+.form-input.is-invalid {
+    border-color: var(--error-text);
+}
+
+.form-label {
+    position: absolute;
+    left: 14px;
+    top: 12px;
+    font-size: 0.9rem;
+    color: var(--gray-medium);
+    transition: var(--transition-smooth);
+    pointer-events: none;
+    background: transparent;
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-label i {
+    font-size: 0.85rem;
+    color: var(--primary-blue);
+}
+
+.form-input:focus + .form-label,
+.form-input:not(:placeholder-shown) + .form-label {
+    top: -9px;
+    font-size: 0.75rem;
+    color: var(--primary-blue);
+    background: white;
+}
+
+#url-status-icon {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.9rem;
+    transition: var(--transition-smooth);
+}
+
+.form-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.btn-submit, .btn-cancel {
+    flex: 1;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    font-family: 'Inter', sans-serif;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.btn-submit {
+    background: var(--gradient-primary);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 102, 255, 0.2);
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 102, 255, 0.3);
+    background: linear-gradient(135deg, #005CE6, var(--secondary-blue));
+}
+
+.btn-cancel {
+    background: #f8f9fa;
+    color: #051831;
+    border: 1px solid rgba(0, 102, 255, 0.2);
+}
+
+.btn-cancel:hover {
+    background: #e9ecef;
+    border-color: var(--primary-blue);
+    color: #051831;
+    transform: translateY(-2px);
+}
+
+.fade-in-item {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in-item.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
     .form-container {
-        max-width: 700px;
-        margin: 2rem auto;
-        padding: 1rem;
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .form-title {
-        text-align: center;
-        color: var(--text-dark);
-        margin-bottom: 0.5rem;
-        font-size: 2.25rem;
-        font-weight: 700;
+        padding: 25px 15px;
+        min-height: calc(100vh - 70px);
     }
     
-    .form-subtitle {
-        text-align: center;
-        color: var(--text-secondary, #555);
-        margin-top: 0;
-        margin-bottom: 2rem;
-        font-size: 1.1rem;
-    }
-
-    /* --- Mensagens do Django --- */
-    .messages-container { margin-bottom: 1.5rem; }
-    .message {
-        padding: 10px 15px; border-radius: 6px; margin-bottom: 8px; font-weight: 500;
-    }
-    .message.success { background-color: #d4edda; color: #155724; }
-    .message.error { background-color: #f8d7da; color: #721c24; }
-
-    /* --- Card do Formulário --- */
     .form-card {
-        background-color: var(--card-bg, #fff);
-        border-radius: 12px;
-        padding: 2.5rem;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        border: 1px solid var(--border-color-light, #e1e8ed);
-        display: flex;
-        flex-direction: column;
-        gap: 1.8rem; /* Espaço entre os campos */
+        max-width: 450px;
+        padding: 30px 25px;
     }
+}
 
-    .form-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .form-label {
-        font-weight: 500;
-        color: var(--text-dark);
-        font-size: 0.95rem;
-        display: flex;
-        align-items: center;
-    }
-
-    /* Estilo de Input Moderno (Underline) */
-    .form-input {
-        width: 100%;
-        padding: 0.8rem 0.5rem;
-        border: none;
-        border-bottom: 2px solid var(--border-color-light, #ddd);
-        background-color: var(--content-bg, #f4f7f9);
-        border-radius: 4px 4px 0 0;
-        font-family: 'Poppins', sans-serif;
-        font-size: 1rem;
-        color: var(--text-dark);
-        box-sizing: border-box;
-        transition: border-color 0.3s ease, background-color 0.3s ease;
-    }
-    .form-input::placeholder {
-        color: #a0b0b8;
-    }
-    .form-input:focus {
-        outline: none;
-        border-bottom-color: var(--accent-blue, #007bff);
-        background-color: #fff;
+@media (max-width: 768px) {
+    .form-container {
+        padding: 20px 12px;
+        min-height: calc(100vh - 60px);
     }
     
-    /* --- JS 2: Validação Visual de URL --- */
-    #url-status-icon {
-        margin-left: 8px;
+    .page-header {
+        margin-bottom: 25px;
+    }
+    
+    .page-title {
+        font-size: 1.6rem;
+    }
+    
+    .page-subtitle {
+        font-size: 0.95rem;
+    }
+    
+    .form-card {
+        max-width: 400px;
+        padding: 25px 20px;
+        border-radius: var(--radius-lg);
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-container {
+        padding: 15px 10px;
+        justify-content: flex-start;
+        padding-top: 25px;
+    }
+    
+    .page-title {
+        font-size: 1.4rem;
+    }
+    
+    .page-subtitle {
         font-size: 0.9rem;
     }
-    .form-input.is-valid {
-        border-bottom-color: #28a745; /* Verde Sucesso */
+    
+    .form-card {
+        max-width: 100%;
+        padding: 22px 18px;
+        border-radius: var(--radius-lg);
+        box-shadow: 0 10px 25px rgba(3, 16, 40, 0.08);
     }
-    .form-input.is-invalid {
-        border-bottom-color: #e74c3c; /* Vermelho Erro */
+    
+    .form-input {
+        padding: 11px 12px;
+        font-size: 0.85rem;
     }
-    /* --- Fim da Validação --- */
-
-
-    /* --- Botões de Ação --- */
+    
+    .form-label {
+        font-size: 0.85rem;
+        top: 11px;
+        left: 12px;
+    }
+    
     .form-buttons {
-        display: flex;
-        gap: 1rem;
-        margin-top: 1.5rem;
+        flex-direction: column;
+        gap: 12px;
     }
     
-    /* Botão Genérico (base para submit e cancel) */
     .btn-submit, .btn-cancel {
-        flex: 1; /* Ocupam espaço igual */
-        padding: 0.9rem 1.5rem;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-family: 'Poppins', sans-serif;
-        font-weight: 500;
-        font-size: 1rem;
-        text-align: center;
-        text-decoration: none;
-        transition: all 0.3s ease;
+        padding: 12px;
+        font-size: 0.85rem;
     }
+}
 
-    /* Botão Salvar (Verde) */
-    .btn-submit {
-        background-color: var(--button-green, #00adb5);
-        color: white;
-    }
-    .btn-submit:hover {
-        background-color: var(--button-green-hover, #00939a);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0, 173, 181, 0.3);
+@media (max-height: 700px) {
+    .form-container {
+        min-height: calc(100vh - 60px);
+        padding: 20px 15px;
+        justify-content: flex-start;
+        padding-top: 20px;
     }
     
-    /* Botão Voltar (Cinza) */
-    .btn-cancel {
-        background-color: #6c757d;
-        color: white;
+    .form-card {
+        padding: 25px 20px;
+        margin: 10px 0;
     }
-    .btn-cancel:hover {
-        background-color: #5a6268;
+    
+    .page-header {
+        margin-bottom: 20px;
     }
-</style>
+    
+    .page-title {
+        font-size: 1.5rem;
+        margin-bottom: 5px;
+    }
+    
+    .form-group {
+        margin-bottom: 18px;
+    }
+}
 
+@media (max-height: 600px) {
+    .form-container {
+        padding: 15px 10px;
+        padding-top: 15px;
+    }
+    
+    .form-card {
+        padding: 20px 18px;
+    }
+    
+    .page-header {
+        margin-bottom: 15px;
+    }
+    
+    .page-title {
+        font-size: 1.3rem;
+    }
+    
+    .page-subtitle {
+        font-size: 0.85rem;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-input {
+        padding: 10px 12px;
+    }
+    
+    .form-buttons {
+        margin-top: 5px;
+    }
+}
+</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-
-    /* ================================
-    JS 1: ANIMAÇÃO EM CASCATA
-    ================================
-    */
+    // Animação em cascata
     const animatedItems = document.querySelectorAll('.fade-in-item');
     animatedItems.forEach((item, index) => {
-        // Atraso de 100ms + 100ms por item
         setTimeout(() => {
             item.classList.add('is-visible');
-        }, index * 100 + 100);
+        }, 100 + index * 50);
     });
 
-
-    /* ================================
-    JS 2: VALIDADOR DE URL EM TEMPO REAL
-    ================================
-    */
+    // Validador de URL em tempo real
     const urlInput = document.getElementById('id_url');
     const urlStatusIcon = document.getElementById('url-status-icon');
     
-    // Regex simples para verificar se começa com http:// ou https://
-    // e tem algum conteúdo depois.
     const urlRegex = /^(https?:\/\/)[^\s$.?#].[^\s]*$/i;
 
     if (urlInput && urlStatusIcon) {
@@ -242,24 +462,34 @@ document.addEventListener('DOMContentLoaded', () => {
             const url = urlInput.value.trim();
 
             if (url === "") {
-                // Limpa o status se o campo estiver vazio
                 urlInput.classList.remove('is-valid', 'is-invalid');
-                urlStatusIcon.textContent = '';
+                urlStatusIcon.innerHTML = '';
             } else if (urlRegex.test(url)) {
-                // Válido
                 urlInput.classList.add('is-valid');
                 urlInput.classList.remove('is-invalid');
-                urlStatusIcon.textContent = '✅';
+                urlStatusIcon.innerHTML = '<i class="fas fa-check" style="color: var(--success-text)"></i>';
             } else {
-                // Inválido
                 urlInput.classList.add('is-invalid');
                 urlInput.classList.remove('is-valid');
-                urlStatusIcon.textContent = '❌';
+                urlStatusIcon.innerHTML = '<i class="fas fa-times" style="color: var(--error-text)"></i>';
             }
         });
     }
 
-}); // Fim do DOMContentLoaded
+    // Ajustar altura para não ter scroll
+    function adjustContainerHeight() {
+        const container = document.querySelector('.form-container');
+        const headerHeight = document.querySelector('header')?.offsetHeight || 80;
+        const windowHeight = window.innerHeight;
+        
+        container.style.minHeight = `calc(${windowHeight}px - ${headerHeight}px)`;
+    }
+
+    // Executar no carregamento e redimensionamento
+    window.addEventListener('load', adjustContainerHeight);
+    window.addEventListener('resize', adjustContainerHeight);
+    setTimeout(adjustContainerHeight, 100);
+});
 </script>
 
 {% endblock content %}
