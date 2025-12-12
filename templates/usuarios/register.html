@@ -4,191 +4,831 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrar - OFF</title>
+    <title>Registrar - OFF — Only Football Fans</title>
+
+    <!-- Fonte Inter (consistente com as outras páginas) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- Font Awesome (ícones profissionais) -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css">
-    
+
     <style>
-        /* ===========================
-         * VARIÁVEIS DE DESIGN
-         * =========================== */
         :root {
-            --sidebar-bg: #004a99; 
-            --header-bg: #007bff; 
-            --content-bg: #f4f7f9; 
-            --text-light: #f1f1f1;
-            --text-dark: #1d2d35;
-            --accent-blue: #007bff; 
-            --accent-blue-hover: #0056b3;
-            --border-color-light: #e1e8ed;
-            --error-text: #e74c3c;
+            --primary-blue: #0066FF;
+            --primary-dark: #031028;
+            --secondary-blue: #1A4FA0;
+            --accent-blue: #00C2FF;
+            --light-blue: #E8F3FF;
+            --white: #FFFFFF;
+            --gray-light: #F5F8FF;
+            --gray-medium: #6B7EA8;
+            --gradient-primary: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            --gradient-accent: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+            --shadow-lg: 0 25px 50px -12px rgba(3, 16, 40, 0.25);
+            --shadow-xl: 0 35px 70px -15px rgba(3, 16, 40, 0.35);
+            --radius-xl: 24px;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --transition-smooth: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
             --success-text: #28a745;
+            --error-text: #dc3545;
         }
 
-        /* ===========================
-         * ANIMAÇÕES (CSS & JS)
-         * =========================== */
-        @keyframes slideInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes slideInLeft  { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes formShake { 0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-8px);}40%,80%{transform:translateX(8px);} }
-        .form-shake { animation: formShake 0.5s ease-in-out; }
-        @keyframes fadeInOut { 0%{opacity:0}20%{opacity:1}80%{opacity:1}100%{opacity:0} }
-        .quote-fade { animation: fadeInOut 5s ease-in-out forwards; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        /* ===========================
-         * LAYOUT: SPLIT-SCREEN
-         * =========================== */
-        body { font-family: 'Poppins', sans-serif; margin: 0; overflow: hidden; }
-        .register-container { display: flex; height: 100vh; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--primary-dark);
+            color: #051831;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
 
-        /* --- PAINEL ESQUERDO (VISUAL) --- */
+        /* Background elements (igual às outras páginas) */
+        .bg-elements {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, rgba(0, 102, 255, 0.15) 0%, transparent 70%);
+        }
+
+        .bg-circle:nth-child(1) {
+            width: 800px;
+            height: 800px;
+            top: -300px;
+            right: -300px;
+        }
+
+        .bg-circle:nth-child(2) {
+            width: 600px;
+            height: 600px;
+            bottom: -200px;
+            left: -200px;
+            background: radial-gradient(circle at center, rgba(0, 194, 255, 0.1) 0%, transparent 70%);
+        }
+
+        .register-container {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Painel Esquerdo - Mantendo a identidade mas atualizando design */
         .register-panel-left {
-            flex: 1;
-            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--sidebar-bg) 100%);
-            color: var(--text-light);
+            flex: 1.2;
+            background: linear-gradient(135deg, rgba(3, 16, 40, 0.95), rgba(3, 16, 40, 0.85));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: var(--white);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 40px;
-            box-sizing: border-box;
+            padding: 30px 20px;
             text-align: center;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
-            opacity: 0;
-            animation: slideInLeft 0.7s ease-out 0.1s forwards;
+            overflow: hidden;
         }
-        .welcome-content h1 { font-size: 3rem; margin: 0 0 10px 0; font-weight: 700; letter-spacing: 2px; }
-        .welcome-content p { font-size: 1.25rem; margin: 0; font-weight: 400; opacity: 0.9; }
 
-        /* Rotador de Frases */
-        .quote-rotator { position: absolute; bottom: 40px; left: 40px; right: 40px; }
-        .quote-rotator h3 { font-size: 1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid var(--accent-blue-hover); display: inline-block; padding-bottom: 5px; margin-bottom: 15px; }
-        #quote-display { font-size: 0.95rem; font-style: italic; opacity: 0; height: 40px; }
+        .register-panel-left::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-accent);
+        }
 
-        /* --- PAINEL DIREITO (FORMULÁRIO) --- */
+        .welcome-content {
+            max-width: 480px;
+            z-index: 2;
+            margin-bottom: 30px;
+        }
+
+        .brand-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        /* Logo da marca */
+        .brand-logo {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brand-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .brand-text {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--white), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .welcome-content h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            margin: 0 0 12px 0;
+            color: var(--white);
+            line-height: 1.1;
+        }
+
+        .welcome-content p {
+            font-size: 1rem;
+            opacity: 0.9;
+            color: var(--light-blue);
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .features-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 25px;
+            text-align: left;
+            max-width: 320px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .feature-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-blue);
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .feature-text {
+            font-size: 0.85rem;
+            line-height: 1.3;
+        }
+
+        /* Rotador de Frases - SIMPLIFICADO */
+        .quote-rotator {
+            margin-top: 25px;
+            padding: 12px;
+            background: transparent;
+            text-align: center;
+        }
+
+        .quote-rotator h3 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .quote-rotator h3 i {
+            font-size: 0.75rem;
+        }
+
+        #quote-display {
+            font-size: 0.85rem;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.85);
+            min-height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1.3;
+            font-weight: 400;
+        }
+
+        /* Painel Direito - Registro */
         .register-panel-right {
-            flex: 1.2;
-            background-color: var(--content-bg);
+            flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow-y: auto;
-            padding: 2rem 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.02);
         }
-        .register-card {
-            background-color: #fff;
-            padding: 25px 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 450px;
-            box-sizing: border-box;
-            opacity: 0;
-            animation: slideInRight 0.7s ease-out 0.2s forwards;
-        }
-        .register-card h1 { color: var(--sidebar-bg); margin: 0 0 10px 0; text-align: center; font-weight: 700; font-size: 2.5rem; letter-spacing: 2px; }
-        .register-card h2 { color: var(--text-dark); margin: 0 0 20px 0; text-align: center; font-weight: 500; font-size: 1.5rem; }
 
-        /* ===========================
-         * ESTILO DO FORMULÁRIO (Float Label)
-         * =========================== */
-        .form-group { position: relative; margin-bottom: 1.25rem; }
+        .register-card {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--radius-xl);
+            padding: 30px 25px;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+
+        .register-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-accent);
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .register-header h1 {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: #051831;
+            margin: 0 0 6px 0;
+            background: linear-gradient(90deg, #051831, var(--secondary-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .register-header h2 {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--gray-medium);
+            margin: 0;
+        }
+
+        /* Formulário */
+        .form-group {
+            position: relative;
+            margin-bottom: 18px;
+        }
+
         .form-input {
             width: 100%;
-            padding: 10px 5px;
-            background-color: transparent;
-            border: none;
-            border-bottom: 2px solid var(--border-color-light);
-            font-family: 'Poppins', sans-serif;
-            font-size: 1rem;
-            color: var(--text-dark);
-            box-sizing: border-box;
-            transition: border-color 0.3s ease;
+            padding: 12px 14px;
+            border: 1px solid rgba(0, 102, 255, 0.2);
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            color: #051831;
+            transition: var(--transition-smooth);
+            font-family: 'Inter', sans-serif;
         }
-        .form-label { position: absolute; top: 10px; left: 5px; color: #999; font-size: 1rem; pointer-events: none; transition: all 0.2s ease-out; }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+            background: white;
+        }
+
+        .form-label {
+            position: absolute;
+            left: 14px;
+            top: 12px;
+            font-size: 0.9rem;
+            color: var(--gray-medium);
+            transition: var(--transition-smooth);
+            pointer-events: none;
+            background: transparent;
+            padding: 0 5px;
+        }
+
         .form-input:focus + .form-label,
         .form-input:not(:placeholder-shown) + .form-label {
-            top: -14px; left: 0; font-size: 0.85rem; font-weight: 500; color: var(--accent-blue);
+            top: -9px;
+            font-size: 0.75rem;
+            color: var(--primary-blue);
+            background: white;
         }
-        .form-input:focus { outline: none; border-bottom-color: var(--accent-blue); }
 
-        /* --- Toggle de Senha --- */
-        .password-wrapper { position: relative; }
-        .password-wrapper .form-input { padding-right: 35px; }
+        .password-wrapper {
+            position: relative;
+        }
+
         .toggle-password {
             position: absolute;
-            right: 5px;
-            top: 8px;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--gray-medium);
             cursor: pointer;
-            font-size: 1.1rem;
-            color: #999;
-            transition: color 0.2s ease;
-            display:inline-flex;
-            align-items:center;
+            font-size: 0.9rem;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-smooth);
         }
-        .toggle-password i { font-size: 1.15rem; }
-        .toggle-password:hover { color: var(--accent-blue); }
-        
-        /* JS 1: Validação de Senha */
-        #password-match-status { font-size: 0.8rem; font-weight: 500; padding-top: 4px; text-align: right; }
-        #password-match-status.is-valid { color: var(--success-text); }
-        #password-match-status.is-invalid { color: var(--error-text); }
 
-        /* JS 2: Input de Avatar Customizado */
-        .form-group-file { margin-bottom: 1.25rem; }
-        .form-group-file input[type="file"] { display: none; }
+        .toggle-password:hover {
+            color: var(--primary-blue);
+        }
+
+        #password-match-status {
+            font-size: 0.75rem;
+            margin-top: 5px;
+            text-align: right;
+            font-weight: 500;
+            min-height: 16px;
+        }
+
+        #password-match-status.is-valid {
+            color: var(--success-text);
+        }
+
+        #password-match-status.is-invalid {
+            color: var(--error-text);
+        }
+
+        /* Upload de Avatar */
+        .form-group-file {
+            margin-bottom: 18px;
+        }
+
+        .form-group-file input[type="file"] {
+            display: none;
+        }
+
         .file-upload-label {
-            display: block; padding: 10px 15px; background-color: #f0f0f0; border: 2px dashed var(--border-color-light);
-            border-radius: 8px; text-align: center; cursor: pointer; font-weight: 500; color: #555; transition: all 0.2s ease;
-            display:flex;align-items:center;justify-content:center;gap:8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 12px;
+            background: rgba(0, 102, 255, 0.05);
+            border: 2px dashed rgba(0, 102, 255, 0.3);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--gray-medium);
+            transition: var(--transition-smooth);
+            font-size: 0.85rem;
         }
-        .file-upload-label i { font-size:1.05rem;color:var(--accent-blue); }
-        .file-upload-label:hover { border-color: var(--accent-blue); color: var(--accent-blue); background-color: #e8f0f7; }
-        #file-name { font-size: 0.85rem; color: #555; margin-top: 8px; display: block; text-align: center; }
 
-        /* --- Botão --- */
+        .file-upload-label i {
+            color: var(--primary-blue);
+            font-size: 0.9rem;
+        }
+
+        .file-upload-label:hover {
+            background: rgba(0, 102, 255, 0.1);
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        #file-name {
+            font-size: 0.75rem;
+            color: var(--gray-medium);
+            margin-top: 5px;
+            text-align: center;
+            min-height: 16px;
+        }
+
         .botao-registrar {
-            width: 100%; padding: 12px; background-color: var(--accent-blue); color: #fff; border: none;
-            border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 1rem; margin-top: 10px; transition: all 0.3s ease;
+            width: 100%;
+            padding: 12px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            margin-top: 8px;
+            font-family: 'Inter', sans-serif;
         }
-        .botao-registrar:hover { background-color: var(--accent-blue-hover); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); }
 
-        /* --- Link de Login --- */
-        .login-link { margin-top: 24px; text-align: center; font-size: 0.9rem; color: #555; }
-        .login-link a { color: var(--accent-blue); text-decoration: none; font-weight: 600; }
-        .login-link a:hover { text-decoration: underline; }
-        
-        /* --- Erro do Django --- */
-        .error { list-style: none; padding: 10px 15px; margin: 0 0 20px 0; background-color: #fdecea; border: 1px solid #f5c6cb; color: var(--error-text); border-radius: 8px; font-size: 0.9rem; font-weight: 500; text-align: center; }
+        .botao-registrar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 102, 255, 0.3);
+            background: linear-gradient(135deg, #005CE6, var(--secondary-blue));
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: var(--gray-medium);
+        }
+
+        .login-link a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition-smooth);
+        }
+
+        .login-link a:hover {
+            color: var(--secondary-blue);
+            text-decoration: underline;
+        }
+
+        .error {
+            margin-top: 12px;
+            padding: 10px;
+            background: rgba(220, 53, 69, 0.1);
+            border: 1px solid rgba(220, 53, 69, 0.2);
+            color: #721c24;
+            border-radius: var(--radius-md);
+            list-style: none;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes formShake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        @keyframes quoteFade {
+            0% { opacity: 0; transform: translateY(8px); }
+            15% { opacity: 1; transform: translateY(0); }
+            85% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-8px); }
+        }
+
+        .form-shake { animation: formShake 0.5s ease-in-out; }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .slide-in-left {
+            animation: slideInLeft 0.7s ease-out 0.1s forwards;
+            opacity: 0;
+        }
+
+        .slide-in-right {
+            animation: slideInRight 0.7s ease-out 0.2s forwards;
+            opacity: 0;
+        }
+
+        .quote-fade {
+            animation: quoteFade 8s ease-in-out forwards;
+        }
+
+        /* Responsividade */
+        @media (max-width: 1024px) {
+            .register-container {
+                flex-direction: column;
+                min-height: 100vh;
+            }
+            
+            .register-panel-left {
+                flex: none;
+                padding: 25px 15px;
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                min-height: 35vh;
+            }
+            
+            .brand-text {
+                font-size: 1.6rem;
+            }
+            
+            .welcome-content h1 {
+                font-size: 1.6rem;
+            }
+            
+            .register-panel-right {
+                flex: none;
+                padding: 15px;
+                min-height: 65vh;
+                align-items: center;
+            }
+            
+            .register-card {
+                max-width: 380px;
+                padding: 25px 20px;
+                margin: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .register-panel-left {
+                padding: 20px 12px;
+                min-height: 30vh;
+            }
+            
+            .brand-header {
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
+                margin-bottom: 15px;
+            }
+            
+            .brand-text {
+                font-size: 1.4rem;
+            }
+            
+            .brand-logo {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .welcome-content h1 {
+                font-size: 1.4rem;
+                margin-bottom: 8px;
+            }
+            
+            .welcome-content p {
+                font-size: 0.9rem;
+                margin-bottom: 15px;
+            }
+            
+            .features-list {
+                display: none;
+            }
+            
+            .quote-rotator {
+                margin-top: 15px;
+                padding: 8px;
+            }
+            
+            .register-panel-right {
+                padding: 12px;
+                min-height: 70vh;
+            }
+            
+            .register-card {
+                max-width: 350px;
+                padding: 22px 18px;
+                border-radius: var(--radius-lg);
+            }
+            
+            .register-header h1 {
+                font-size: 1.4rem;
+            }
+            
+            .register-header h2 {
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .register-panel-left {
+                padding: 15px 10px;
+                min-height: 28vh;
+            }
+            
+            .brand-text {
+                font-size: 1.3rem;
+            }
+            
+            .brand-logo {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .welcome-content h1 {
+                font-size: 1.3rem;
+            }
+            
+            .quote-rotator h3 {
+                font-size: 0.8rem;
+            }
+            
+            #quote-display {
+                font-size: 0.8rem;
+            }
+            
+            .register-panel-right {
+                padding: 10px;
+                min-height: 72vh;
+            }
+            
+            .register-card {
+                max-width: 100%;
+                padding: 20px 16px;
+                border-radius: var(--radius-lg);
+            }
+            
+            .register-header h1 {
+                font-size: 1.3rem;
+            }
+            
+            .register-header h2 {
+                font-size: 0.8rem;
+            }
+            
+            .form-input {
+                padding: 11px 13px;
+                font-size: 0.85rem;
+            }
+            
+            .form-label {
+                font-size: 0.85rem;
+                top: 11px;
+            }
+            
+            .botao-registrar {
+                padding: 11px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-height: 700px) {
+            .register-card {
+                padding: 20px 18px;
+            }
+            
+            .form-group {
+                margin-bottom: 15px;
+            }
+            
+            .register-header {
+                margin-bottom: 20px;
+            }
+            
+            .botao-registrar {
+                margin-top: 5px;
+            }
+            
+            .login-link {
+                margin-top: 15px;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .register-panel-left {
+                padding: 15px 10px;
+            }
+            
+            .brand-header {
+                margin-bottom: 15px;
+            }
+            
+            .brand-text {
+                font-size: 1.4rem;
+            }
+            
+            .welcome-content h1 {
+                font-size: 1.4rem;
+                margin-bottom: 8px;
+            }
+            
+            .welcome-content p {
+                font-size: 0.9rem;
+                margin-bottom: 15px;
+            }
+            
+            .features-list {
+                display: none;
+            }
+            
+            .quote-rotator {
+                margin-top: 10px;
+                padding: 8px;
+            }
+            
+            .register-card {
+                padding: 18px 15px;
+            }
+            
+            .form-group {
+                margin-bottom: 12px;
+            }
+            
+            .form-input {
+                padding: 10px 12px;
+            }
+        }
     </style>
+
 </head>
 <body>
 
+    <!-- Background Elements (igual às outras páginas) -->
+    <div class="bg-elements">
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+    </div>
+
     <div class="register-container">
         
-        <div class="register-panel-left">
+        <!-- Painel Esquerdo - Informações e Branding -->
+        <div class="register-panel-left slide-in-left">
             <div class="welcome-content">
+                <div class="brand-header">
+                    <!-- Logo da marca -->
+                    <div class="brand-logo">
+                        <img src="{% static 'logo_OFF.png' %}" alt="Logo OFF">
+                    </div>
+                    <div class="brand-text">Only Football Fans</div>
+                </div>
+                
                 <h1>Junte-se à Torcida!</h1>
-                <p>Crie sua conta e comece a registrar suas memórias.</p>
+                <p>Crie sua conta e comece a registrar suas memórias do futebol.</p>
+                
+                <div class="features-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-stopwatch"></i>
+                        </div>
+                        <div class="feature-text">
+                            <strong>Registro rápido</strong> — Partidas em segundos
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="feature-text">
+                            <strong>Avaliação detalhada</strong> — Estádios e experiências
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <div class="feature-text">
+                            <strong>Galeria pessoal</strong> — Fotos e vídeos organizados
+                        </div>
+                    </div>
+                </div>
             </div>
-            
+
+            <!-- Rotador de Frases - SIMPLIFICADO -->
             <div class="quote-rotator">
-                <h3>Voz da Arquibancada</h3>
-                <p id="quote-display">"O futebol é a única religião que não tem ateus."</p>
+                <h3><i class="fas fa-quote-left"></i> Voz da Arquibancada</h3>
+                <div id="quote-display">"O futebol é a única religião que não tem ateus."</div>
             </div>
         </div>
 
+        <!-- Painel Direito - Formulário de Registro -->
         <div class="register-panel-right">
-            <div class="register-card" id="register-card">
-                <h1>O.F.F.</h1>
-                <h2>Criar Conta</h2>
-                
+            <div class="register-card slide-in-right" id="register-card">
+                <div class="register-header">
+                    <h1>Criar Conta</h1>
+                    <h2>Junte-se à comunidade de torcedores</h2>
+                </div>
+
                 {% if error %}
-                    <p class="error">{{ error }}</p>
+                    <div class="error">{{ error }}</div>
                 {% endif %}
 
                 <form method="post" enctype="multipart/form-data" id="register-form">
@@ -207,17 +847,17 @@
                     <div class="form-group password-wrapper">
                         <input type="password" name="password" id="password" class="form-input" placeholder=" " required autocomplete="new-password">
                         <label for="password" class="form-label">Senha</label>
-                        <span class="toggle-password" data-target="password" title="Mostrar / ocultar senha">
-                            <i class="fa-regular fa-eye" aria-hidden="true"></i>
-                        </span>
+                        <button type="button" class="toggle-password" data-target="password">
+                            <i class="fas fa-eye"></i>
+                        </button>
                     </div>
                     
                     <div class="form-group password-wrapper">
                         <input type="password" name="confirm_password" id="confirm_password" class="form-input" placeholder=" " required autocomplete="new-password">
                         <label for="confirm_password" class="form-label">Confirmar senha</label>
-                        <span class="toggle-password" data-target="confirm_password" title="Mostrar / ocultar senha">
-                            <i class="fa-regular fa-eye" aria-hidden="true"></i>
-                        </span>
+                        <button type="button" class="toggle-password" data-target="confirm_password">
+                            <i class="fas fa-eye"></i>
+                        </button>
                     </div>
                     <div id="password-match-status"></div>
 
@@ -227,131 +867,171 @@
                     </div>
                     
                     <div class="form-group-file">
-                        <label for="avatar" class="file-upload-label"><i class="fa-solid fa-camera-retro" aria-hidden="true"></i> Escolher Avatar (Opcional)</label>
+                        <label for="avatar" class="file-upload-label">
+                            <i class="fas fa-camera-retro"></i> Escolher Avatar (Opcional)
+                        </label>
                         <input type="file" name="avatar" id="avatar" accept="image/*">
                         <span id="file-name">Nenhum arquivo selecionado</span>
                     </div>
 
-                    <button type="submit" class="botao-registrar">Registrar</button>
+                    <button type="submit" class="botao-registrar">
+                        <i class="fas fa-user-plus" style="margin-right: 8px;"></i>
+                        Registrar
+                    </button>
                 </form>
 
                 <p class="login-link">
-                    Já tem conta? <a href="{% url 'core:login' %}">Login</a>
+                    Já tem uma conta?
+                    <a href="{% url 'core:login' %}">Faça login aqui</a>
                 </p>
+
             </div>
         </div>
+
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Toggle de Senha
+    const toggleButtons = document.querySelectorAll('.toggle-password');
+    
+    toggleButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const targetInputId = button.dataset.target;
+            const targetInput = document.getElementById(targetInputId);
             
-            // --- Toggle de Senha (para múltiplos campos) usando Font Awesome REGULAR icons ---
-            const toggleButtons = document.querySelectorAll('.toggle-password');
-            toggleButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const targetInputId = button.dataset.target;
-                    const targetInput = document.getElementById(targetInputId);
-                    if (targetInput) {
-                        const isHidden = targetInput.type === 'password';
-                        targetInput.type = isHidden ? 'text' : 'password';
+            if (targetInput) {
+                const hidden = targetInput.type === 'password';
+                targetInput.type = hidden ? 'text' : 'password';
 
-                        // sempre usar ícones REGULAR
-                        button.innerHTML = isHidden
-                            ? '<i class="fa-regular fa-eye-slash" aria-hidden="true"></i>'
-                            : '<i class="fa-regular fa-eye" aria-hidden="true"></i>';
-                    }
-                });
-            });
-
-            // --- Validação "Shake" ---
-            const registerForm = document.getElementById('register-form');
-            const registerCard = document.getElementById('register-card');
-            
-            if (registerForm && registerCard) {
-                registerForm.addEventListener('submit', (event) => {
-                    let hasEmptyFields = false;
-                    registerForm.querySelectorAll('input[required]').forEach(input => {
-                        if (input.value.trim() === '') hasEmptyFields = true;
-                    });
-
-                    if (hasEmptyFields) {
-                        event.preventDefault(); 
-                        registerCard.classList.add('form-shake');
-                        setTimeout(() => registerCard.classList.remove('form-shake'), 500);
-                    }
-                });
+                button.innerHTML = hidden
+                    ? '<i class="fas fa-eye-slash"></i>'
+                    : '<i class="fas fa-eye"></i>';
+                
+                targetInput.focus();
             }
-
-            // --- Rotador de Frases ---
-            const quotes = [
-                '"O futebol é a única religião que não tem ateus." - (Anônimo)',
-                '"Entrar em campo é como entrar num templo." - Zico',
-                '"Onde quer que haja uma bola, haverá um brasileiro." - (Dito popular)',
-                '"Não é apenas um jogo, é uma paixão." - (Torcedor)'
-            ];
-            const quoteDisplay = document.getElementById('quote-display');
-            let currentQuoteIndex = 0;
-            if (quoteDisplay) {
-                setInterval(() => {
-                    currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
-                    quoteDisplay.classList.add('quote-fade');
-                    setTimeout(() => {
-                        quoteDisplay.textContent = quotes[currentQuoteIndex];
-                        quoteDisplay.classList.remove('quote-fade');
-                        void quoteDisplay.offsetWidth; 
-                        quoteDisplay.classList.add('quote-fade');
-                    }, 500);
-                }, 5000);
-                quoteDisplay.classList.add('quote-fade');
-            }
-
-            // --- Validação de Senha em Tempo Real ---
-            const passwordInput = document.getElementById('password');
-            const confirmPasswordInput = document.getElementById('confirm_password');
-            const matchStatus = document.getElementById('password-match-status');
-            
-            const validatePasswordMatch = () => {
-                if (!passwordInput || !confirmPasswordInput || !matchStatus) return;
-                const pass = passwordInput.value;
-                const confirmPass = confirmPasswordInput.value;
-
-                if (confirmPass.length === 0) {
-                    matchStatus.textContent = '';
-                    matchStatus.className = '';
-                } else if (pass === confirmPass) {
-                    matchStatus.textContent = 'Senhas coincidem!';
-                    matchStatus.className = 'is-valid';
-                } else {
-                    matchStatus.textContent = 'Senhas não coincidem!';
-                    matchStatus.className = 'is-invalid';
-                }
-            };
-            if(passwordInput) passwordInput.addEventListener('input', validatePasswordMatch);
-            if(confirmPasswordInput) confirmPasswordInput.addEventListener('input', validatePasswordMatch);
-
-            // --- Input de Avatar Customizado ---
-            const avatarInput = document.getElementById('avatar');
-            const fileNameDisplay = document.getElementById('file-name');
-            const fileLabel = document.querySelector('.file-upload-label');
-
-            if (avatarInput && fileNameDisplay && fileLabel) {
-                avatarInput.addEventListener('change', () => {
-                    if (avatarInput.files.length > 0) {
-                        fileNameDisplay.textContent = avatarInput.files[0].name;
-                        fileLabel.style.borderColor = 'var(--success-text)';
-                        fileLabel.style.color = 'var(--success-text)';
-                    } else {
-                        fileNameDisplay.textContent = 'Nenhum arquivo selecionado';
-                        fileLabel.style.borderColor = 'var(--border-color-light)';
-                        fileLabel.style.color = '#555';
-                    }
-                });
-
-                // abrir o input ao clicar no label (acessibilidade)
-                fileLabel.addEventListener('click', () => avatarInput.click());
-            }
-
         });
-    </script>
+    });
+
+    // Form Shake Animation
+    const registerForm = document.getElementById('register-form');
+    const registerCard = document.getElementById('register-card');
+    const usernameInput = document.getElementById('username');
+
+    registerForm.addEventListener('submit', (e) => {
+        let hasEmptyFields = false;
+        
+        registerForm.querySelectorAll('input[required]').forEach(input => {
+            if (input.value.trim() === '') {
+                hasEmptyFields = true;
+                input.style.borderColor = '#dc3545';
+            } else {
+                input.style.borderColor = '';
+            }
+        });
+
+        if (hasEmptyFields) {
+            e.preventDefault();
+            registerCard.classList.add('form-shake');
+            setTimeout(() => registerCard.classList.remove('form-shake'), 500);
+        }
+    });
+
+    // Remove borda de erro quando o usuário começa a digitar
+    usernameInput.addEventListener('input', () => {
+        usernameInput.style.borderColor = '';
+    });
+
+    // Rotador de Frases - COM VELOCIDADE REDUZIDA
+    const quotes = [
+        '"O futebol é a única religião que não tem ateus." - (Anônimo)',
+        '"Entrar em campo é como entrar num templo." - Zico',
+        '"Onde quer que haja uma bola, haverá um brasileiro." - (Dito popular)',
+        '"Não é apenas um jogo, é uma paixão." - (Torcedor)',
+        '"O futebol é arte, é emoção, é vida." - (Torcedor)',
+        '"Cada jogo é uma nova história para contar." - (Torcedor)'
+    ];
+
+    const quoteDisplay = document.getElementById('quote-display');
+    let index = 0;
+
+    // Função para trocar as frases - TEMPO AUMENTADO PARA 8 SEGUNDOS
+    function rotateQuote() {
+        quoteDisplay.classList.add('quote-fade');
+        
+        setTimeout(() => {
+            index = (index + 1) % quotes.length;
+            quoteDisplay.textContent = quotes[index];
+            
+            // Força reflow para reiniciar a animação
+            void quoteDisplay.offsetWidth;
+            
+            quoteDisplay.classList.remove('quote-fade');
+        }, 800); // Tempo aumentado para transição mais suave
+    }
+
+    // Inicia a rotação a cada 8 segundos
+    if (quoteDisplay) {
+        setInterval(rotateQuote, 8000);
+        quoteDisplay.classList.add('quote-fade');
+    }
+
+    // Validação de Senha em Tempo Real
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirm_password');
+    const matchStatus = document.getElementById('password-match-status');
+    
+    const validatePasswordMatch = () => {
+        if (!passwordInput || !confirmPasswordInput || !matchStatus) return;
+        
+        const pass = passwordInput.value;
+        const confirmPass = confirmPasswordInput.value;
+
+        if (confirmPass.length === 0) {
+            matchStatus.textContent = '';
+            matchStatus.className = '';
+        } else if (pass === confirmPass) {
+            matchStatus.textContent = 'Senhas coincidem!';
+            matchStatus.className = 'is-valid';
+        } else {
+            matchStatus.textContent = 'Senhas não coincidem!';
+            matchStatus.className = 'is-invalid';
+        }
+    };
+    
+    if(passwordInput) passwordInput.addEventListener('input', validatePasswordMatch);
+    if(confirmPasswordInput) confirmPasswordInput.addEventListener('input', validatePasswordMatch);
+
+    // Input de Avatar Customizado
+    const avatarInput = document.getElementById('avatar');
+    const fileNameDisplay = document.getElementById('file-name');
+    const fileLabel = document.querySelector('.file-upload-label');
+
+    if (avatarInput && fileNameDisplay && fileLabel) {
+        avatarInput.addEventListener('change', () => {
+            if (avatarInput.files.length > 0) {
+                fileNameDisplay.textContent = avatarInput.files[0].name;
+                fileLabel.style.borderColor = 'var(--success-text)';
+                fileLabel.style.color = 'var(--success-text)';
+            } else {
+                fileNameDisplay.textContent = 'Nenhum arquivo selecionado';
+                fileLabel.style.borderColor = '';
+                fileLabel.style.color = '';
+            }
+        });
+
+        // Abrir o input ao clicar no label
+        fileLabel.addEventListener('click', () => avatarInput.click());
+    }
+
+    // Auto-focus no primeiro campo
+    setTimeout(() => {
+        if (usernameInput.value === '') {
+            usernameInput.focus();
+        }
+    }, 300);
+});
+</script>
+
 </body>
 </html>

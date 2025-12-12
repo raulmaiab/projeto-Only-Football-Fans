@@ -2,159 +2,555 @@
 <html lang="pt-br">
 <head> 
     <meta charset="UTF-8">
-    <title>OFF</title>
+    <title>OFF — Only Football Fans</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- Font Awesome (ícones profissionais usados em sites grandes) -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css">
-
 
     {% block extra_head %}{% endblock %}
 
     <style>
         :root {
-            --sidebar-width: 240px;
-            --sidebar-bg: #004a99;
-            --header-bg: var(--accent-blue);
-            --content-bg: #f4f7f9;
-            --text-light: #f1f1f1;
-            --text-dark: #1d2d35;
-            --accent-blue: #007bff;
-            --accent-blue-hover: #0069d9;
-            --border-color-light: #e1e8ed;
+            --sidebar-width: 260px;
+            --primary-blue: #0066FF;
+            --primary-dark: #031028;
+            --secondary-blue: #1A4FA0;
+            --accent-blue: #00C2FF;
+            --light-blue: #E8F3FF;
+            --white: #FFFFFF;
+            --gray-light: #F5F8FF;
+            --gray-medium: #6B7EA8;
+            --gradient-primary: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            --gradient-accent: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+            --shadow-lg: 0 25px 50px -12px rgba(3, 16, 40, 0.15);
+            --shadow-xl: 0 35px 70px -15px rgba(3, 16, 40, 0.2);
+            --radius-xl: 20px;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --transition-smooth: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            margin: 0;
-            font-family: 'Poppins', sans-serif; 
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--primary-dark);
+            color: #051831;
             display: flex;
             height: 100vh;
-            background-color: var(--content-bg); 
-            color: var(--text-dark);
-            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow: hidden;
+            transition: margin-left 0.4s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        /* HEADER */
+        /* Background elements */
+        .bg-elements {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, rgba(0, 102, 255, 0.15) 0%, transparent 70%);
+        }
+
+        .bg-circle:nth-child(1) {
+            width: 800px;
+            height: 800px;
+            top: -300px;
+            right: -300px;
+        }
+
+        .bg-circle:nth-child(2) {
+            width: 600px;
+            height: 600px;
+            bottom: -200px;
+            left: -200px;
+            background: radial-gradient(circle at center, rgba(0, 194, 255, 0.1) 0%, transparent 70%);
+        }
+
+        /* HEADER - Modernizado */
         .header {
             position: fixed;
             top: 0;
-            left: var(--sidebar-width); 
-            width: calc(100% - var(--sidebar-width)); 
-            background-color: var(--header-bg); 
-            color: var(--text-light); 
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-            padding: 15px 25px;
+            left: var(--sidebar-width);
+            right: 0;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 20px rgba(3, 16, 40, 0.1);
+            padding: 0 40px;
             z-index: 10;
-            transition: left 0.3s, width 0.3s;
+            transition: left 0.4s cubic-bezier(0.23, 1, 0.32, 1);
             
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 34px; 
         }
         
         .header h1 { display: none; }
 
         .menu-toggle {
-            font-size: 24px; 
-            color: var(--text-light); 
+            font-size: 24px;
+            color: var(--primary-blue);
             cursor: pointer;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-md);
+            background: rgba(0, 102, 255, 0.1);
+            transition: var(--transition-smooth);
+            flex-shrink: 0;
+        }
+
+        .menu-toggle:hover {
+            background: rgba(0, 102, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Nova marca centralizada no header - CORRIGIDO */
+        .header-brand {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            transition: left 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .header-brand-logo {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-blue);
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .header-brand-text {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--primary-blue), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+            white-space: nowrap;
         }
 
         .header-user-icon {
             font-size: 1.5rem;
             text-decoration: none;
-            color: var(--text-light); 
-            padding: 4px;
-            border-radius: 50%; 
+            color: var(--primary-blue);
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(0, 102, 255, 0.1);
+            transition: var(--transition-smooth);
+            flex-shrink: 0;
         }
 
-        /* SIDEBAR */
+        .header-user-icon:hover {
+            background: rgba(0, 102, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* SIDEBAR - Modernizada */
         .sidebar {
             width: var(--sidebar-width);
-            background: var(--sidebar-bg);
-            color: var(--text-light);
+            background: linear-gradient(180deg, rgba(3, 16, 40, 0.95) 0%, rgba(3, 16, 40, 0.85) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: var(--white);
             position: fixed;
             top: 0;
             bottom: 0;
-            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 8px 0 30px rgba(0, 0, 0, 0.2);
             transform: translateX(0);
-            transition: transform 0.3s;
+            transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
             z-index: 20;
             display: flex;
             flex-direction: column;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .sidebar-header {
-            padding: 20px 25px;
+            padding: 30px 25px;
             text-align: center;
-            border-bottom: 1px solid #0060c4; 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 10px;
         }
+        
+        .sidebar-header h2 {
+            margin: 0;
+        }
+        
         .sidebar-header h2 a {
-            color: var(--text-light);
+            color: var(--white);
             text-decoration: none;
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--white), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
         }
 
         .sidebar ul {
             list-style: none;
-            padding: 15px;
+            padding: 20px;
             margin: 0;
             flex-grow: 1;
-            overflow-y: auto; 
+            overflow-y: auto;
         }
 
         .sidebar-link {
             text-decoration: none;
-            color: var(--text-light);
+            color: rgba(255, 255, 255, 0.9);
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
             width: 100%;
-            padding: 12px 15px;
-            border-radius: 8px;
+            padding: 14px 18px;
+            border-radius: var(--radius-md);
             font-weight: 500;
             cursor: pointer;
+            transition: var(--transition-smooth);
+            margin-bottom: 8px;
+            border: 1px solid transparent;
         }
 
         .sidebar-link:hover {
-            background-color: var(--accent-blue); 
-            color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            transform: translateX(5px);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Estilo unificado para botão Sair */
+        .logout-form {
+            display: block;
+            width: 100%;
+        }
+
+        .logout-button {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            margin-bottom: 8px;
+            border: 1px solid transparent;
+            background: none;
+            border: none;
+            font: inherit;
+            text-align: left;
+        }
+
+        .logout-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            transform: translateX(5px);
+            border-color: rgba(255, 255, 255, 0.1);
         }
 
         .icon {
             font-size: 1.2rem;
-            width: 20px;
+            width: 24px;
             text-align: center;
+            opacity: 0.9;
         }
 
+        hr {
+            border: none;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 20px 0;
+        }
+
+        /* CONTENT - Modernizado */
         .content {
             margin-left: var(--sidebar-width);
             padding: 100px 40px 40px;
-            width: calc(100% - var(--sidebar-width) - 80px);
-            transition: margin-left 0.3s, width 0.3s;
+            width: calc(100% - var(--sidebar-width));
+            transition: margin-left 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            overflow-y: auto;
+            height: 100vh;
+            z-index: 2;
         }
 
-        body.sidebar-hidden .sidebar { transform: translateX(-100%); }
-        body.sidebar-hidden .header { left: 0; width: 100%; }
-        body.sidebar-hidden .content { margin-left: 0; width: 100%; }
+        .content-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
 
+        .content-inner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-accent);
+        }
+
+        /* Estados da sidebar - CORRIGIDO */
+        body.sidebar-hidden .sidebar { 
+            transform: translateX(-100%); 
+        }
+        
+        body.sidebar-hidden .header { 
+            left: 0; 
+        }
+        
+        body.sidebar-hidden .content { 
+            margin-left: 0; 
+            width: 100%;
+        }
+
+        /* CORREÇÃO: Quando sidebar está escondida, a marca fica centralizada */
+        body.sidebar-hidden .header-brand {
+            left: 50%;
+        }
+
+        /* Quando sidebar está visível, a marca fica centralizada no espaço disponível */
+        body:not(.sidebar-hidden) .header-brand {
+            left: calc(50% + (var(--sidebar-width)/2));
+        }
+
+        /* Hover area para sidebar */
         #sidebar-hover-area {
             position: fixed;
             left: 0;
             top: 0;
-            width: 10px;
+            width: 15px;
             height: 100%;
             z-index: 30;
+            transition: opacity 0.3s;
+        }
+
+        body.sidebar-hidden #sidebar-hover-area {
+            opacity: 1;
+        }
+
+        body:not(.sidebar-hidden) #sidebar-hover-area {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            :root {
+                --sidebar-width: 240px;
+            }
+            
+            .header {
+                padding: 0 30px;
+            }
+            
+            .header-brand-text {
+                font-size: 1.3rem;
+            }
+            
+            .content {
+                padding: 100px 30px 30px;
+            }
+            
+            .content-inner {
+                padding: 25px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --sidebar-width: 220px;
+            }
+            
+            .header {
+                padding: 0 20px;
+                height: 70px;
+            }
+            
+            .menu-toggle,
+            .header-user-icon {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .header-brand-logo {
+                width: 32px;
+                height: 32px;
+                font-size: 18px;
+            }
+            
+            .header-brand-text {
+                font-size: 1.2rem;
+            }
+            
+            .content {
+                padding: 90px 20px 20px;
+            }
+            
+            .content-inner {
+                padding: 20px;
+                border-radius: var(--radius-lg);
+            }
+            
+            .sidebar-header {
+                padding: 25px 20px;
+            }
+            
+            .sidebar-header h2 a {
+                font-size: 1.5rem;
+            }
+            
+            .sidebar ul {
+                padding: 15px;
+            }
+            
+            .sidebar-link,
+            .logout-button {
+                padding: 12px 15px;
+                font-size: 0.95rem;
+            }
+            
+            /* CORREÇÃO MOBILE: Mantém centralizado em mobile */
+            body:not(.sidebar-hidden) .header-brand {
+                left: 50%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            :root {
+                --sidebar-width: 200px;
+            }
+            
+            .header {
+                padding: 0 16px;
+            }
+            
+            .header-brand-text {
+                display: none; /* Esconde o texto em telas muito pequenas */
+            }
+            
+            .header-brand-logo {
+                width: 30px;
+                height: 30px;
+                font-size: 16px;
+            }
+            
+            .content {
+                padding: 85px 16px 16px;
+            }
+            
+            .content-inner {
+                padding: 16px;
+            }
+            
+            .sidebar-header h2 a {
+                font-size: 1.3rem;
+            }
+        }
+
+        /* Custom scrollbar */
+        .sidebar ul::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar ul::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .sidebar ul::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        .content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .content::-webkit-scrollbar-track {
+            background: rgba(0, 102, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .content::-webkit-scrollbar-thumb {
+            background: var(--primary-blue);
+            border-radius: 10px;
+        }
+
+        /* Animações */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-inner {
+            animation: fadeIn 0.6s ease-out;
         }
     </style>
 </head>
 
 <body class="sidebar-hidden">
 
+    <!-- Background Elements -->
+    <div class="bg-elements">
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+    </div>
+
     <div class="header">
-        <span class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></span>
+        <span class="menu-toggle" id="menuToggle">
+            <i class="fa-solid fa-bars"></i>
+        </span>
+
+        <!-- Nova marca centralizada e clicável -->
+        <a href="{% url 'core:home' %}" class="header-brand" title="Página Inicial">
+            <div class="header-brand-logo">
+                <i class="fa-solid fa-futbol"></i>
+            </div>
+            <div class="header-brand-text">Only Football Fans</div>
+        </a>
 
         <a href="{% url 'core:perfil' %}" class="header-user-icon" title="Configurações e Perfil">
             <i class="fa-solid fa-user"></i>
@@ -167,28 +563,45 @@
         </div>
 
         <ul>
-            <li><a href="{% url 'core:home' %}" class="sidebar-link"><span class="icon"><i class="fa-solid fa-house"></i></span>Página Inicial</a></li>
+            <li><a href="{% url 'core:home' %}" class="sidebar-link">
+                <span class="icon"><i class="fa-solid fa-house"></i></span>Página Inicial
+            </a></li>
 
-            <li><a href="{% url 'core:registrar_partida' %}" class="sidebar-link"><span class="icon"><i class="fa-solid fa-plus"></i></span>Registrar Partida</a></li>
+            <li><a href="{% url 'core:registrar_partida' %}" class="sidebar-link">
+                <span class="icon"><i class="fa-solid fa-plus"></i></span>Registrar Partida
+            </a></li>
 
-            <li><a href="{% url 'core:lista_partidas' %}" class="sidebar-link"><span class="icon"><i class="fa-solid fa-list"></i></span>Histórico</a></li>
+            <li><a href="{% url 'core:lista_partidas' %}" class="sidebar-link">
+                <span class="icon"><i class="fa-solid fa-list"></i></span>Histórico
+            </a></li>
 
-            <li><a href="{% url 'core:avaliacao_inicio' %}" class="sidebar-link"><span class="icon"><i class="fa-solid fa-star"></i></span>Avaliar Estádio</a></li>
+            <li><a href="{% url 'core:avaliacao_inicio' %}" class="sidebar-link">
+                <span class="icon"><i class="fa-solid fa-star"></i></span>Avaliar Estádio
+            </a></li>
 
-            <li><a href="{% url 'core:galeria' %}" class="sidebar-link"><span class="icon"><i class="fa-solid fa-camera"></i></span>Galeria</a></li>
+            <li><a href="{% url 'core:galeria' %}" class="sidebar-link">
+                <span class="icon"><i class="fa-solid fa-camera"></i></span>Galeria
+            </a></li>
 
-            <li><a href="{% url 'core:lista_links' %}" class="sidebar-link"><span class="icon"><i class="fa-solid fa-link"></i></span>Assistir Jogos</a></li>
+            <li><a href="{% url 'core:lista_links' %}" class="sidebar-link">
+                <span class="icon"><i class="fa-solid fa-link"></i></span>Assistir Jogos
+            </a></li>
 
-            <li><a href="#" onclick="abrirModal()" class="sidebar-link"><span class="icon"><i class="fa-solid fa-futbol"></i></span>Avaliar Partida</a></li>
+            <li><a href="#" onclick="abrirModal()" class="sidebar-link">
+                <span class="icon"><i class="fa-solid fa-futbol"></i></span>Avaliar Partida
+            </a></li>
 
             <hr>
 
-            <li><a href="{% url 'core:perfil' %}" class="sidebar-link"><span class="icon"><i class="fa-solid fa-gear"></i></span>Configurações</a></li>
+            <li><a href="{% url 'core:perfil' %}" class="sidebar-link">
+                <span class="icon"><i class="fa-solid fa-gear"></i></span>Configurações
+            </a></li>
 
-            <li>
+            <!-- Botão Sair com estilo unificado -->
+            <li class="logout-form">
                 <form action="{% url 'core:logout' %}" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="sidebar-link">
+                    <button type="submit" class="logout-button">
                         <span class="icon"><i class="fa-solid fa-right-from-bracket"></i></span>Sair
                     </button>
                 </form>
@@ -199,25 +612,75 @@
     <div id="sidebar-hover-area"></div>
 
     <div class="content">
-        {% block content %}{% endblock %}
+        <div class="content-inner">
+            {% block content %}{% endblock %}
+        </div>
     </div>
 
     {% include 'partidas/popup_avaliar_partida.html' %}
 
-<script>
-var menuToggleButton = document.getElementById('menuToggle');
-var bodyElement = document.body;
-var hoverArea = document.getElementById('sidebar-hover-area');
+    <script>
+        var menuToggleButton = document.getElementById('menuToggle');
+        var bodyElement = document.body;
+        var hoverArea = document.getElementById('sidebar-hover-area');
 
-menuToggleButton.addEventListener('click', function() {
-    bodyElement.classList.toggle('sidebar-hidden');
-});
+        menuToggleButton.addEventListener('click', function() {
+            bodyElement.classList.toggle('sidebar-hidden');
+            updateHeaderBrandPosition();
+        });
 
-// abre ao aproximar a lateral
-hoverArea.addEventListener('mouseenter', function() {
-    bodyElement.classList.remove('sidebar-hidden');
-});
-</script>
+        // Abre ao aproximar a lateral
+        hoverArea.addEventListener('mouseenter', function() {
+            bodyElement.classList.remove('sidebar-hidden');
+            updateHeaderBrandPosition();
+        });
+
+        // Fecha ao clicar fora em mobile
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 768 && 
+                !bodyElement.classList.contains('sidebar-hidden') &&
+                !event.target.closest('.sidebar') && 
+                !event.target.closest('#menuToggle')) {
+                bodyElement.classList.add('sidebar-hidden');
+                updateHeaderBrandPosition();
+            }
+        });
+
+        // Função para atualizar posição da marca
+        function updateHeaderBrandPosition() {
+            const sidebarHidden = bodyElement.classList.contains('sidebar-hidden');
+            const headerBrand = document.querySelector('.header-brand');
+            
+            if (sidebarHidden) {
+                headerBrand.style.left = '50%';
+            } else {
+                // Calcula a posição correta considerando a sidebar
+                const sidebarWidth = getComputedStyle(document.documentElement)
+                    .getPropertyValue('--sidebar-width');
+                headerBrand.style.left = `calc(50% + (${sidebarWidth}/2))`;
+            }
+        }
+
+        // Detecta mudança de tamanho de tela
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                bodyElement.classList.remove('sidebar-hidden');
+            } else {
+                // Em mobile, força centralizado independente do estado
+                const headerBrand = document.querySelector('.header-brand');
+                headerBrand.style.left = '50%';
+            }
+            updateHeaderBrandPosition();
+        });
+
+        // Inicializa sidebar visível em desktop
+        if (window.innerWidth > 768) {
+            bodyElement.classList.remove('sidebar-hidden');
+        }
+        updateHeaderBrandPosition();
+    </script>
+
+    {% block extra_scripts %}{% endblock %}
 
 </body>
 </html>

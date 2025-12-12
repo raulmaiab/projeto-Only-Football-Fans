@@ -2,226 +2,860 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>OFF — Only Football Fans</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>OFF — Only Football Fans</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css">
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-blue: #0066FF;
+      --primary-dark: #031028;
+      --secondary-blue: #1A4FA0;
+      --accent-blue: #00C2FF;
+      --light-blue: #E8F3FF;
+      --white: #FFFFFF;
+      --gray-light: #F5F8FF;
+      --gray-medium: #6B7EA8;
+      --gradient-primary: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+      --gradient-accent: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+      --shadow-lg: 0 25px 50px -12px rgba(3, 16, 40, 0.25);
+      --shadow-xl: 0 35px 70px -15px rgba(3, 16, 40, 0.35);
+      --radius-xl: 24px;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --transition-smooth: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    }
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css">
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-    <style>
-        :root{
-            --brand: #007bff;
-            --brand-600: #0056b3;
-            --navy: #004a99;
-            --soft-white: rgba(255,255,255,0.95);
-            --muted: #cddff8;
-            --glass: rgba(255,255,255,0.04);
-            --max-width: 1200px;
-            --radius: 18px;
-            --strip-h: 110px; /* maior para logo grande */
-            --ease: cubic-bezier(.16,.84,.32,1);
-        }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
 
-        /* Reset */
-        *{box-sizing:border-box;margin:0;padding:0}
-        html,body{height:100%}
-        body{
-            font-family:'Poppins',system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
-            color:#071428;
-            background:#031028;
-            -webkit-font-smoothing:antialiased;
-            -moz-osx-font-smoothing:grayscale;
-            overflow-x:hidden;
-        }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--primary-dark);
+      color: #051831;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      position: fixed;
+      width: 100%;
+      height: 100%;
+    }
 
-        /* Background carousel */
-        .background-slider{position:fixed;inset:0;z-index:-3;overflow:hidden}
-        .background-slider img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.48) saturate(0.95) contrast(0.98);opacity:0;transform:scale(1.02);transition:opacity 1.6s var(--ease),transform 8s linear}
-        .background-slider img.active{opacity:1;transform:scale(1)}
-        .gradient-overlay{position:fixed;inset:0;z-index:-2;background:linear-gradient(180deg, rgba(0,86,179,0.42) 0%, rgba(3,16,40,0.62) 100%);backdrop-filter:blur(2px)}
+    /* Background elements */
+    .bg-elements {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
 
-        /* TOP STRIP: branco, logo grande à esquerda, OFF central, botões à direita */
-        .top-strip{
-            position:fixed;top:0;left:0;right:0;height:var(--strip-h);
-            display:flex;align-items:center;justify-content:space-between;
-            padding:10px 30px; z-index:80;
-            background: rgba(255,255,255,0.985);
-            border-bottom: 1px solid rgba(3,16,40,0.06);
-            box-shadow: 0 10px 30px rgba(2,10,30,0.06);
-            backdrop-filter: blur(6px);
-        }
-        .top-left{display:flex;align-items:center;gap:14px}
-        .strip-logo{width:88px;height:88px;border-radius:12px;overflow:hidden;display:block;box-shadow:0 12px 30px rgba(2,10,30,0.06)}
-        
-        /* OFF title centered, agora maior e com gradiente animado */
-        .strip-title{
-            position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-            font-weight:900;font-size:1.35rem;letter-spacing:1.5px;text-transform:uppercase;
-            background: linear-gradient(90deg,#00a0ff,#004a99,#00c0ff);
-            background-size:200% 200%;
-            -webkit-background-clip: text; background-clip: text; color: transparent;
-            text-shadow: 0 6px 18px rgba(0,0,0,0.06);
-            animation: gradientShift 6s linear infinite;
-        }
-        @keyframes gradientShift { 0% { background-position: 0% 50% } 50% { background-position: 100% 50% } 100% { background-position: 0% 50% } }
+    .bg-circle {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, rgba(0, 102, 255, 0.15) 0%, transparent 70%);
+    }
 
-        .top-right{display:flex;gap:12px;align-items:center}
-        .strip-btn{padding:10px 16px;border-radius:999px;font-weight:700;border:0;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:10px;font-size:0.95rem;transition:transform .14s var(--ease),box-shadow .14s var(--ease);box-shadow: 0 8px 22px rgba(2,10,30,0.06)}
-        .strip-btn.primary{background:linear-gradient(180deg,var(--brand),var(--navy));color:#fff}
-        .strip-btn.primary:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(2,10,30,0.12)}
-        .strip-btn.ghost{background:transparent;border:1px solid rgba(3,16,40,0.06);color:#071428}
-        .strip-btn.ghost:hover{transform:translateY(-3px);border-color:rgba(3,16,40,0.12)}
-        .strip-btn:focus{outline:3px solid rgba(0,123,255,0.12);outline-offset:2px}
+    .bg-circle:nth-child(1) {
+      width: 800px;
+      height: 800px;
+      top: -300px;
+      right: -300px;
+    }
 
-        /* Page layout */
-        .page{min-height:calc(100vh - var(--strip-h));padding-top:calc(var(--strip-h) + 28px);display:flex;align-items:center;justify-content:center}
-        .container{width:100%;max-width:var(--max-width);display:flex;gap:40px;align-items:center;padding:0 28px;justify-content:center}
+    .bg-circle:nth-child(2) {
+      width: 600px;
+      height: 600px;
+      bottom: -200px;
+      left: -200px;
+      background: radial-gradient(circle at center, rgba(0, 194, 255, 0.1) 0%, transparent 70%);
+    }
 
-        /* CENTRAL CARD (apenas o bloco OFF, maior e centralizado) */
-        .central-card{
-            width:100%;
-            max-width:980px;
-            margin:0 auto;
-            padding:56px;
-            border-radius:22px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
-            box-shadow: 0 30px 100px rgba(2,10,30,0.6);
-            text-align:center;
-            display:flex;
-            flex-direction:column;
-            align-items:center;
-            gap:22px;
-            backdrop-filter: blur(6px);
-        }
+    /* Top Bar */
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      z-index: 1000;
+      transition: var(--transition-smooth);
+    }
 
-        .central-logo{width:220px;height:220px;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.6)}
-        .central-title{
-            font-weight:900;
-            font-size:clamp(3rem, 7vw, 5rem);
-            line-height:1;
-            margin:0;
-            background: linear-gradient(90deg,#00a0ff,#004a99,#00d1ff);
-            background-size:300% 300%;
-            -webkit-background-clip: text; background-clip: text; color: transparent;
-            animation: gradientShift 6s linear infinite;
-            text-transform:uppercase;
-            letter-spacing:6px;
-            text-shadow: 0 20px 50px rgba(0,0,0,0.6);
-        }
+    .top-bar:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
 
-        .central-sub{
-            color:var(--muted);
-            font-size:clamp(1.05rem, 2.2vw, 1.25rem);
-            max-width:86ch;
-            line-height:1.5;
-        }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-        .features{display:flex;gap:16px;margin-top:6px;justify-content:center;flex-wrap:wrap}
-        .feature{background:var(--glass);padding:12px 14px;border-radius:12px;display:flex;gap:12px;align-items:flex-start;border:1px solid rgba(255,255,255,0.03);min-width:220px}
-        .feature i{font-size:20px;color:var(--brand);margin-top:4px}
-        .feature .ftext{color:var(--muted);font-size:0.95rem;line-height:1.35}
+    .brand-logo {
+      width: 48px; /* Aumentado de 40px */
+      height: 48px; /* Aumentado de 40px */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 900;
+      font-size: 18px;
+    }
 
-        /* responsive */
-        @media (max-width: 1100px){
-            .strip-logo{width:72px;height:72px}
-            .central-logo{width:180px;height:180px}
-            .central-card{padding:42px}
-        }
-        @media (max-width: 720px){
-            .top-strip{padding:8px 14px}
-            .strip-title{font-size:1rem}
-            .central-card{padding:28px}
-            .central-logo{width:140px;height:140px}
-            .central-title{font-size:clamp(2rem, 10vw, 3rem);letter-spacing:4px}
-            .central-sub{font-size:1rem}
-        }
-    </style>
+    .brand-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .brand-text {
+      font-size: 1.5rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, var(--white), var(--light-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .top-right {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 12px 28px;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 15px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition-smooth);
+      cursor: pointer;
+      border: none;
+      outline: none;
+    }
+
+    .btn-ghost {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--white);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-primary {
+      background: var(--gradient-primary);
+      color: white;
+      box-shadow: 0 8px 30px rgba(0, 102, 255, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0, 102, 255, 0.4);
+      background: linear-gradient(135deg, #005CE6, var(--secondary-blue));
+    }
+
+    /* Main Content - TELA ÚNICA SEM SCROLL */
+    .stage {
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 40px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .panel {
+      width: 100%;
+      max-width: 1300px;
+      max-height: 88vh; /* Reduzido de 90vh para dar mais espaço acima */
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: var(--radius-xl);
+      padding: 60px 70px 80px 70px; /* Alterado: padding-top 60px, padding-bottom 80px (era 70px uniforme) */
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 70px;
+      box-shadow: var(--shadow-xl);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+      margin-top: 20px; /* Adicionado para descer o painel */
+    }
+
+    .panel::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-accent);
+    }
+
+    /* Left Column - Ajustado para tela única */
+    .left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 25px;
+      overflow-y: auto;
+      max-height: 100%;
+      padding-right: 15px;
+    }
+
+    /* Custom scrollbar para o conteúdo esquerdo */
+    .left::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .left::-webkit-scrollbar-track {
+      background: rgba(0, 102, 255, 0.1);
+      border-radius: 10px;
+    }
+
+    .left::-webkit-scrollbar-thumb {
+      background: var(--primary-blue);
+      border-radius: 10px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--primary-blue);
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      padding: 10px 18px;
+      background: rgba(0, 102, 255, 0.1);
+      border-radius: var(--radius-md);
+      width: fit-content;
+    }
+
+    .eyebrow i {
+      font-size: 12px;
+    }
+
+    .headline {
+      font-size: clamp(2.4rem, 3.8vw, 3.2rem);
+      font-weight: 900;
+      line-height: 1.1;
+      color: #051831;
+      margin: 0;
+    }
+
+    .typing-container {
+      display: inline-block;
+      position: relative;
+      margin-top: 8px;
+    }
+
+    .typing {
+      color: var(--primary-blue);
+      font-weight: 800;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 3px;
+      height: 1.1em;
+      background: var(--accent-blue);
+      margin-left: 4px;
+      vertical-align: text-bottom;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: #334a63;
+      margin-top: 8px;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+      margin-top: 15px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      color: #425b74;
+    }
+
+    .feature-icon {
+      width: 26px;
+      height: 26px;
+      background: var(--light-blue);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-blue);
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    /* Right Column - Ajustado para tela única */
+    .right {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 25px;
+      height: 100%;
+    }
+
+    .card-container {
+      width: 100%;
+      max-width: 420px;
+      perspective: 2000px;
+    }
+
+    .rot-card {
+      width: 100%;
+      height: 450px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .rot-card:hover {
+      transform: translateY(-10px) rotateX(5deg);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .rot-card.spin {
+      transform: rotateY(360deg);
+    }
+
+    .card-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .rot-card:hover .card-image {
+      transform: scale(1.05);
+    }
+
+    .card-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(3, 16, 40, 0.9), transparent);
+      padding: 30px;
+      color: white;
+      transform: translateY(20px);
+      opacity: 0;
+      transition: var(--transition-smooth);
+    }
+
+    .rot-card:hover .card-overlay {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .card-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .card-desc {
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    .card-nav {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(0, 102, 255, 0.3);
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .nav-dot.active {
+      background: var(--primary-blue);
+      transform: scale(1.2);
+    }
+
+    .card-caption {
+      font-size: 14px;
+      color: var(--gray-medium);
+      font-weight: 500;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+
+    /* Responsive para tela única */
+    @media (max-width: 1024px) {
+      .panel {
+        grid-template-columns: 1fr;
+        gap: 50px;
+        padding: 50px 50px 70px 50px; /* Ajustado padding */
+        max-height: 90vh;
+      }
+      
+      .right {
+        order: -1;
+      }
+      
+      .card-container {
+        max-width: 480px;
+      }
+      
+      .rot-card {
+        height: 400px;
+      }
+      
+      .brand-logo {
+        width: 44px; /* Ajustado para responsivo */
+        height: 44px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .top-bar {
+        padding: 0 24px;
+        height: 70px;
+      }
+      
+      .stage {
+        padding: 0 24px;
+      }
+      
+      .panel {
+        padding: 40px 40px 60px 40px; /* Ajustado padding */
+        max-height: 86vh;
+      }
+      
+      .headline {
+        font-size: 2rem;
+      }
+      
+      .features {
+        grid-template-columns: 1fr;
+      }
+      
+      .rot-card {
+        height: 350px;
+      }
+      
+      .btn {
+        padding: 10px 20px;
+        font-size: 14px;
+      }
+      
+      .brand-logo {
+        width: 42px;
+        height: 42px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .top-bar {
+        padding: 0 16px;
+      }
+      
+      .brand-text {
+        font-size: 1.2rem;
+      }
+      
+      .stage {
+        padding: 0 16px;
+      }
+      
+      .panel {
+        padding: 30px 30px 50px 30px; /* Ajustado padding */
+        gap: 35px;
+        max-height: 90vh;
+        margin-top: 15px; /* Ajustado para mobile */
+      }
+      
+      .headline {
+        font-size: 1.7rem;
+      }
+      
+      .rot-card {
+        height: 280px;
+      }
+      
+      .eyebrow {
+        font-size: 12px;
+        padding: 8px 14px;
+      }
+      
+      .brand-logo {
+        width: 38px;
+        height: 38px;
+      }
+    }
+
+    @media (max-height: 700px) {
+      .panel {
+        padding: 30px 35px 50px 35px; /* Ajustado padding */
+        gap: 35px;
+        max-height: 86vh;
+        margin-top: 15px;
+      }
+      
+      .headline {
+        font-size: 1.9rem;
+      }
+      
+      .subtitle {
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+      
+      .features {
+        gap: 12px;
+      }
+      
+      .feature-item {
+        font-size: 14px;
+      }
+      
+      .rot-card {
+        height: 320px;
+      }
+    }
+
+    /* Animations */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .floating {
+      animation: float 6s ease-in-out infinite;
+    }
+  </style>
 </head>
 <body>
 
-    <!-- background -->
-    <div class="background-slider" id="background-slider"></div>
-    <div class="gradient-overlay"></div>
+  <!-- Background Elements -->
+  <div class="bg-elements">
+    <div class="bg-circle"></div>
+    <div class="bg-circle"></div>
+  </div>
 
-    <!-- top strip -->
-    <header class="top-strip" role="banner" aria-label="Barra superior">
-        <div class="top-left">
-            <a href="{% url 'core:home' %}" title="OFF">
-                <img src="{% static 'logo_OFF.png' %}" alt="OFF logo" class="strip-logo" />
-            </a>
+  <!-- Top Bar -->
+  <div class="top-bar" role="banner">
+    <div class="brand">
+      <div class="brand-logo">
+        <img src="{% static 'logo_OFF.png' %}" alt="Logo OFF">
+      </div>
+      <div class="brand-text">Only Football Fans</div>
+    </div>
+
+    <div class="top-right" role="navigation" aria-label="Ações principais">
+      <!-- BOTÕES TROCADOS DE ORDEM -->
+      <a class="btn btn-primary" href="{% url 'core:login' %}">
+        <i class="fas fa-sign-in-alt"></i>Entrar
+      </a>
+      <a class="btn btn-ghost" href="{% url 'core:register' %}">
+        <i class="fas fa-user-plus"></i>Cadastrar-se
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Content - TELA ÚNICA -->
+  <main class="stage" role="main">
+    <section class="panel" role="region" aria-labelledby="panel-title">
+      
+      <!-- Left Column -->
+      <div class="left">
+        <div class="eyebrow">
+          <i class="fas fa-bolt"></i>Conecte. Avalie. Reviva.
         </div>
 
-        <div class="strip-title" aria-hidden="false">OFF</div>
+        <h1 id="panel-title" class="headline">
+          Transforme suas experiências de torcedor — 
+          <div class="typing-container">
+            <span class="typing" id="typing"></span>
+            <span class="cursor" id="cursor"></span>
+          </div>
+        </h1>
 
-        <div class="top-right" role="navigation" aria-label="Acesso">
-            <a class="strip-btn primary" href="{% url 'core:login' %}">Entrar</a>
-            <a class="strip-btn ghost" href="{% url 'core:register' %}">Cadastrar-se</a>
+        <p class="subtitle">
+          Com o OFF você registra partidas em segundos, avalia estádios com notas detalhadas, organiza sua galeria pessoal e revisita memórias com estatísticas e fotos. Tudo pensado para torcedores que querem guardar histórias — rápido, visual e social.
+        </p>
+
+        <div class="features">
+          <div class="feature-item">
+            <div class="feature-icon"><i class="fas fa-stopwatch"></i></div>
+            <span>Registro em segundos</span>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon"><i class="fas fa-star"></i></div>
+            <span>Avaliação detalhada</span>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon"><i class="fas fa-photo-video"></i></div>
+            <span>Galeria organizada</span>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+            <span>Estatísticas completas</span>
+          </div>
         </div>
-    </header>
+      </div>
 
-    <!-- main: central card -->
-    <main class="page" role="main">
-        <div class="container">
-            <section class="central-card" aria-labelledby="central-off">
-                <div class="central-logo" aria-hidden="true">
-                    <img src="{% static 'logo_OFF.png' %}" alt="OFF logo" style="width:100%;height:100%;object-fit:cover;display:block">
-                </div>
-
-                <h1 id="central-off" class="central-title">OFF</h1>
-
-                <p class="central-sub">
-                    Registre o jogo. Avalie o estádio. Reviva o momento.  
-                    Organize suas experiências de torcedor em um só lugar — <strong>fotos, avaliações e histórico</strong>.
-                </p>
-
-                <div class="features" aria-hidden="false">
-                    <div class="feature">
-                        <i class="fa-solid fa-stadium" aria-hidden="true"></i>
-                        <div class="ftext"><strong>Avalie Estádios</strong><br>Conte como foi sua experiência nas arquibancadas.</div>
-                    </div>
-                    <div class="feature">
-                        <i class="fa-solid fa-camera-retro" aria-hidden="true"></i>
-                        <div class="ftext"><strong>Galeria</strong><br>Reviva seus melhores momentos com fotos e vídeos.</div>
-                    </div>
-                </div>
-            </section>
+      <!-- Right Column -->
+      <aside class="right" aria-hidden="false">
+        <div class="card-container floating">
+          <div id="rotCard" class="rot-card" role="button" aria-pressed="false" tabindex="0" aria-label="Galeria de imagens - clique para trocar">
+            <img id="rotImg" src="{% static 'torcida.jpg' %}" alt="Torcida vibrante em estádio" class="card-image">
+            <div class="card-overlay">
+              <div class="card-title" id="cardTitle">Momento Épico</div>
+              <div class="card-desc" id="cardDesc">A energia única das arquibancadas</div>
+            </div>
+          </div>
         </div>
-    </main>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const imgs = [
+        <div class="card-nav">
+          <div class="nav-dot active" data-index="0"></div>
+          <div class="nav-dot" data-index="1"></div>
+          <div class="nav-dot" data-index="2"></div>
+          <div class="nav-dot" data-index="3"></div>
+          <div class="nav-dot" data-index="4"></div>
+        </div>
+
+        <div class="card-caption">Clique ou use as bolinhas para navegar</div>
+      </aside>
+
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Typing Effect
+      const phrases = [
+        'registre partidas em segundos.',
+        'avalie cada estádio com detalhe.',
+        'reviva seus melhores momentos.',
+        'compartilhe suas histórias.'
+      ];
+      
+      const cardTitles = [
+        'Torcida Vibrante',
+        'Arena Moderna',
+        'Ídolos em Ação',
+        'Jogadas Incríveis',
+        'Comunidade OFF'
+      ];
+      
+      const cardDescriptions = [
+        'A energia única das arquibancadas em momentos decisivos',
+        'Os estádios mais impressionantes do mundo do futebol',
+        'Os grandes nomes que fazem a história do esporte',
+        'As jogadas que ficam para sempre na memória',
+        'Conecte-se com torcedores de todo o mundo'
+      ];
+
+      const typingEl = document.getElementById('typing');
+      const rotCard = document.getElementById('rotCard');
+      const rotImg = document.getElementById('rotImg');
+      const cardTitle = document.getElementById('cardTitle');
+      const cardDesc = document.getElementById('cardDesc');
+      const navDots = document.querySelectorAll('.nav-dot');
+      
+      const imgs = [
         "{% static 'torcida.jpg' %}",
         "{% static 'estadio3.jpg' %}",
         "{% static 'messi.jpg' %}",
-        "{% static 'neymar.jpg' %}"
-    ];
-    const slider = document.getElementById('background-slider');
-    let i = 0;
+        "{% static 'neymar.jpg' %}",
+        "{% static 'logo_OFF.png' %}"
+      ];
 
-    function showNext() {
-        const prev = slider.querySelector('img.active');
-        if (prev) prev.classList.remove('active');
-        const img = document.createElement('img');
-        img.src = imgs[i];
-        img.alt = '';
-        img.loading = 'lazy';
-        img.className = 'active';
-        slider.appendChild(img);
-        if (prev) prev.addEventListener('transitionend', () => prev.remove(), { once: true });
-        i = (i + 1) % imgs.length;
-    }
+      let pIndex = 0;
+      let cIndex = 0;
+      let imgIndex = 0;
+      let isTyping = true;
+      const typingSpeed = 60;
+      const pauseTime = 2000;
 
-    showNext();
-    setInterval(showNext, 7000);
-});
-</script>
+      function typeWriter() {
+        const currentPhrase = phrases[pIndex];
+        
+        if (isTyping) {
+          if (cIndex < currentPhrase.length) {
+            typingEl.textContent += currentPhrase.charAt(cIndex);
+            cIndex++;
+            setTimeout(typeWriter, typingSpeed);
+          } else {
+            isTyping = false;
+            setTimeout(() => {
+              isTyping = true;
+              pIndex = (pIndex + 1) % phrases.length;
+              cIndex = 0;
+              typingEl.textContent = '';
+              setTimeout(typeWriter, 300);
+            }, pauseTime);
+          }
+        }
+      }
 
+      // Initialize typing
+      setTimeout(typeWriter, 1000);
+
+      // Card rotation functionality
+      function updateCard(index) {
+        imgIndex = index;
+        rotCard.classList.add('spin');
+        
+        setTimeout(() => {
+          rotImg.src = imgs[index];
+          rotImg.alt = cardTitles[index];
+          cardTitle.textContent = cardTitles[index];
+          cardDesc.textContent = cardDescriptions[index];
+          
+          // Update active dot
+          navDots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === index);
+          });
+        }, 400);
+        
+        setTimeout(() => {
+          rotCard.classList.remove('spin');
+        }, 800);
+      }
+
+      // Auto rotation
+      let autoRotate = setInterval(() => {
+        const nextIndex = (imgIndex + 1) % imgs.length;
+        updateCard(nextIndex);
+      }, 5000);
+
+      // Click on card
+      rotCard.addEventListener('click', (e) => {
+        const nextIndex = (imgIndex + 1) % imgs.length;
+        updateCard(nextIndex);
+        resetAutoRotate();
+      });
+
+      // Keyboard navigation
+      rotCard.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          const nextIndex = (imgIndex + 1) % imgs.length;
+          updateCard(nextIndex);
+          resetAutoRotate();
+        } else if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          const prevIndex = (imgIndex - 1 + imgs.length) % imgs.length;
+          updateCard(prevIndex);
+          resetAutoRotate();
+        } else if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          const nextIndex = (imgIndex + 1) % imgs.length;
+          updateCard(nextIndex);
+          resetAutoRotate();
+        }
+      });
+
+      // Dot navigation
+      navDots.forEach(dot => {
+        dot.addEventListener('click', () => {
+          const index = parseInt(dot.dataset.index);
+          updateCard(index);
+          resetAutoRotate();
+        });
+      });
+
+      function resetAutoRotate() {
+        clearInterval(autoRotate);
+        autoRotate = setInterval(() => {
+          const nextIndex = (imgIndex + 1) % imgs.length;
+          updateCard(nextIndex);
+        }, 5000);
+      }
+
+      // Preload images
+      imgs.forEach(src => {
+        const img = new Image();
+        img.src = src;
+      });
+
+      // Add focus styling for accessibility
+      rotCard.addEventListener('focus', () => {
+        rotCard.style.outline = '2px solid var(--accent-blue)';
+        rotCard.style.outlineOffset = '4px';
+      });
+
+      rotCard.addEventListener('blur', () => {
+        rotCard.style.outline = 'none';
+      });
+
+      // Prevent scrolling with keyboard
+      document.addEventListener('keydown', (e) => {
+        if (['Space', 'ArrowUp', 'ArrowDown', 'PageUp', 'PageDown'].includes(e.code)) {
+          e.preventDefault();
+        }
+      }, false);
+    });
+  </script>
 </body>
 </html>

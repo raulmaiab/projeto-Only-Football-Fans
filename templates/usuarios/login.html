@@ -4,289 +4,819 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - OFF</title>
+    <title>Login - OFF — Only Football Fans</title>
 
-    <!-- Fonte -->
+    <!-- Fonte Inter (consistente com as outras páginas) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- Font Awesome REGULAR -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css">
 
     <style>
         :root {
-            --sidebar-bg: #004a99; 
-            --header-bg: #007bff; 
-            --content-bg: #f4f7f9; 
-            --text-light: #f1f1f1;
-            --text-dark: #1d2d35;
-            --accent-blue: #007bff; 
-            --accent-blue-hover: #0056b3;
-            --border-color-light: #e1e8ed;
-            --error-bg: #f8d7da;
-            --error-text: #721c24;
-            --error-border: #f5c6cb;
+            --primary-blue: #0066FF;
+            --primary-dark: #031028;
+            --secondary-blue: #1A4FA0;
+            --accent-blue: #00C2FF;
+            --light-blue: #E8F3FF;
+            --white: #FFFFFF;
+            --gray-light: #F5F8FF;
+            --gray-medium: #6B7EA8;
+            --gradient-primary: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            --gradient-accent: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+            --shadow-lg: 0 25px 50px -12px rgba(3, 16, 40, 0.25);
+            --shadow-xl: 0 35px 70px -15px rgba(3, 16, 40, 0.35);
+            --radius-xl: 24px;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --transition-smooth: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--primary-dark);
+            color: #051831;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Background elements (igual às outras páginas) */
+        .bg-elements {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, rgba(0, 102, 255, 0.15) 0%, transparent 70%);
+        }
+
+        .bg-circle:nth-child(1) {
+            width: 800px;
+            height: 800px;
+            top: -300px;
+            right: -300px;
+        }
+
+        .bg-circle:nth-child(2) {
+            width: 600px;
+            height: 600px;
+            bottom: -200px;
+            left: -200px;
+            background: radial-gradient(circle at center, rgba(0, 194, 255, 0.1) 0%, transparent 70%);
+        }
+
+        .login-container {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Painel Esquerdo - Mantendo a identidade mas atualizando design */
+        .login-panel-left {
+            flex: 1.2;
+            background: linear-gradient(135deg, rgba(3, 16, 40, 0.95), rgba(3, 16, 40, 0.85));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 20px;
+            text-align: center;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-panel-left::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-accent);
+        }
+
+        .welcome-content {
+            max-width: 480px;
+            z-index: 2;
+            margin-bottom: 30px;
+        }
+
+        .brand-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        /* Substituição do círculo OFF pela imagem da marca */
+        .brand-logo {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brand-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .brand-text {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--white), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .welcome-content h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            margin: 0 0 12px 0;
+            color: var(--white);
+            line-height: 1.1;
+        }
+
+        .welcome-content p {
+            font-size: 1rem;
+            opacity: 0.9;
+            color: var(--light-blue);
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .features-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 25px;
+            text-align: left;
+            max-width: 320px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .feature-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-blue);
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .feature-text {
+            font-size: 0.85rem;
+            line-height: 1.3;
+        }
+
+        /* Rotador de Frases - SIMPLIFICADO (sem sombra) */
+        .quote-rotator {
+            margin-top: 25px;
+            padding: 12px;
+            background: transparent;
+            text-align: center;
+        }
+
+        .quote-rotator h3 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .quote-rotator h3 i {
+            font-size: 0.75rem;
+        }
+
+        #quote-display {
+            font-size: 0.85rem;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.85);
+            min-height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1.3;
+            font-weight: 400;
+        }
+
+        /* Painel Direito - Login */
+        .login-panel-right {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--radius-xl);
+            padding: 30px 25px;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-accent);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .login-header h1 {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: #051831;
+            margin: 0 0 6px 0;
+            background: linear-gradient(90deg, #051831, var(--secondary-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-header h2 {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--gray-medium);
+            margin: 0;
+        }
+
+        /* Formulário - Atualizado mas mantendo funcionalidade */
+        .form-group {
+            position: relative;
+            margin-bottom: 18px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid rgba(0, 102, 255, 0.2);
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            color: #051831;
+            transition: var(--transition-smooth);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+            background: white;
+        }
+
+        .form-label {
+            position: absolute;
+            left: 14px;
+            top: 12px;
+            font-size: 0.9rem;
+            color: var(--gray-medium);
+            transition: var(--transition-smooth);
+            pointer-events: none;
+            background: transparent;
+            padding: 0 5px;
+        }
+
+        .form-input:focus + .form-label,
+        .form-input:not(:placeholder-shown) + .form-label {
+            top: -9px;
+            font-size: 0.75rem;
+            color: var(--primary-blue);
+            background: white;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--gray-medium);
+            cursor: pointer;
+            font-size: 0.9rem;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-smooth);
+        }
+
+        .toggle-password:hover {
+            color: var(--primary-blue);
+        }
+
+        .botao-login {
+            width: 100%;
+            padding: 12px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            margin-top: 8px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .botao-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 102, 255, 0.3);
+            background: linear-gradient(135deg, #005CE6, var(--secondary-blue));
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: var(--gray-medium);
+        }
+
+        .register-link a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition-smooth);
+        }
+
+        .register-link a:hover {
+            color: var(--secondary-blue);
+            text-decoration: underline;
+        }
+
+        .error-messages {
+            margin-top: 12px;
+            padding: 10px;
+            background: rgba(220, 53, 69, 0.1);
+            border: 1px solid rgba(220, 53, 69, 0.2);
+            color: #721c24;
+            border-radius: var(--radius-md);
+            list-style: none;
+            font-size: 0.8rem;
+            margin-bottom: 12px;
+        }
+
+        .error-messages li {
+            margin-bottom: 5px;
+        }
+
+        .error-messages li:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         @keyframes slideInRight {
             from { opacity: 0; transform: translateX(30px); }
             to { opacity: 1; transform: translateX(0); }
         }
-        @keyframes slideInLeft {
-            from { opacity: 0; transform: translateX(-30px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
+
         @keyframes formShake {
             0%, 100% { transform: translateX(0); }
             20%, 60% { transform: translateX(-8px); }
             40%, 80% { transform: translateX(8px); }
         }
+
+        @keyframes quoteFade {
+            0% { opacity: 0; transform: translateY(8px); }
+            15% { opacity: 1; transform: translateY(0); }
+            85% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-8px); }
+        }
+
         .form-shake { animation: formShake 0.5s ease-in-out; }
 
-        @keyframes fadeInOut {
-            0% { opacity: 0; }
-            20% { opacity: 1; }
-            80% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-        .quote-fade { animation: fadeInOut 5s ease-in-out forwards; }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            overflow: hidden;
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
         }
 
-        .login-container {
-            display: flex;
-            height: 100vh;
-        }
-
-        .login-panel-left {
-            flex: 1;
-            background: linear-gradient(135deg, var(--accent-blue), var(--sidebar-bg));
-            color: var(--text-light);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 40px;
-            text-align: center;
-            opacity: 0;
+        .slide-in-left {
             animation: slideInLeft 0.7s ease-out 0.1s forwards;
-            position: relative;
-        }
-
-        .welcome-content h1 {
-            font-size: 3rem;
-            margin: 0 0 10px;
-            font-weight: 700;
-            letter-spacing: 2px;
-        }
-        .welcome-content p { font-size: 1.25rem; opacity: .9; }
-
-        .quote-rotator {
-            position: absolute;
-            bottom: 40px;
-            left: 40px;
-            right: 40px;
-        }
-        .quote-rotator h3 {
-            font-size: 1rem;
-            font-weight: 600;
-            border-bottom: 2px solid var(--accent-blue-hover);
-            display: inline-block;
-            margin-bottom: 15px;
-        }
-        #quote-display {
-            font-size: .95rem;
-            font-style: italic;
             opacity: 0;
-            height: 40px;
         }
 
-        .login-panel-right {
-            flex: 1;
-            background-color: var(--content-bg);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .login-card {
-            background-color: #fff;
-            padding: 30px 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 400px;
-            opacity: 0;
+        .slide-in-right {
             animation: slideInRight 0.7s ease-out 0.2s forwards;
+            opacity: 0;
         }
 
-        .login-card h1 {
-            color: var(--sidebar-bg);
-            text-align: center;
-            font-size: 2.5rem;
-            margin: 0 0 10px;
-            letter-spacing: 2px;
-        }
-        .login-card h2 {
-            text-align: center;
-            color: var(--text-dark);
-            margin: 0 0 24px;
-            font-weight: 500;
-            font-size: 1.5rem;
+        .quote-fade {
+            animation: quoteFade 8s ease-in-out forwards;
         }
 
-        .form-group {
-            position: relative;
-            margin-bottom: 1.5rem;
-        }
-        .form-input {
-            width: 100%;
-            padding: 10px 5px;
-            border: none;
-            border-bottom: 2px solid var(--border-color-light);
-            background: transparent;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-        .form-label {
-            position: absolute;
-            top: 10px;
-            left: 5px;
-            font-size: 1rem;
-            color: #999;
-            transition: .2s;
-        }
-        .form-input:focus + .form-label,
-        .form-input:not(:placeholder-shown) + .form-label {
-            top: -14px;
-            font-size: .85rem;
-            color: var(--accent-blue);
-        }
-        .form-input:focus { border-bottom-color: var(--accent-blue); }
-
-        .password-wrapper { position: relative; }
-        .password-wrapper .form-input { padding-right: 12px; }
-        #toggle-password {
-            position: absolute;
-            right: 5px;
-            top: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            color: #777;
+        /* Responsividade */
+        @media (max-width: 1024px) {
+            .login-container {
+                flex-direction: column;
+                min-height: 100vh;
+            }
+            
+            .login-panel-left {
+                flex: none;
+                padding: 25px 15px;
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                min-height: 35vh;
+            }
+            
+            .brand-text {
+                font-size: 1.6rem;
+            }
+            
+            .welcome-content h1 {
+                font-size: 1.6rem;
+            }
+            
+            .login-panel-right {
+                flex: none;
+                padding: 15px;
+                min-height: 65vh;
+                align-items: center;
+            }
+            
+            .login-card {
+                max-width: 380px;
+                padding: 25px 20px;
+                margin: 0;
+            }
         }
 
-        .botao-login {
-            width: 100%;
-            padding: 12px;
-            background: var(--accent-blue);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: .3s;
-        }
-        .botao-login:hover {
-            background: var(--accent-blue-hover);
-            transform: translateY(-2px);
+        @media (max-width: 768px) {
+            .login-panel-left {
+                padding: 20px 12px;
+                min-height: 30vh;
+            }
+            
+            .brand-header {
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
+                margin-bottom: 15px;
+            }
+            
+            .brand-text {
+                font-size: 1.4rem;
+            }
+            
+            .brand-logo {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .welcome-content h1 {
+                font-size: 1.4rem;
+                margin-bottom: 8px;
+            }
+            
+            .welcome-content p {
+                font-size: 0.9rem;
+                margin-bottom: 15px;
+            }
+            
+            .features-list {
+                display: none;
+            }
+            
+            .quote-rotator {
+                margin-top: 15px;
+                padding: 8px;
+            }
+            
+            .login-panel-right {
+                padding: 12px;
+                min-height: 70vh;
+            }
+            
+            .login-card {
+                max-width: 350px;
+                padding: 22px 18px;
+                border-radius: var(--radius-lg);
+            }
+            
+            .login-header h1 {
+                font-size: 1.4rem;
+            }
+            
+            .login-header h2 {
+                font-size: 0.85rem;
+            }
         }
 
-        .register-link {
-            text-align: center;
-            margin-top: 24px;
-            font-size: .9rem;
-            color: #555;
+        @media (max-width: 480px) {
+            .login-panel-left {
+                padding: 15px 10px;
+                min-height: 28vh;
+            }
+            
+            .brand-text {
+                font-size: 1.3rem;
+            }
+            
+            .brand-logo {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .welcome-content h1 {
+                font-size: 1.3rem;
+            }
+            
+            .quote-rotator h3 {
+                font-size: 0.8rem;
+            }
+            
+            #quote-display {
+                font-size: 0.8rem;
+            }
+            
+            .login-panel-right {
+                padding: 10px;
+                min-height: 72vh;
+            }
+            
+            .login-card {
+                max-width: 100%;
+                padding: 20px 16px;
+                border-radius: var(--radius-lg);
+            }
+            
+            .login-header h1 {
+                font-size: 1.3rem;
+            }
+            
+            .login-header h2 {
+                font-size: 0.8rem;
+            }
+            
+            .form-input {
+                padding: 11px 13px;
+                font-size: 0.85rem;
+            }
+            
+            .form-label {
+                font-size: 0.85rem;
+                top: 11px;
+            }
+            
+            .botao-login {
+                padding: 11px;
+                font-size: 0.85rem;
+            }
         }
 
-        .register-link a {
-            color: var(--accent-blue);
-            text-decoration: none;
-            font-weight: 600;
+        @media (max-height: 700px) {
+            .login-card {
+                padding: 20px 18px;
+            }
+            
+            .form-group {
+                margin-bottom: 15px;
+            }
+            
+            .login-header {
+                margin-bottom: 20px;
+            }
+            
+            .botao-login {
+                margin-top: 5px;
+            }
+            
+            .register-link {
+                margin-top: 15px;
+            }
         }
 
-        .error-messages {
-            margin-top: 20px;
-            padding: 10px 15px;
-            background: var(--error-bg);
-            border: 1px solid var(--error-border);
-            color: var(--error-text);
-            border-radius: 8px;
-            list-style: none;
+        @media (max-height: 600px) {
+            .login-panel-left {
+                padding: 15px 10px;
+            }
+            
+            .brand-header {
+                margin-bottom: 15px;
+            }
+            
+            .brand-text {
+                font-size: 1.4rem;
+            }
+            
+            .welcome-content h1 {
+                font-size: 1.4rem;
+                margin-bottom: 8px;
+            }
+            
+            .welcome-content p {
+                font-size: 0.9rem;
+                margin-bottom: 15px;
+            }
+            
+            .features-list {
+                display: none;
+            }
+            
+            .quote-rotator {
+                margin-top: 10px;
+                padding: 8px;
+            }
+            
+            .login-card {
+                padding: 18px 15px;
+            }
+            
+            .form-group {
+                margin-bottom: 12px;
+            }
+            
+            .form-input {
+                padding: 10px 12px;
+            }
         }
     </style>
 
 </head>
 <body>
 
-<div class="login-container">
-    
-    <div class="login-panel-left">
-        <div class="welcome-content">
-            <h1>Bem-vindo ao O.F.F.</h1>
-            <p>Seu diário de torcedor.</p>
-        </div>
-
-        <div class="quote-rotator">
-            <h3>Frases de Craques</h3>
-            <p id="quote-display">"A bola não entra por acaso." - Didi</p>
-        </div>
+    <!-- Background Elements (igual às outras páginas) -->
+    <div class="bg-elements">
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
     </div>
 
-    <div class="login-panel-right">
-        <div class="login-card" id="login-card">
-            <h1>O.F.F.</h1>
-            <h2>Login</h2>
-
-            <form method="post" action="{% url 'core:login' %}" id="login-form">
-                {% csrf_token %}
-
-                <div class="form-group">
-                    <input type="text" id="username" name="username" class="form-input" placeholder=" " required autocomplete="off">
-                    <label for="username" class="form-label">Usuário</label>
+    <div class="login-container">
+        
+        <!-- Painel Esquerdo - Informações e Branding -->
+        <div class="login-panel-left slide-in-left">
+            <div class="welcome-content">
+                <div class="brand-header">
+                    <!-- Substituído o círculo OFF pela imagem da marca -->
+                    <div class="brand-logo">
+                        <img src="{% static 'logo_OFF.png' %}" alt="Logo OFF">
+                    </div>
+                    <div class="brand-text">Only Football Fans</div>
                 </div>
-
-                <div class="form-group password-wrapper">
-                    <input type="password" id="password" name="password" class="form-input" placeholder=" " required autocomplete="off">
-                    <label for="password" class="form-label">Senha</label>
-
-                    <!-- ÍCONE REGULAR -->
-                    <span id="toggle-password">
-                        <i class="fa-regular fa-eye"></i>
-                    </span>
+                
+                <h1>Bem-vindo ao O.F.F.</h1>
+                <p>Seu diário de torcedor. Registre partidas, avalie estádios e guarde memórias únicas do futebol.</p>
+                
+                <div class="features-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-stopwatch"></i>
+                        </div>
+                        <div class="feature-text">
+                            <strong>Registro rápido</strong> — Partidas em segundos
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="feature-text">
+                            <strong>Avaliação detalhada</strong> — Estádios e experiências
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <div class="feature-text">
+                            <strong>Galeria pessoal</strong> — Fotos e vídeos organizados
+                        </div>
+                    </div>
                 </div>
+            </div>
 
-                <input type="hidden" name="next" value="{{ next }}">
-
-                <button type="submit" class="botao-login">Entrar</button>
-            </form>
-
-            {% if messages %}
-                <ul class="error-messages">
-                    {% for message in messages %}
-                        <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-
-            <p class="register-link">
-                Ainda não tem uma conta?
-                <a href="{% url 'core:register' %}">Cadastre-se aqui</a>
-            </p>
-
+            <!-- Rotador de Frases - SIMPLIFICADO (sem sombra) -->
+            <div class="quote-rotator">
+                <h3><i class="fas fa-quote-left"></i> Frases de Craques</h3>
+                <div id="quote-display">"A bola não entra por acaso." - Didi</div>
+            </div>
         </div>
-    </div>
 
-</div>
+        <!-- Painel Direito - Formulário de Login -->
+        <div class="login-panel-right">
+            <div class="login-card slide-in-right" id="login-card">
+                <div class="login-header">
+                    <h1>Login</h1>
+                    <h2>Acesse sua conta para continuar</h2>
+                </div>
+
+                <form method="post" action="{% url 'core:login' %}" id="login-form">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <input type="text" id="username" name="username" class="form-input" placeholder=" " required autocomplete="off">
+                        <label for="username" class="form-label">Usuário</label>
+                    </div>
+
+                    <div class="form-group password-wrapper">
+                        <input type="password" id="password" name="password" class="form-input" placeholder=" " required autocomplete="off">
+                        <label for="password" class="form-label">Senha</label>
+                        <button type="button" class="toggle-password" id="toggle-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+
+                    <input type="hidden" name="next" value="{{ next }}">
+
+                    <button type="submit" class="botao-login">
+                        <i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i>
+                        Entrar
+                    </button>
+                </form>
+
+                {% if messages %}
+                    <ul class="error-messages">
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <p class="register-link">
+                    Ainda não tem uma conta?
+                    <a href="{% url 'core:register' %}">Cadastre-se aqui</a>
+                </p>
+
+            </div>
+        </div>
+
+    </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-
-    /* Toggle de Senha (REGULAR) */
+    // Toggle de Senha
     const passwordInput = document.getElementById('password');
     const toggleButton = document.getElementById('toggle-password');
 
@@ -296,12 +826,15 @@ document.addEventListener('DOMContentLoaded', () => {
             passwordInput.type = hidden ? 'text' : 'password';
 
             toggleButton.innerHTML = hidden
-                ? '<i class="fa-regular fa-eye-slash"></i>'
-                : '<i class="fa-regular fa-eye"></i>';
+                ? '<i class="fas fa-eye-slash"></i>'
+                : '<i class="fas fa-eye"></i>';
+            
+            // Foco no input após toggle
+            passwordInput.focus();
         });
     }
 
-    /* Shake */
+    // Form Shake Animation
     const loginForm = document.getElementById('login-form');
     const loginCard = document.getElementById('login-card');
     const usernameInput = document.getElementById('username');
@@ -311,36 +844,72 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             loginCard.classList.add('form-shake');
             setTimeout(() => loginCard.classList.remove('form-shake'), 500);
+            
+            // Adiciona borda vermelha nos campos vazios
+            if (!usernameInput.value.trim()) {
+                usernameInput.style.borderColor = '#dc3545';
+                setTimeout(() => usernameInput.style.borderColor = '', 1000);
+            }
+            if (!passwordInput.value.trim()) {
+                passwordInput.style.borderColor = '#dc3545';
+                setTimeout(() => passwordInput.style.borderColor = '', 1000);
+            }
         }
     });
 
-    /* Rotador de frases */
+    // Remove borda de erro quando o usuário começa a digitar
+    usernameInput.addEventListener('input', () => {
+        usernameInput.style.borderColor = '';
+    });
+    
+    passwordInput.addEventListener('input', () => {
+        passwordInput.style.borderColor = '';
+    });
+
+    // Auto-focus no primeiro campo
+    setTimeout(() => {
+        if (usernameInput.value === '') {
+            usernameInput.focus();
+        }
+    }, 300);
+
+    // Rotador de Frases - COM VELOCIDADE REDUZIDA
     const quotes = [
         '"A bola não entra por acaso." - Didi',
         '"Se eu tivesse que nascer de novo, eu seria jogador." - Pelé',
         '"O segredo do futebol é jogar bola." - Mauro Shampoo',
         '"Corro atrás da bola porque é ela que me dá o pão." - Obdulio Varela',
-        '"Eu sou Romário, eu sou Deus." - Romário'
+        '"Eu sou Romário, eu sou Deus." - Romário',
+        '"Gol é igual a ovo: quando vem, vem em dúzia." - Carlos Alberto Torres',
+        '"Na minha vida, futebol sempre foi paixão." - Zico',
+        '"O futebol é uma caixinha de surpresas." - Telê Santana',
+        '"Jogador que tem medo de jogada difícil não é jogador." - Garrincha',
+        '"Futebol é como jazz. Quanto melhor, mais improvisa." - Sócrates'
     ];
 
     const quoteDisplay = document.getElementById('quote-display');
     let index = 0;
 
-    setInterval(() => {
-        index = (index + 1) % quotes.length;
+    // Função para trocar as frases - TEMPO AUMENTADO PARA 8 SEGUNDOS
+    function rotateQuote() {
         quoteDisplay.classList.add('quote-fade');
-
+        
         setTimeout(() => {
+            index = (index + 1) % quotes.length;
             quoteDisplay.textContent = quotes[index];
-            quoteDisplay.classList.remove('quote-fade');
+            
+            // Força reflow para reiniciar a animação
             void quoteDisplay.offsetWidth;
-            quoteDisplay.classList.add('quote-fade');
-        }, 500);
+            
+            quoteDisplay.classList.remove('quote-fade');
+        }, 800); // Tempo aumentado para transição mais suave
+    }
 
-    }, 5000);
+    // Inicia a rotação a cada 8 segundos (em vez de 5)
+    setInterval(rotateQuote, 8000);
 
+    // Inicia com animação
     quoteDisplay.classList.add('quote-fade');
-
 });
 </script>
 

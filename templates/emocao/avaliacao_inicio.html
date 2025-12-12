@@ -2,20 +2,38 @@
 
 {% block content %}
 <div class="avaliacao-container">
+    <div class="avaliacao-header">
+        <div class="eyebrow">
+            <i class="fas fa-star"></i>Avaliação de Estádios
+        </div>
+        <h1 class="page-title">Como foi sua experiência no estádio?</h1>
+        <p class="page-subtitle">Registre suas impressões ou consulte avaliações anteriores para planejar suas próximas visitas.</p>
+    </div>
+
     <div class="botoes-grid">
-        <a href="{% url 'core:nova_avaliacao' %}" class="botao-card">
-            <div class="botao-icon">⭐</div>
-            <div class="botao-content">
+        <a href="{% url 'core:nova_avaliacao' %}" class="botao-card floating">
+            <div class="card-icon">
+                <i class="fas fa-plus-circle"></i>
+            </div>
+            <div class="card-content">
                 <h3>Nova Avaliação</h3>
-                <p>Registrar experiência</p>
+                <p>Registrar nova experiência</p>
+            </div>
+            <div class="card-arrow">
+                <i class="fas fa-arrow-right"></i>
             </div>
         </a>
 
-        <a href="{% url 'core:avaliacoes_anteriores' %}" class="botao-card">
-            <div class="botao-icon">📊</div>
-            <div class="botao-content">
+        <a href="{% url 'core:avaliacoes_anteriores' %}" class="botao-card floating">
+            <div class="card-icon">
+                <i class="fas fa-chart-bar"></i>
+            </div>
+            <div class="card-content">
                 <h3>Minhas Avaliações</h3>
-                <p>Ver histórico</p>
+                <p>Consultar histórico</p>
+            </div>
+            <div class="card-arrow">
+                <i class="fas fa-arrow-right"></i>
             </div>
         </a>
     </div>
@@ -27,150 +45,377 @@ body {
     overflow: hidden;
 }
 
+/* Animations */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+}
+
+.floating {
+    animation: float 6s ease-in-out infinite;
+}
+
 .avaliacao-container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 140px); /* Altura total menos header e padding */
-    padding: 0;
+    height: 100%;
+    padding: 20px;
+    gap: 40px;
+}
+
+.avaliacao-header {
+    text-align: center;
+    max-width: 600px;
+    margin-bottom: 10px;
+}
+
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary-blue);
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 8px 16px;
+    background: rgba(0, 102, 255, 0.1);
+    border-radius: var(--radius-md);
+    margin-bottom: 20px;
+}
+
+.eyebrow i {
+    font-size: 12px;
+}
+
+.page-title {
+    font-size: clamp(2rem, 3vw, 2.5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    color: #051831;
+    margin: 0 0 15px 0;
+    background: linear-gradient(90deg, #051831, var(--secondary-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.page-subtitle {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #334a63;
+    margin: 0;
+    opacity: 0.9;
 }
 
 .botoes-grid {
     display: flex;
-    gap: 30px;
+    gap: 40px;
     justify-content: center;
     align-items: center;
+    margin: 20px 0;
 }
 
 .botao-card {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    background: #f8f9fa;
-    padding: 30px 25px;
-    border-radius: 12px;
-    box-shadow: 0 3px 12px rgba(0, 123, 255, 0.1);
-    transition: all 0.3s ease;
-    width: 180px;
-    height: 160px;
-    border: 2px solid #e3f2fd;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px 30px;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    transition: var(--transition-smooth);
+    width: 280px;
+    height: 260px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    overflow: hidden;
+}
+
+.botao-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+    transition: var(--transition-smooth);
 }
 
 .botao-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.15);
-    background: #e3f2fd;
-    border-color: #007bff;
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-xl);
 }
 
-.botao-icon {
-    font-size: 2.2rem;
-    margin-bottom: 12px;
-    color: #007bff;
-    transition: all 0.3s ease;
+.botao-card:hover::before {
+    height: 6px;
+    background: var(--gradient-accent);
 }
 
-.botao-card:hover .botao-icon {
-    color: #0056b3;
-    transform: scale(1.05);
+.card-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: var(--primary-blue);
+    transition: var(--transition-smooth);
+    z-index: 2;
 }
 
-.botao-content {
+.botao-card:hover .card-icon {
+    color: var(--accent-blue);
+    transform: scale(1.1);
+}
+
+.card-content {
     text-align: center;
+    z-index: 2;
 }
 
-.botao-content h3 {
-    color: #007bff;
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 6px;
-    transition: all 0.3s ease;
+.card-content h3 {
+    color: #051831;
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    transition: var(--transition-smooth);
 }
 
-.botao-card:hover .botao-content h3 {
-    color: #0056b3;
+.botao-card:hover .card-content h3 {
+    color: var(--primary-blue);
 }
 
-.botao-content p {
-    color: #64b5f6;
-    font-size: 0.85rem;
+.card-content p {
+    color: var(--gray-medium);
+    font-size: 0.95rem;
     margin: 0;
-    transition: all 0.3s ease;
+    transition: var(--transition-smooth);
 }
 
-.botao-card:hover .botao-content p {
-    color: #1976d2;
+.botao-card:hover .card-content p {
+    color: var(--secondary-blue);
+}
+
+.card-arrow {
+    position: absolute;
+    bottom: 25px;
+    right: 25px;
+    width: 40px;
+    height: 40px;
+    background: rgba(0, 102, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-blue);
+    font-size: 1rem;
+    transition: var(--transition-smooth);
+    opacity: 0;
+    transform: translateX(10px);
+}
+
+.botao-card:hover .card-arrow {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.avaliacao-stats {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(0, 102, 255, 0.1);
+    transition: var(--transition-smooth);
+    min-width: 200px;
+}
+
+.stat-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 102, 255, 0.1);
+    border-color: rgba(0, 102, 255, 0.2);
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 102, 255, 0.1);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-blue);
+    font-size: 1.3rem;
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-value {
+    font-weight: 700;
+    color: #051831;
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--gray-medium);
 }
 
 /* Responsividade */
+@media (max-width: 1024px) {
+    .botoes-grid {
+        gap: 30px;
+    }
+    
+    .botao-card {
+        width: 250px;
+        height: 240px;
+        padding: 35px 25px;
+    }
+    
+    .card-icon {
+        font-size: 2.8rem;
+    }
+    
+    .stat-item {
+        min-width: 180px;
+    }
+}
+
 @media (max-width: 768px) {
+    .avaliacao-container {
+        gap: 30px;
+        padding: 15px;
+    }
+    
     .botoes-grid {
         gap: 25px;
     }
     
     .botao-card {
-        width: 160px;
-        height: 140px;
-        padding: 25px 20px;
+        width: 220px;
+        height: 220px;
+        padding: 30px 20px;
     }
     
-    .botao-icon {
-        font-size: 2rem;
+    .card-icon {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
     }
     
-    .botao-content h3 {
-        font-size: 1rem;
+    .card-content h3 {
+        font-size: 1.2rem;
+    }
+    
+    .avaliacao-stats {
+        gap: 20px;
+    }
+    
+    .stat-item {
+        min-width: 160px;
+        padding: 12px 16px;
+    }
+    
+    .stat-icon {
+        width: 44px;
+        height: 44px;
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .botoes-grid {
+        flex-direction: column;
+        gap: 25px;
+    }
+    
+    .botao-card {
+        width: 280px;
+        height: 220px;
+    }
+    
+    .avaliacao-stats {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .stat-item {
+        width: 280px;
+        min-width: auto;
     }
 }
 
 @media (max-width: 480px) {
-    .botoes-grid {
-        flex-direction: column;
-        gap: 20px;
+    .avaliacao-container {
+        gap: 25px;
+    }
+    
+    .eyebrow {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+    
+    .page-title {
+        font-size: 1.8rem;
+    }
+    
+    .page-subtitle {
+        font-size: 1rem;
     }
     
     .botao-card {
-        width: 200px;
-        height: 140px;
+        width: 260px;
+        height: 210px;
         padding: 25px 20px;
     }
     
-    .botao-icon {
-        font-size: 2rem;
+    .card-icon {
+        font-size: 2.2rem;
     }
     
-    .botao-content h3 {
+    .card-content h3 {
         font-size: 1.1rem;
     }
     
-    .botao-content p {
-        font-size: 0.9rem;
+    .stat-item {
+        width: 260px;
     }
 }
 
 @media (max-width: 360px) {
-    .botoes-grid {
-        gap: 15px;
-    }
-    
     .botao-card {
-        width: 180px;
-        height: 130px;
+        width: 240px;
+        height: 200px;
         padding: 20px 15px;
     }
     
-    .botao-icon {
-        font-size: 1.8rem;
+    .card-icon {
+        font-size: 2rem;
     }
     
-    .botao-content h3 {
+    .card-content h3 {
         font-size: 1rem;
     }
     
-    .botao-content p {
-        font-size: 0.8rem;
+    .stat-item {
+        width: 240px;
     }
 }
 </style>

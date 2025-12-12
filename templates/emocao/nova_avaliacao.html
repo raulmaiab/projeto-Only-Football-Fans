@@ -3,7 +3,10 @@
 {% block content %}
 <div class="avaliacao-container">
     <div class="avaliacao-card">
-        <h2 class="avaliacao-titulo">Avaliar Estádio</h2>
+        <div class="avaliacao-header">
+            <h1 class="avaliacao-titulo">Avaliar Estádio</h1>
+            <p class="avaliacao-subtitulo">Compartilhe sua experiência nos estádios que visitou</p>
+        </div>
 
         {% if messages %}
         <div class="mensagens-erro">
@@ -18,9 +21,9 @@
 
             <!-- Estádio -->
             <div class="form-group">
-                <label for="estadio" class="form-label">Estádio:</label>
                 <input type="text" id="estadio" name="estadio" value="{{ request.POST.estadio }}" 
-                       class="form-input" placeholder="Nome do estádio" required>
+                       class="form-input" placeholder=" " required>
+                <label for="estadio" class="form-label">Nome do estádio</label>
             </div>
 
             <!-- Avaliação -->
@@ -32,7 +35,10 @@
                         <input type="radio" name="avaliacao" value="{{ i }}"
                             class="rating-input" 
                             {% if request.POST.avaliacao == i %}checked{% endif %}>
-                        <span class="rating-star">{{ i }} ⭐</span>
+                        <span class="rating-star">
+                            <i class="fas fa-star"></i>
+                            <span class="star-number">{{ i }}</span>
+                        </span>
                     </label>
                     {% endfor %}
                 </div>
@@ -40,108 +46,192 @@
 
             <!-- Comentário -->
             <div class="form-group">
-                <label for="comentario" class="form-label">Comentário:</label>
-                <textarea id="comentario" name="comentario" rows="4" 
+                <textarea id="comentario" name="comentario" rows="3" 
                           class="form-textarea" 
-                          placeholder="Compartilhe sua experiência com o estádio...">{{ request.POST.comentario }}</textarea>
+                          placeholder=" ">{{ request.POST.comentario }}</textarea>
+                <label for="comentario" class="form-label">Compartilhe sua experiência</label>
             </div>
 
-            <button type="submit" class="botao-enviar">Enviar Avaliação</button>
+            <button type="submit" class="botao-enviar">
+                <i class="fas fa-star" style="margin-right: 8px;"></i>
+                Enviar Avaliação
+            </button>
         </form>
     </div>
 </div>
 
 <style>
+:root {
+    --primary-blue: #0066FF;
+    --primary-dark: #031028;
+    --secondary-blue: #1A4FA0;
+    --accent-blue: #00C2FF;
+    --light-blue: #E8F3FF;
+    --white: #FFFFFF;
+    --gray-light: #F5F8FF;
+    --gray-medium: #6B7EA8;
+    --gradient-primary: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    --gradient-accent: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+    --shadow-lg: 0 25px 50px -12px rgba(3, 16, 40, 0.25);
+    --shadow-xl: 0 35px 70px -15px rgba(3, 16, 40, 0.35);
+    --radius-xl: 24px;
+    --radius-lg: 16px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+    --transition-smooth: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    --success-text: #28a745;
+    --error-text: #dc3545;
+}
+
 .avaliacao-container {
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    min-height: 80vh;
-    padding: 40px 20px;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    align-items: center;
+    min-height: calc(100vh - 80px);
+    padding: 20px;
+    background: var(--primary-dark);
+    overflow: hidden;
 }
 
 .avaliacao-card {
-    background: white;
-    padding: 40px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: var(--radius-xl);
+    padding: 35px 30px;
+    box-shadow: var(--shadow-xl);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    max-width: 480px;
     width: 100%;
-    animation: fadeInUp 0.6s ease-out;
+    position: relative;
+    min-height: fit-content;
+    overflow: hidden;
+}
+
+.avaliacao-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-accent);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+.avaliacao-header {
+    text-align: center;
+    margin-bottom: 25px;
 }
 
 .avaliacao-titulo {
-    color: #2c3e50;
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 2rem;
-    font-weight: 600;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #051831;
+    margin: 0 0 6px 0;
+    background: linear-gradient(90deg, #051831, var(--secondary-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.avaliacao-subtitulo {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--gray-medium);
+    margin: 0;
+    line-height: 1.4;
 }
 
 .mensagens-erro {
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 .mensagem-erro {
-    background: #fee;
-    color: #c33;
-    padding: 12px 16px;
-    border-radius: 8px;
-    border-left: 4px solid #c33;
-    margin-bottom: 10px;
+    background: rgba(220, 53, 69, 0.1);
+    color: #721c24;
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(220, 53, 69, 0.2);
+    margin-bottom: 8px;
+    font-size: 0.85rem;
     font-weight: 500;
+    text-align: center;
+}
+
+.mensagem-erro:last-child {
+    margin-bottom: 0;
 }
 
 .form-group {
-    margin-bottom: 25px;
-}
-
-.form-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #2c3e50;
-    font-size: 1.1rem;
+    position: relative;
+    margin-bottom: 20px;
 }
 
 .form-input, .form-textarea {
     width: 100%;
-    padding: 14px 16px;
-    border: 2px solid #e1e8ed;
-    border-radius: 10px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    box-sizing: border-box;
+    padding: 12px 14px;
+    border: 1px solid rgba(0, 102, 255, 0.2);
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    color: #051831;
+    transition: var(--transition-smooth);
+    font-family: 'Inter', sans-serif;
+    resize: vertical;
 }
 
 .form-input:focus, .form-textarea:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+    background: white;
 }
 
 .form-textarea {
-    resize: vertical;
-    min-height: 100px;
+    min-height: 90px;
+}
+
+.form-label {
+    position: absolute;
+    left: 14px;
+    top: 12px;
+    font-size: 0.9rem;
+    color: var(--gray-medium);
+    transition: var(--transition-smooth);
+    pointer-events: none;
+    background: transparent;
+    padding: 0 5px;
+}
+
+.form-input:focus + .form-label,
+.form-input:not(:placeholder-shown) + .form-label,
+.form-textarea:focus + .form-label,
+.form-textarea:not(:placeholder-shown) + .form-label {
+    top: -9px;
+    font-size: 0.75rem;
+    color: var(--primary-blue);
+    background: white;
 }
 
 .avaliacao-texto {
     font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 15px;
-    font-size: 1.1rem;
+    color: #051831;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    text-align: center;
 }
 
 .rating-group {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 5px;
 }
 
 .rating-label {
     cursor: pointer;
-    transition: transform 0.2s ease;
+    transition: var(--transition-smooth);
 }
 
 .rating-input {
@@ -149,49 +239,70 @@
 }
 
 .rating-star {
-    display: inline-block;
-    padding: 12px 20px;
-    background: #f8f9fa;
-    border: 2px solid #e1e8ed;
-    border-radius: 10px;
-    font-weight: 600;
-    color: #6c757d;
-    transition: all 0.3s ease;
-    min-width: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    background: rgba(0, 102, 255, 0.05);
+    border: 2px solid rgba(0, 102, 255, 0.2);
+    border-radius: var(--radius-md);
+    color: var(--gray-medium);
+    transition: var(--transition-smooth);
+    min-width: 55px;
     text-align: center;
+    gap: 3px;
+}
+
+.rating-star i {
+    font-size: 1.1rem;
+}
+
+.star-number {
+    font-size: 0.8rem;
+    font-weight: 600;
 }
 
 .rating-input:checked + .rating-star {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    background: var(--gradient-primary);
     color: white;
-    border-color: #007bff;
+    border-color: var(--primary-blue);
     transform: scale(1.05);
+}
+
+.rating-input:checked + .rating-star i {
+    color: white;
 }
 
 .rating-label:hover .rating-star {
     transform: translateY(-2px);
-    border-color: #007bff;
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+    border-color: var(--primary-blue);
+    color: var(--primary-blue);
+}
+
+.rating-label:hover .rating-star i {
+    color: var(--primary-blue);
 }
 
 .botao-enviar {
-    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    width: 100%;
+    padding: 12px;
+    background: var(--gradient-primary);
     color: white;
     border: none;
-    padding: 16px 40px;
-    font-size: 1.1rem;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
     font-weight: 600;
-    border-radius: 10px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    width: 100%;
-    margin-top: 10px;
+    transition: var(--transition-smooth);
+    margin-top: 5px;
+    font-family: 'Inter', sans-serif;
 }
 
 .botao-enviar:hover {
-    background: linear-gradient(135deg, #20c997 0%, #28a745 100%);
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+    box-shadow: 0 8px 25px rgba(0, 102, 255, 0.3);
+    background: linear-gradient(135deg, #005CE6, var(--secondary-blue));
 }
 
 .botao-enviar:active {
@@ -202,7 +313,7 @@
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(20px);
     }
     to {
         opacity: 1;
@@ -210,58 +321,189 @@
     }
 }
 
+.avaliacao-card {
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+
 /* Responsividade */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .avaliacao-container {
-        padding: 20px 15px;
-        min-height: 70vh;
+        min-height: calc(100vh - 70px);
+        padding: 15px;
     }
     
     .avaliacao-card {
+        max-width: 440px;
         padding: 30px 25px;
-    }
-    
-    .avaliacao-titulo {
-        font-size: 1.7rem;
-    }
-    
-    .rating-group {
-        justify-content: center;
-    }
-    
-    .rating-star {
-        padding: 10px 16px;
-        min-width: 50px;
-        font-size: 0.9rem;
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
+    .avaliacao-container {
+        min-height: calc(100vh - 60px);
+        padding: 15px;
+        align-items: flex-start;
+        padding-top: 20px;
+    }
+    
     .avaliacao-card {
+        max-width: 380px;
         padding: 25px 20px;
+        border-radius: var(--radius-lg);
     }
     
     .avaliacao-titulo {
         font-size: 1.5rem;
     }
     
-    .rating-group {
-        gap: 8px;
-    }
-    
-    .rating-star {
-        padding: 8px 12px;
-        min-width: 45px;
+    .avaliacao-subtitulo {
         font-size: 0.85rem;
     }
     
+    .rating-star {
+        padding: 7px 10px;
+        min-width: 48px;
+    }
+    
+    .rating-star i {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .avaliacao-container {
+        padding: 10px;
+        padding-top: 15px;
+    }
+    
+    .avaliacao-card {
+        max-width: 100%;
+        padding: 22px 18px;
+        border-radius: var(--radius-lg);
+    }
+    
+    .avaliacao-titulo {
+        font-size: 1.3rem;
+    }
+    
+    .avaliacao-subtitulo {
+        font-size: 0.8rem;
+    }
+    
     .form-input, .form-textarea {
-        padding: 12px 14px;
+        padding: 11px 12px;
+        font-size: 0.85rem;
+    }
+    
+    .form-label {
+        font-size: 0.85rem;
+        top: 11px;
+        left: 12px;
+    }
+    
+    .form-textarea {
+        min-height: 80px;
+    }
+    
+    .rating-group {
+        gap: 6px;
+    }
+    
+    .rating-star {
+        padding: 6px 8px;
+        min-width: 42px;
+    }
+    
+    .rating-star i {
+        font-size: 0.9rem;
+    }
+    
+    .star-number {
+        font-size: 0.75rem;
     }
     
     .botao-enviar {
-        padding: 14px 30px;
-        font-size: 1rem;
+        padding: 11px;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-height: 700px) {
+    .avaliacao-container {
+        min-height: calc(100vh - 60px);
+        padding: 10px;
+        align-items: flex-start;
+        padding-top: 15px;
+    }
+    
+    .avaliacao-card {
+        padding: 22px 20px;
+        margin: 10px 0;
+    }
+    
+    .avaliacao-header {
+        margin-bottom: 20px;
+    }
+    
+    .avaliacao-titulo {
+        font-size: 1.4rem;
+        margin-bottom: 4px;
+    }
+    
+    .form-group {
+        margin-bottom: 16px;
+    }
+    
+    .form-textarea {
+        min-height: 75px;
+    }
+}
+
+@media (max-height: 600px) {
+    .avaliacao-container {
+        padding-top: 10px;
+    }
+    
+    .avaliacao-card {
+        padding: 20px 18px;
+    }
+    
+    .avaliacao-header {
+        margin-bottom: 15px;
+    }
+    
+    .avaliacao-titulo {
+        font-size: 1.3rem;
+    }
+    
+    .avaliacao-subtitulo {
+        font-size: 0.8rem;
+    }
+    
+    .form-group {
+        margin-bottom: 14px;
+    }
+    
+    .form-input, .form-textarea {
+        padding: 10px 12px;
+    }
+    
+    .form-textarea {
+        min-height: 65px;
+    }
+    
+    .rating-group {
+        gap: 5px;
+    }
+    
+    .rating-star {
+        padding: 5px 7px;
+        min-width: 38px;
+    }
+    
+    .botao-enviar {
+        padding: 10px;
+        margin-top: 3px;
     }
 }
 </style>

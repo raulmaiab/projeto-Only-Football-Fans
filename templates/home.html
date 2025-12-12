@@ -1,78 +1,122 @@
 {% extends 'base.html' %}
 
-{% block extra_head %}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css">
-{% endblock %}
-
 {% block content %}
 <main class="dashboard-container">
     
+    <!-- Header com efeito glass -->
     <header class="welcome-header fade-in-item">
-        <h1><i class="fa-solid fa-hand-wave" aria-hidden="true"></i> Olá, {{ request.user.username }}!</h1>
-        <p>Bem-vindo ao seu painel de torcedor. O que vamos fazer hoje?</p>
+        <div class="eyebrow">
+            <i class="fas fa-hand-wave"></i>Bem-vindo de volta
+        </div>
+        <h1 class="page-title">Olá, {{ request.user.username }}!</h1>
+        <p class="page-subtitle">Seu painel de torcedor está pronto. O que vamos fazer hoje?</p>
     </header>
 
+    <!-- Cards de ações rápidas -->
     <section class="quick-actions-grid">
         
-        <a href="{% url 'core:registrar_partida' %}" class="action-card card-destaque fade-in-item tilt-card">
-            <div class="card-content-wrapper">
-                <div class="card-icon"><i class="fa-solid fa-stadium" aria-hidden="true"></i></div>
+        <a href="{% url 'core:registrar_partida' %}" class="action-card card-destaque floating fade-in-item">
+            <div class="card-icon-wrapper">
+                <div class="card-icon">
+                    <i class="fa-solid fa-stadium"></i>
+                </div>
+            </div>
+            <div class="card-content">
                 <h3>Registrar Nova Partida</h3>
-                <p>Anote os detalhes do jogo que você assistiu.</p>
+                <p>Anote os detalhes do jogo que você assistiu</p>
+            </div>
+            <div class="card-arrow">
+                <i class="fas fa-arrow-right"></i>
             </div>
         </a>
         
-        <a href="{% url 'core:lista_partidas' %}" class="action-card fade-in-item tilt-card">
-            <div class="card-content-wrapper">
-                <div class="card-icon"><i class="fa-solid fa-chart-simple" aria-hidden="true"></i></div>
+        <a href="{% url 'core:lista_partidas' %}" class="action-card floating fade-in-item">
+            <div class="card-icon-wrapper">
+                <div class="card-icon">
+                    <i class="fa-solid fa-chart-simple"></i>
+                </div>
+            </div>
+            <div class="card-content">
                 <h3>Histórico de Jogos</h3>
-                <p>Veja e avalie suas partidas anteriores.</p>
+                <p>Veja e avalie suas partidas anteriores</p>
+            </div>
+            <div class="card-arrow">
+                <i class="fas fa-arrow-right"></i>
             </div>
         </a>
 
-        <a href="{% url 'core:avaliacao_inicio' %}" class="action-card fade-in-item tilt-card">
-            <div class="card-content-wrapper">
-                <div class="card-icon"><i class="fa-solid fa-star" aria-hidden="true"></i></div>
+        <a href="{% url 'core:avaliacao_inicio' %}" class="action-card floating fade-in-item">
+            <div class="card-icon-wrapper">
+                <div class="card-icon">
+                    <i class="fa-solid fa-star"></i>
+                </div>
+            </div>
+            <div class="card-content">
                 <h3>Avaliar Estádio</h3>
-                <p>Conte como foi sua experiência na arquibancada.</p>
+                <p>Conte como foi sua experiência na arquibancada</p>
+            </div>
+            <div class="card-arrow">
+                <i class="fas fa-arrow-right"></i>
             </div>
         </a>
 
-        <a href="{% url 'core:galeria' %}" class="action-card fade-in-item tilt-card">
-            <div class="card-content-wrapper">
-                <div class="card-icon"><i class="fa-solid fa-camera-retro" aria-hidden="true"></i></div>
+        <a href="{% url 'core:galeria' %}" class="action-card floating fade-in-item">
+            <div class="card-icon-wrapper">
+                <div class="card-icon">
+                    <i class="fa-solid fa-camera-retro"></i>
+                </div>
+            </div>
+            <div class="card-content">
                 <h3>Galeria de Mídia</h3>
-                <p>Reveja suas fotos e vídeos dos jogos.</p>
+                <p>Reveja suas fotos e vídeos dos jogos</p>
+            </div>
+            <div class="card-arrow">
+                <i class="fas fa-arrow-right"></i>
             </div>
         </a>
     </section>
 
+    <!-- Painel de estatísticas -->
     <section class="stats-panel fade-in-item">
-        <h2>Suas Estatísticas</h2>
+        <div class="stats-header">
+            <h2 class="section-title">Suas Estatísticas</h2>
+            <p class="section-subtitle">Acompanhe suas atividades como torcedor</p>
+        </div>
+        
         <div class="stats-grid">
             
             <div class="stat-item">
-                <span class="stat-number" data-value="{{ partidas_registradas }}">0</span>
-                <span class="stat-label">Partidas Registradas</span>
+                <div class="stat-icon">
+                    <i class="fas fa-futbol"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-number" data-value="{{ partidas_registradas }}">0</div>
+                    <div class="stat-label">Partidas Registradas</div>
+                </div>
             </div>
             
             <div class="stat-item">
-                <span class="stat-number" data-value="{{ estadios_avaliados }}">0</span>
-                <span class="stat-label">Estádios Avaliados</span>
+                <div class="stat-icon">
+                    <i class="fas fa-stadium"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-number" data-value="{{ estadios_avaliados }}">0</div>
+                    <div class="stat-label">Estádios Avaliados</div>
+                </div>
             </div>
 
             <div class="stat-item">
-                {% if time_favorito %}
-                    <span class="stat-number stat-team">{{ time_favorito }}</span>
-                {% else %}
-                    <span class="stat-number">--</span>
-                {% endif %}
-                <span class="stat-label">Seu Time do Coração</span>
+                <div class="stat-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <div class="stat-info">
+                    {% if time_favorito %}
+                        <div class="stat-number stat-team">{{ time_favorito }}</div>
+                    {% else %}
+                        <div class="stat-number">--</div>
+                    {% endif %}
+                    <div class="stat-label">Time do Coração</div>
+                </div>
             </div>
 
         </div>
@@ -81,127 +125,475 @@
 </main>
 
 <style>
-    /* --- Variáveis de Estilo --- */
-    :root {
-        --card-bg: #ffffff;
-        --text-primary: #1d2d35;
-        --text-secondary: #657786;
-        --border-color: #e1e8ed;
-        --shadow-color: rgba(0, 0, 0, 0.08);
-        --destaque-color: #007bff;
-        --destaque-hover: #0056b3;
-    }
+/* Animations */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+}
 
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.floating {
+    animation: float 6s ease-in-out infinite;
+}
+
+.fade-in-item {
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out forwards;
+}
+
+.fade-in-item:nth-child(1) { animation-delay: 0.1s; }
+.fade-in-item:nth-child(2) { animation-delay: 0.2s; }
+.fade-in-item:nth-child(3) { animation-delay: 0.3s; }
+.fade-in-item:nth-child(4) { animation-delay: 0.4s; }
+.fade-in-item:nth-child(5) { animation-delay: 0.5s; }
+
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    height: 100%;
+}
+
+/* Header Section */
+.welcome-header {
+    text-align: center;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-accent);
+}
+
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary-blue);
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 8px 16px;
+    background: rgba(0, 102, 255, 0.1);
+    border-radius: var(--radius-md);
+    margin-bottom: 20px;
+}
+
+.eyebrow i {
+    font-size: 12px;
+}
+
+.page-title {
+    font-size: clamp(2rem, 3vw, 2.5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    color: #051831;
+    margin: 0 0 15px 0;
+    background: linear-gradient(90deg, #051831, var(--secondary-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.page-subtitle {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #334a63;
+    margin: 0;
+    opacity: 0.9;
+}
+
+/* Quick Actions Grid */
+.quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+.action-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px 25px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    transition: var(--transition-smooth);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    overflow: hidden;
+    height: 220px;
+}
+
+.action-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+    transition: var(--transition-smooth);
+}
+
+.action-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-xl);
+}
+
+.action-card:hover::before {
+    height: 6px;
+    background: var(--gradient-accent);
+}
+
+.card-destaque {
+    background: linear-gradient(135deg, rgba(0, 102, 255, 0.95), rgba(26, 79, 160, 0.95));
+    color: white;
+}
+
+.card-destaque::before {
+    background: var(--gradient-accent);
+}
+
+.card-destaque .card-icon {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.card-destaque .card-content h3,
+.card-destaque .card-content p {
+    color: white;
+}
+
+.card-destaque .card-arrow {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.card-icon-wrapper {
+    margin-bottom: 20px;
+}
+
+.card-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(0, 102, 255, 0.1);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-blue);
+    font-size: 1.8rem;
+    transition: var(--transition-smooth);
+}
+
+.action-card:hover .card-icon {
+    transform: scale(1.1);
+    background: rgba(0, 102, 255, 0.2);
+}
+
+.card-content {
+    flex-grow: 1;
+}
+
+.card-content h3 {
+    color: #051831;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+    transition: var(--transition-smooth);
+}
+
+.action-card:hover .card-content h3 {
+    color: var(--primary-blue);
+}
+
+.card-content p {
+    color: var(--gray-medium);
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.5;
+    transition: var(--transition-smooth);
+}
+
+.action-card:hover .card-content p {
+    color: var(--secondary-blue);
+}
+
+.card-arrow {
+    position: absolute;
+    bottom: 25px;
+    right: 25px;
+    width: 40px;
+    height: 40px;
+    background: rgba(0, 102, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-blue);
+    font-size: 1rem;
+    transition: var(--transition-smooth);
+    opacity: 0;
+    transform: translateX(10px);
+}
+
+.action-card:hover .card-arrow {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Stats Panel */
+.stats-panel {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: var(--radius-xl);
+    padding: 30px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.stats-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+}
+
+.stats-header {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.section-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #051831;
+    margin: 0 0 10px 0;
+}
+
+.section-subtitle {
+    font-size: 1rem;
+    color: var(--gray-medium);
+    margin: 0;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(0, 102, 255, 0.1);
+    transition: var(--transition-smooth);
+}
+
+.stat-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 102, 255, 0.1);
+    border-color: rgba(0, 102, 255, 0.2);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(0, 102, 255, 0.1);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-blue);
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.stat-number {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--primary-blue);
+    line-height: 1;
+    margin-bottom: 5px;
+    font-variant-numeric: tabular-nums;
+}
+
+.stat-team {
+    font-size: 1.5rem;
+    color: #051831;
+}
+
+.stat-label {
+    font-size: 0.95rem;
+    color: var(--gray-medium);
+    font-weight: 500;
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
     .dashboard-container {
-        max-width: 1100px;
-        margin: 0 auto;
-        padding: 1rem;
-        font-family: 'Poppins', sans-serif;
+        gap: 30px;
     }
-
-    .fade-in-item {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-    }
-    .fade-in-item.is-visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
+    
     .welcome-header {
-        padding: 1.5rem 1rem;
-        border-radius: 12px;
-        background-color: var(--card-bg);
-        box-shadow: 0 4px 15px var(--shadow-color);
-        margin-bottom: 2rem;
+        padding: 25px;
     }
-    .welcome-header h1 { margin: 0 0 0.25rem 0; color: var(--text-primary); font-size: 2rem; font-weight: 700; display:flex; align-items:center; gap:0.5rem; }
-    .welcome-header p { margin: 0; color: var(--text-secondary); font-size: 1.1rem; }
-
+    
     .quick-actions-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 2rem;
-        perspective: 1000px;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 20px;
     }
-
+    
     .action-card {
-        background-color: var(--card-bg);
-        border-radius: 12px;
-        padding: 1.5rem;
-        text-decoration: none;
-        color: var(--text-primary);
-        box-shadow: 0 4px 15px var(--shadow-color);
-        border: 1px solid var(--border-color);
-        transform-style: preserve-3d;
-        transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        height: 200px;
+        padding: 25px 20px;
     }
-
-    .action-card:hover { box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); }
-
-    .card-content-wrapper { transform: translateZ(20px); }
-
-    /* Ícones dos cards */
-    .card-icon { font-size: 2.2rem; margin-bottom: 0.5rem; color: var(--destaque-color); display:flex; align-items:center; justify-content:flex-start; }
-    .card-icon i { font-size: 2.2rem; }
-
-    .action-card h3 { margin: 0 0 0.5rem 0; font-size: 1.2rem; font-weight: 600; }
-    .action-card p { margin: 0; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.4; }
-
-    .action-card.card-destaque {
-        background-color: var(--destaque-color);
-        color: white;
-        border-color: var(--destaque-color);
+    
+    .card-icon {
+        width: 55px;
+        height: 55px;
+        font-size: 1.6rem;
     }
-    .action-card.card-destaque h3 { color: white; }
-    .action-card.card-destaque p { color: #e0e0e0; }
-    .action-card.card-destaque:hover { background-color: var(--destaque-hover); }
-
-    /* Garante ícone branco no card destaque */
-    .action-card.card-destaque .card-icon i { color: #fff; }
-
+    
     .stats-panel {
-        background-color: var(--card-bg);
-        border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 4px 15px var(--shadow-color);
+        padding: 25px;
     }
-    .stats-panel h2 { margin: 0 0 1.5rem 0; color: var(--text-primary); font-weight: 600; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; }
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; }
-    .stat-item { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 1rem; background-color: #f9fafb; border-radius: 8px; }
+    
+    .stat-item {
+        padding: 18px;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        gap: 25px;
+        padding: 10px;
+    }
+    
+    .welcome-header {
+        padding: 20px;
+    }
+    
+    .eyebrow {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+    
+    .page-title {
+        font-size: 1.8rem;
+    }
+    
+    .quick-actions-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    .action-card {
+        height: 180px;
+        padding: 20px 15px;
+    }
+    
+    .card-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+    
+    .card-content h3 {
+        font-size: 1.1rem;
+    }
+    
+    .card-content p {
+        font-size: 0.9rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .stat-item {
+        padding: 15px;
+    }
     
     .stat-number {
-        font-size: 2.25rem;
-        font-weight: 700;
-        color: var(--destaque-color);
-        line-height: 1;
-        font-variant-numeric: tabular-nums;
+        font-size: 2rem;
     }
+}
 
-    .stat-label { color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem; }
-    .stat-team { font-size: 1.5rem; color: var(--text-primary); }
-
+@media (max-width: 480px) {
+    .quick-actions-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .action-card {
+        height: 160px;
+    }
+    
+    .page-title {
+        font-size: 1.6rem;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+    }
+    
+    .stat-number {
+        font-size: 1.8rem;
+    }
+}
 </style>
-
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-
-        const animatedItems = document.querySelectorAll('.fade-in-item');
-        animatedItems.forEach((item, index) => {
-            setTimeout(() => { item.classList.add('is-visible'); }, index * 150 + 100);
-        });
-
+        // Animações dos contadores
         const counters = document.querySelectorAll('.stat-number[data-value]');
         const animationDuration = 1500;
+        
         const animateCounter = (counter) => {
             const targetValue = parseInt(counter.dataset.value, 10);
             if (isNaN(targetValue) || targetValue === 0) {
                 counter.textContent = targetValue;
                 return;
             }
+            
             let startTime = null;
             const step = (timestamp) => {
                 if (!startTime) startTime = timestamp;
@@ -209,30 +601,41 @@
                 const easeOutProgress = 1 - Math.pow(1 - progress, 3);
                 const currentValue = Math.floor(easeOutProgress * targetValue);
                 counter.textContent = currentValue;
-                if (progress < 1) { window.requestAnimationFrame(step); } else { counter.textContent = targetValue; }
+                
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    counter.textContent = targetValue;
+                }
             };
+            
             window.requestAnimationFrame(step);
         };
-        counters.forEach(animateCounter);
 
-        const tiltCards = document.querySelectorAll('.tilt-card');
-        tiltCards.forEach(card => {
-            const maxTilt = 15;
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const cardWidth = card.offsetWidth;
-                const cardHeight = card.offsetHeight;
-                const mouseX = (e.clientX - rect.left - cardWidth / 2) / (cardWidth / 2);
-                const mouseY = (e.clientY - rect.top - cardHeight / 2) / (cardHeight / 2);
-                const rotateX = -maxTilt * mouseY;
-                const rotateY = maxTilt * mouseX;
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+        // Anima os contadores quando entram na viewport
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counter = entry.target;
+                    animateCounter(counter);
+                    observer.unobserve(counter);
+                }
             });
+        }, { threshold: 0.5 });
+
+        counters.forEach(counter => observer.observe(counter));
+
+        // Remove a animação float quando o usuário interage com o card
+        const floatingCards = document.querySelectorAll('.floating');
+        floatingCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.animationPlayState = 'paused';
+            });
+            
             card.addEventListener('mouseleave', () => {
-                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+                card.style.animationPlayState = 'running';
             });
         });
-
     });
 </script>
 
