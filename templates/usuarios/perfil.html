@@ -2,7 +2,7 @@
 
 {% block extra_head %}
 <style>
-    /* --- ESTILOS DE EDIÇÃO DE PERFIL (Ajustes de Avatar e Sobreposição) --- */
+    /* --- ESTILOS DE EDIÇÃO DE PERFIL (Ajustes Finais de Layout) --- */
 
     .profile-edit-container {
         display: flex;
@@ -24,7 +24,7 @@
 
     /* Header Azul do Cartão */
     .card-header-bg {
-        height: 80px; /* Reduzido levemente para melhor proporção */
+        height: 90px; /* Ajuste na altura */
         background: var(--accent-blue); 
         position: relative;
         border-top-left-radius: 12px;
@@ -34,9 +34,9 @@
     /* Avatar Wrapper para posicionamento */
     .profile-avatar-wrapper {
         text-align: center;
-        /* CORREÇÃO: Ajusta a margem para centralizar a 'cabeça' do avatar sobre a borda */
-        margin-top: -50px; 
-        margin-bottom: 0; /* Remove a margem extra aqui */
+        /* CORREÇÃO CHAVE: Puxa o avatar mais para cima, cobrindo melhor o header azul */
+        margin-top: -60px; 
+        margin-bottom: 0; 
     }
 
     .profile-avatar {
@@ -45,6 +45,7 @@
         height: 100px;
         background: #fff; 
         border-radius: 50%;
+        /* Usando a cor de fundo do seu layout para a borda */
         border: 5px solid var(--content-bg);
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         display: flex;
@@ -52,16 +53,17 @@
         justify-content: center;
     }
     
-    /* CORREÇÃO: Tamanho e cor do ícone da pessoa */
+    /* Tamanho e cor do ícone da pessoa */
     .profile-avatar i {
-        font-size: 3.8rem; /* Aumentado para preencher melhor o círculo */
+        font-size: 3.8rem; 
         color: var(--accent-blue);
-        line-height: 1; /* Garante que o ícone fique centralizado verticalmente */
+        line-height: 1; 
     }
 
     /* Corpo do Formulário */
     .card-body {
-        padding: 30px 40px 30px 40px; /* Aumenta o padding superior */
+        /* CORREÇÃO CHAVE: Aumenta o padding superior para forçar o espaçamento limpo abaixo do avatar */
+        padding: 40px 40px 30px 40px; 
         text-align: center;
     }
 
