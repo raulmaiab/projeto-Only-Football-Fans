@@ -539,13 +539,23 @@ from .forms import EditarPerfilForm
 
 @login_required
 def perfil(request):
+    # A instância é o usuário logado (request.user)
     if request.method == 'POST':
+        # Passar request.user como instance garante que o formulário carrega os dados
+        # e que o .save() salva nessa mesma instância.
         form = EditarPerfilForm(request.POST, user=request.user, instance=request.user)
+        
         if form.is_valid():
             form.save()
+            messages.success(request, 'Seu perfil foi atualizado com sucesso!') # ADICIONADO FEEDBACK
             return redirect('core:perfil')
+        else:
+            messages.error(request, 'Houve um erro ao salvar as alterações. Verifique os campos.')
     else:
+        # Carrega o formulário com os dados atuais do usuário
         form = EditarPerfilForm(user=request.user, instance=request.user)
 
-    return render(request, 'usuarios/perfil.html', {'form': form})
-
+    # Note que você precisa garantir que o seu template está em 'usuarios/perfil.html'
+    # conforme esta view, ou em 'perfil.html' conforme a view anterior.
+    # Vou usar o nome que você usou no primeiro bloco: 'perfil.html'
+    return render(request, 'perfil.html', {'form': form})
