@@ -1,52 +1,57 @@
-# forms.py CORRIGIDO
+# forms.py (Adicionando campos de senha)
 
 from django import forms
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 
 Usuario = get_user_model()
 
 class EditarPerfilForm(forms.ModelForm):
-    # Campo 'nome' customizado para preencher first_name
-    nome = forms.CharField(max_length=150, label='Nome', required=False) 
+    email = forms.EmailField(label='E-mail', required=False)
     
-    # Removendo o campo 'email' daqui, pois ele já é um campo do modelo AbstractUser
-    # e você o desabilitou no template. 
-    # Deixar email na Meta é mais limpo.
+    # NOVOS CAMPOS DE SENHA (Opcional)
+    new_password1 = forms.CharField(label='Nova Senha', required=False, widget=forms.PasswordInput)
+    new_password2 = forms.CharField(label='Confirme a Senha', required=False, widget=forms.PasswordInput)
 
     class Meta:
         model = Usuario
-        # Incluímos 'first_name', 'time_favorito' e 'email' na Meta.
-        # Mesmo que 'email' e 'first_name' sejam campos do modelo,
-        # o Django vai tentar preenchê-los se forem definidos no formulário (o que faremos na inicialização).
-        fields = ['time_favorito', 'email'] # time_favorito é o campo que queremos salvar via ModelForm
+        fields = ['first_name', 'time_favorito', 'email'] 
 
+    # ... __init__ permanece o mesmo ...
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
         self.user = user
 
-        # 1. Carregamento do Nome (usando first_name do modelo)
-        self.fields['nome'].initial = self.user.first_name
-
-        # 2. Desabilitar email (conforme seu template)
+        self.fields['first_name'].label = 'Nome'
         self.fields['email'].disabled = True 
-        # Carregamento do email (já é feito automaticamente por ser ModelForm, 
-        # mas garantimos a inicialização, caso não esteja na Meta):
-        # self.fields['email'].initial = self.user.email 
 
-    def clean_nome(self):
-        # Adicione validação, se necessário, mas para este caso, apenas retorna o valor
-        return self.cleaned_data.get('nome')
+    # NOVO MÉTODO DE VALIDAÇÃO DE SENHA
+    def clean(self):
+        cleaned_data = super().clean()
+        new_password1 = cleaned_data.get("new_password1")
+        new_password2 = cleaned_data.get("new_password2")
 
-    def save(self, commit=True):
-        # 1. Obter a instância do usuário que está sendo salva (request.user)
-        user = super().save(commit=False)
-
-        # 2. Mapear o campo customizado 'nome' de volta para 'first_name' no modelo
-        user.first_name = self.cleaned_data['nome']
-
-        # 3. Salvar o objeto (que agora tem time_favorito e first_name atualizados)
-        if commit:
-            user.save()
+        if new_password1 or new_password2:
+            if new_password1 and not new_password2:
+                self.add_error('new_password2', 'Confirme a nova senha.')
+            elif not new_password1 and new_password2:
+                self.add_error('new_password1', 'Digite a nova senha.')
+            elif new_password1 != new_password2:
+                raise ValidationError("As senhas não coincidem.")
         
-        return user # Retorna a instância do usuário
+        return cleaned_data
+    
+    # ATUALIZANDO O SAVE PARA TRATAR A SENHA
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        
+        new_password = self.cleaned_data.get("new_password1")
+        
+        if new_password:
+            user.set_password(new_password)
+        
+        if commit:
+            user.save() 
+        
+        return user

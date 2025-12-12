@@ -157,15 +157,15 @@ else:
     # URL base dos arquivos armazenados no Azure Blob
     MEDIA_URL = f'https://{AZURE_ACCOUNT_NAME}.blob.core.windows.net/{AZURE_CONTAINER}/'
  
+# settings.py (CÓDIGO CORRIGIDO)
 # ======================
 # AUTENTICAÇÃO
 # ======================
 
 AUTH_USER_MODEL = 'core.Usuario'
-LOGIN_URL = 'login'
+LOGIN_URL = 'core:login'  # <--- AGORA APONTA CORRETAMENTE PARA O NAMESPACE
 LOGIN_REDIRECT_URL = 'core:home'
 LOGOUT_REDIRECT_URL = 'core:home'
-
 # ======================
 # SESSÃO
 # ======================
