@@ -532,3 +532,19 @@ def editar_perfil(request):
         # 'profile': profile,
     }
     return render(request, 'perfil.html', context)
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .forms import EditarPerfilForm
+
+@login_required
+def perfil(request):
+    if request.method == 'POST':
+        form = EditarPerfilForm(request.POST, user=request.user, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('core:perfil')
+    else:
+        form = EditarPerfilForm(user=request.user, instance=request.user)
+
+    return render(request, 'perfil.html', {'form': form})
