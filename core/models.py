@@ -256,3 +256,17 @@ class AvaliacaoTorcida(models.Model):
 # COMMIT 4
 # Commit vazio: adicionado comentários explicativos sem alterar a lógica
 # =======================
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    nome_completo = models.CharField(max_length=120)
+    bio = models.TextField(blank=True, null=True)
+
+    instagram = models.URLField(blank=True, null=True)
+    twitter = models.URLField(blank=True, null=True)
+    site = models.URLField(blank=True, null=True)
+
+    foto_perfil = models.ImageField(upload_to='perfil/', blank=True, null=True)
+
+    def __str__(self):
+        return self.user.username
