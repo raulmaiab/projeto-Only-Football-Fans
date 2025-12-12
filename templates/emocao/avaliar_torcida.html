@@ -4,12 +4,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    {# Adicione o Font Awesome para os ícones, se não estiver no base.html #}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 {% endblock %}
 
 {% block content %}
 <main class="dashboard-container">
     
-    <!-- Header com efeito glass -->
     <header class="welcome-header fade-in-item">
         <div class="eyebrow">
             <i class="fas fa-people-group"></i>Avaliar Torcida
@@ -18,12 +19,10 @@
         <p class="page-subtitle">Compartilhe sua experiência sobre a torcida durante o jogo</p>
     </header>
 
-    <!-- Formulário de avaliação -->
     <section class="form-card fade-in-item">
         <form method="post" class="avaliacao-form">
             {% csrf_token %}
 
-            <!-- Time em campo -->
             <div class="form-section">
                 <div class="form-header">
                     <i class="fas fa-flag form-icon"></i>
@@ -41,14 +40,12 @@
                 </div>
             </div>
 
-            <!-- Avaliações com estrelas -->
             <div class="form-section">
                 <div class="form-header">
                     <i class="fas fa-fire form-icon"></i>
                     <h3>Avaliação da Torcida</h3>
                 </div>
 
-                <!-- Emoção da Torcida -->
                 <div class="form-group rating-group">
                     <div class="rating-header">
                         <i class="fas fa-heart rating-icon"></i>
@@ -68,7 +65,6 @@
                     </div>
                 </div>
 
-                <!-- Presença e Barulho -->
                 <div class="form-group rating-group">
                     <div class="rating-header">
                         <i class="fas fa-volume-up rating-icon"></i>
@@ -89,7 +85,6 @@
                 </div>
             </div>
 
-            <!-- Comentários -->
             <div class="form-section">
                 <div class="form-header">
                     <i class="fas fa-comment-dots form-icon"></i>
@@ -110,7 +105,6 @@
                 </div>
             </div>
 
-            <!-- Botões de ação -->
             <div class="form-buttons">
                 <a href="{% url 'core:lista_partidas' %}" class="action-btn secondary-btn">
                     <i class="fas fa-times"></i>
@@ -127,7 +121,7 @@
 </main>
 
 <style>
-/* Variáveis consistentes */
+/* Variáveis consistentes (mantidas) */
 :root {
     --primary-blue: #0066FF;
     --secondary-blue: #0052D4;
@@ -147,7 +141,7 @@
     --gray-dark: #334155;
 }
 
-/* Animations */
+/* Animations (mantidas) */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
@@ -186,7 +180,7 @@
     padding: 20px;
 }
 
-/* Header Section */
+/* Header Section (mantida) */
 .welcome-header {
     text-align: center;
     padding: 25px 30px;
@@ -262,6 +256,8 @@
     width: 100%;
     max-width: 700px;
     margin: 0 auto;
+    /* CORREÇÃO APLICADA AQUI: Garante que o card fique visível */
+    z-index: 10; 
     animation: gentleFloat 6s ease-in-out infinite, gentleGlow 8s ease-in-out infinite;
 }
 
@@ -281,7 +277,7 @@
     gap: 30px;
 }
 
-/* Form Sections */
+/* Form Sections (mantidas) */
 .form-section {
     background: var(--gray-light);
     border-radius: 16px;
@@ -331,7 +327,7 @@
     margin: 0;
 }
 
-/* Input Groups */
+/* Input Groups (mantidas) */
 .form-group {
     margin-bottom: 25px;
     position: relative;
@@ -408,7 +404,7 @@
     color: var(--primary-blue);
 }
 
-/* Star Rating System */
+/* Star Rating System (mantidas) */
 .rating-group {
     background: white;
     border-radius: 12px;
@@ -506,7 +502,7 @@
     color: var(--success-green);
 }
 
-/* Character Counter */
+/* Character Counter (mantido) */
 .char-counter {
     text-align: right;
     font-size: 0.85rem;
@@ -519,7 +515,7 @@
     color: var(--primary-blue);
 }
 
-/* Form Buttons */
+/* Form Buttons (mantidos) */
 .form-buttons {
     display: flex;
     gap: 15px;
@@ -580,7 +576,7 @@
     transform: translateY(-1px) scale(1.01);
 }
 
-/* Responsividade */
+/* Responsividade (mantida) */
 @media (max-width: 768px) {
     .dashboard-container {
         gap: 30px;
@@ -668,6 +664,7 @@
 </style>
 
 <script>
+// O código JavaScript (mantido)
 document.addEventListener('DOMContentLoaded', () => {
     // Contador de caracteres para o textarea
     const textarea = document.getElementById('comentario');
