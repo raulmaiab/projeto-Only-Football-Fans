@@ -15,12 +15,29 @@ urlpatterns = [
     path('partida/<int:partida_id>/ver-avaliacao-torcida/', views.ver_avaliacao_torcida, name='ver_avaliacao_torcida'),
 
     # =========================
-    # Partidas
+    # Partidas (ROTAS AJUSTADAS AQUI)
     # =========================
-    path('partida/avaliar_torcida/<int:partida_id>/', views.avaliar_torcida, name='avaliar_torcida'),
-    path('partidas/avaliar_torcida/<int:partida_id>/2/', 
-         lambda r, partida_id: views.avaliar_torcida(r, partida_id, time_index=2), 
+    
+    # ROTA 1: Avaliar Torcida da Casa (time_index=1)
+    # Sugestão: Use esta rota no botão "Avaliar Torcida" do histórico.
+    path('partida/avaliar_torcida/<int:partida_id>/casa/', 
+         views.avaliar_torcida, 
+         {'time_index': 1}, 
+         name='avaliar_torcida_primeiro'), # Renomeado de 'avaliar_torcida' para maior clareza
+
+    # ROTA 2: Avaliar Torcida Visitante (time_index=2)
+    # Uso de 'defaults' para passar o time_index, removendo o lambda.
+    path('partida/avaliar_torcida/<int:partida_id>/visitante/', 
+         views.avaliar_torcida, 
+         {'time_index': 2}, 
          name='avaliar_torcida_segundo'),
+
+    # Rota Antiga (Manter para evitar quebra de links antigos, mas a view agora sempre assume time_index=1)
+    path('partida/avaliar_torcida/<int:partida_id>/', 
+         views.avaliar_torcida, 
+         {'time_index': 1}, # Força o time_index=1 para a URL sem índice
+         name='avaliar_torcida'), 
+
     path('partidas/', views.lista_partidas, name='lista_partidas'),
     path('partidas/registrar/', views.registrar_partida, name='registrar_partida'),
     path('partidas/avaliar/<int:partida_id>/', views.avaliar_partida, name='avaliar_partida'),

@@ -112,39 +112,50 @@ def home(request):
 
 
 # ----------------------------
-# EMOÇÕES
+# EMOÇÕES (TORCIDA/ESTÁDIO)
 # ----------------------------
 
 @login_required(login_url='/login/')
 def avaliar_torcida(request, partida_id, time_index=1):
-    partida = get_object_or_404(Partida, id=partida_id)
-    time = partida.time_casa if time_index == 1 else partida.time_visitante
+    partida = get_object_or_404(Partida, id=partida_id, usuario=request.user) 
+    
+    # Define o NOME do time (string) que será exibido no template
+    time_nome = partida.time_casa if time_index == 1 else partida.time_visitante
 
     if request.method == 'POST':
+        # 1. Pega o NOME (string) enviado pelo campo oculto do formulário
+        time_nome_post = request.POST.get('time', '').strip()
+        
+        # 2. VALIDAÇÃO: Garante que o nome postado é um dos times da partida.
+        times_validos = [partida.time_casa, partida.time_visitante]
+        
+        if time_nome_post not in times_validos or not time_nome_post:
+            messages.error(request, f"O nome do time '{time_nome_post}' não corresponde aos times desta partida. Avaliação não registrada.")
+            return redirect(request.path) 
+        
+        # 3. CRIA A AVALIAÇÃO USANDO A STRING 
         AvaliacaoTorcida.objects.create(
-            time=request.POST.get('time'),
+            # SALVA A STRING na CharField 'time'
+            time=time_nome_post, 
             comentario_torcida=request.POST.get('comentario'),
             emocao=request.POST.get('emocao'),
             presenca=request.POST.get('presenca'),
-            
-            # --- CAMPOS ADICIONADOS ---
             usuario=request.user,
             partida=partida
-            # --------------------------
         )
 
+        # 4. Continua o fluxo
         if time_index == 1:
-            # Continua o fluxo para avaliar o segundo time (Time Visitante)
-            # (Certifique-se que você tenha uma URL com name='avaliar_torcida_segundo' 
-            #  apontando para esta view com time_index=2)
-            return redirect('core:avaliar_torcida_segundo', partida_id=partida_id)
+            messages.success(request, f"Avaliação da torcida do {time_nome_post} registrada! Avalie agora o time visitante.")
+            # Redireciona para a rota do segundo time (avaliar_torcida_segundo, que é a mesma view com time_index=2)
+            return redirect('core:avaliar_torcida', partida_id=partida_id, time_index=2)
         else:
-            # --- MUDANÇA NO REDIRECT ---
-            # Após avaliar o segundo time, volta para a tela de 'ver_avaliacao'
             messages.success(request, "Avaliações das torcidas registradas com sucesso!")
+            # Redireciona para a rota final (ver_avaliacao)
             return redirect('core:ver_avaliacao', partida_id=partida.id) 
 
-    context = {'time': time, 'partida': partida}
+    # Bloco GET (apenas carrega o formulário)
+    context = {'time': time_nome, 'partida': partida}
     context.update(get_partidas_context(request))
     return render(request, 'emocao/avaliar_torcida.html', context)
 
@@ -215,7 +226,7 @@ def avaliar_time(request, time_id):
             comentario=comentario,
             emocao=emocao,
             presenca=presenca,
-            time=time
+            time=time.nome 
         )
 
         proximo_time = Time.objects.filter(nome="Time 2").first()
@@ -243,19 +254,21 @@ def ver_avaliacao_torcida(request, partida_id):
     avaliacoes = AvaliacaoTorcida.objects.filter(
         partida=partida, 
         usuario=request.user
-    ).order_by('time') # Ordena pelo nome do time
+    ).order_by('time')
 
     if not avaliacoes.exists():
         messages.error(request, "Você ainda não avaliou as torcidas desta partida.")
-        # Volta para a tela anterior
         return redirect('core:ver_avaliacao', partida_id=partida.id)
 
+    # Variável para o loop de estrelas no template
+    estrelas_range = range(1, 6) 
+    
     context = {
         "partida": partida,
-        "avaliacoes": avaliacoes
+        "avaliacoes": avaliacoes,
+        "estrelas_range": estrelas_range, 
     }
     context.update(get_partidas_context(request))
-    # Renderiza o novo template que você pediu
     return render(request, "emocao/ver_ava_torcida.html", context)
 
 
@@ -276,26 +289,18 @@ def galeria(request):
 # ADICIONAR MÍDIA (IMAGEM/VIDEO/AUDIO)
 # ============================
 
-# Em core/views.py
-
 @login_required
 def adicionar_midia(request, partida_id):
-    # 1. Pega a partida (como antes)
     partida = get_object_or_404(Partida, id=partida_id, usuario=request.user)
     
-    # --- INÍCIO DA CORREÇÃO ---
-    # 2. Agora usamos a ForeignKey 'partida' em vez do campo 'jogo'
     definicao, _ = Definicao.objects.get_or_create(
-        partida=partida,  # <-- ESTA É A CORREÇÃO REAL
+        partida=partida, 
         usuario=request.user,
-        defaults={"jogo": str(partida), "descricao": ""} # Ainda salvamos o 'jogo' por segurança
+        defaults={"jogo": str(partida), "descricao": ""} 
     )
-    # --- FIM DA CORREÇÃO ---
 
     if request.method == "POST":
         
-        # O seu código original aqui estava CORRETO.
-        # A Imagem só precisa da 'definicao'.
         if "imagem" in request.FILES:
             Imagem.objects.create(
                 definicao=definicao, 
@@ -335,7 +340,7 @@ def adicionar_link(request, definicao_id):
             Link.objects.create(definicao=definicao, titulo=titulo, url=url)
             messages.success(request, f"Link '{titulo}' adicionado com sucesso!")
             # Pegando a partida correta para redirect
-            partida = Partida.objects.filter(usuario=request.user, jogo=definicao.jogo).first()
+            partida = definicao.partida
             if partida:
                 return redirect('core:adicionar_midia', partida_id=partida.id)
             else:
@@ -361,6 +366,7 @@ def adicionar_link_page(request):
         url = request.POST.get('url')
 
         if nome_do_jogo and url:
+            # Cria o link sem associação a Definição
             Link.objects.create(nome_do_jogo=nome_do_jogo, url=url)
             messages.success(request, f"Link de {nome_do_jogo} cadastrado com sucesso!")
             return redirect('core:lista_links')
@@ -379,7 +385,7 @@ def adicionar_link_page(request):
 def lista_links(request):
     user_definicoes = Definicao.objects.filter(usuario=request.user)
     links = Link.objects.filter(
-        Q(definicao__in=user_definicoes) | Q(definicao__isnull=True)
+        Q(definicao__in=user_definicoes) | Q(definicao__isnull=True, usuario=request.user) # Assume que links soltos também são do usuário
     ).order_by('-criado_em')
 
     context = {'links': links, 'page_title': 'Links de Replay e Mídia'}
@@ -407,19 +413,19 @@ def registrar_partida(request):
     times = Time.objects.all()
 
     if request.method == "POST":
-        time_casa_nome = request.POST.get("time_casa")
-        time_visitante_nome = request.POST.get("time_visitante")
+        time_casa_nome = request.POST.get("time_casa", "").strip()
+        time_visitante_nome = request.POST.get("time_visitante", "").strip()
         data = request.POST.get("data")
-
-        if request.user.is_authenticated:
+        
+        if request.user.is_authenticated and time_casa_nome and time_visitante_nome:
             Partida.objects.create(
                 usuario=request.user,
                 time_casa=time_casa_nome,
                 time_visitante=time_visitante_nome,
                 data=data
             )
-
-        return redirect("core:lista_partidas")
+            messages.success(request, f"Partida {time_casa_nome} x {time_visitante_nome} registrada com sucesso!")
+            return redirect("core:lista_partidas")
 
     context = {"times": times}
     context.update(get_partidas_context(request))
@@ -429,12 +435,10 @@ def registrar_partida(request):
 @login_required(login_url='/login/')
 def avaliar_partida(request, partida_id):
     partida = get_object_or_404(Partida, id=partida_id)
-
-    if request.user.is_authenticated:
-        ja_avaliou = AvaliacaoPartida.objects.filter(partida=partida, usuario=request.user).exists()
-        if ja_avaliou:
-            messages.warning(request, "Você já avaliou esta partida!")
-            return redirect("core:lista_partidas")
+    
+    # 1. Busca a avaliação existente (se houver) - Útil para pre-popular formulário em um fluxo de edição mais complexo,
+    # mas aqui, usamos apenas o POST para registro. A exclusão é feita em editar_avaliacao.
+    # avaliacao_existente = AvaliacaoPartida.objects.filter(partida=partida, usuario=request.user).first()
 
     if request.method == "POST":
         nota = int(request.POST.get("nota", 0))
@@ -445,9 +449,10 @@ def avaliar_partida(request, partida_id):
         melhor_jogador = Jogador.objects.get_or_create(nome=melhor_nome)[0] if melhor_nome else None
         pior_jogador = Jogador.objects.get_or_create(nome=pior_nome)[0] if pior_nome else None
 
+        # Cria a nova avaliação (pois a antiga foi excluída na view 'editar_avaliacao')
         AvaliacaoPartida.objects.create(
             partida=partida,
-            usuario=request.user if request.user.is_authenticated else None,
+            usuario=request.user,
             nota=nota,
             melhor_jogador=melhor_jogador,
             pior_jogador=pior_jogador,
@@ -462,6 +467,7 @@ def avaliar_partida(request, partida_id):
     return render(request, "partidas/avaliar_partida.html", context)
 
 
+@login_required(login_url='/login/')
 def ver_avaliacao(request, partida_id):
     partida = get_object_or_404(Partida, id=partida_id)
     avaliacao = AvaliacaoPartida.objects.filter(partida=partida, usuario=request.user).first()
@@ -470,25 +476,41 @@ def ver_avaliacao(request, partida_id):
         messages.error(request, "Você ainda não avaliou esta partida.")
         return redirect("core:lista_partidas")
 
-    # --- NOVA LÓGICA ---
-    # A sua view 'avaliar_torcida' tem lógica para time_index=1 e time_index=2.
-    # Vamos assumir que "avaliado" significa que existem 2 registros (um para cada time).
+    # Verifica se as duas torcidas foram avaliadas
     avaliacoes_torcida_count = AvaliacaoTorcida.objects.filter(
         partida=partida, 
         usuario=request.user
     ).count()
 
-    # Se a contagem for 2 ou mais, consideramos que a avaliação foi feita.
     torcida_ja_avaliada = avaliacoes_torcida_count >= 2
-    # ---------------------
 
     context = {
         "avaliacao": avaliacao, 
         "partida": partida,
-        "torcida_ja_avaliada": torcida_ja_avaliada  # <-- Passa a variável para o template
+        "torcida_ja_avaliada": torcida_ja_avaliada
     }
     context.update(get_partidas_context(request))
     return render(request, "partidas/ver_avaliacao.html", context)
+
+
+@login_required(login_url='/login/')
+def editar_avaliacao(request, partida_id):
+    """
+    Deleta as avaliações existentes do usuário para esta partida e redireciona
+    para o formulário de avaliação, permitindo um "reset" completo.
+    """
+    partida = get_object_or_404(Partida, id=partida_id, usuario=request.user)
+    
+    # 1. Deleta a avaliação da partida existente
+    AvaliacaoPartida.objects.filter(partida=partida, usuario=request.user).delete()
+    
+    # 2. Deleta as avaliações de torcida associadas
+    AvaliacaoTorcida.objects.filter(partida=partida, usuario=request.user).delete()
+    
+    messages.info(request, "Avaliação anterior excluída. Por favor, registre uma nova avaliação para esta partida.")
+    
+    # 3. Redireciona para a tela de avaliação
+    return redirect('core:avaliar_partida', partida_id=partida.id)
 
 
 def registrar_gols(request, partida_id):
@@ -515,7 +537,13 @@ def registrar_gols(request, partida_id):
 
 @login_required
 def editar_perfil(request):
-    profile, _ = request.user.userprofile.get_or_create(user=request.user)
+    try:
+        profile = request.user.userprofile
+    except AttributeError:
+        profile = request.user
+    except Exception:
+        profile = request.user 
+
 
     if request.method == "POST":
         form = EditarPerfilForm(request.POST, request.FILES, instance=profile, user=request.user)
@@ -528,34 +556,22 @@ def editar_perfil(request):
     context = {
         'form': form,
         'user': request.user,
-        # Adicione outros itens de contexto conforme necessário, por exemplo:
-        # 'profile': profile,
     }
     return render(request, 'perfil.html', context)
 
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from .forms import EditarPerfilForm
 
 @login_required
 def perfil(request):
-    # A instância é o usuário logado (request.user)
     if request.method == 'POST':
-        # Passar request.user como instance garante que o formulário carrega os dados
-        # e que o .save() salva nessa mesma instância.
         form = EditarPerfilForm(request.POST, user=request.user, instance=request.user)
         
         if form.is_valid():
             form.save()
-            messages.success(request, 'Seu perfil foi atualizado com sucesso!') # ADICIONADO FEEDBACK
+            messages.success(request, 'Seu perfil foi atualizado com sucesso!')
             return redirect('core:perfil')
         else:
             messages.error(request, 'Houve um erro ao salvar as alterações. Verifique os campos.')
     else:
-        # Carrega o formulário com os dados atuais do usuário
         form = EditarPerfilForm(user=request.user, instance=request.user)
 
-    # Note que você precisa garantir que o seu template está em 'usuarios/perfil.html'
-    # conforme esta view, ou em 'perfil.html' conforme a view anterior.
-    # Vou usar o nome que você usou no primeiro bloco: 'perfil.html'
     return render(request, 'usuarios/perfil.html', {'form': form})
