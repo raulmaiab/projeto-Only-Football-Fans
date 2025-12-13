@@ -126,7 +126,7 @@ def avaliar_torcida(request, partida_id, time_index=1):
         # 1. Pega o NOME (string) enviado pelo campo oculto do formulário
         time_nome_post = request.POST.get('time', '').strip()
         
-        # 2. VALIDAÇÃO: Garante que o nome postado é um dos times da partida.
+        # 2. VALIDAÇÃO
         times_validos = [partida.time_casa, partida.time_visitante]
         
         if time_nome_post not in times_validos or not time_nome_post:
@@ -135,7 +135,6 @@ def avaliar_torcida(request, partida_id, time_index=1):
         
         # 3. CRIA A AVALIAÇÃO USANDO A STRING 
         AvaliacaoTorcida.objects.create(
-            # SALVA A STRING na CharField 'time'
             time=time_nome_post, 
             comentario_torcida=request.POST.get('comentario'),
             emocao=request.POST.get('emocao'),
@@ -147,8 +146,8 @@ def avaliar_torcida(request, partida_id, time_index=1):
         # 4. Continua o fluxo
         if time_index == 1:
             messages.success(request, f"Avaliação da torcida do {time_nome_post} registrada! Avalie agora o time visitante.")
-            # Redireciona para a rota do segundo time (avaliar_torcida_segundo, que é a mesma view com time_index=2)
-            return redirect('core:avaliar_torcida', partida_id=partida_id, time_index=2)
+            # CORREÇÃO: Usando a rota nomeada 'avaliar_torcida_segundo'
+            return redirect('core:avaliar_torcida_segundo', partida_id=partida_id)
         else:
             messages.success(request, "Avaliações das torcidas registradas com sucesso!")
             # Redireciona para a rota final (ver_avaliacao)
@@ -384,8 +383,11 @@ def adicionar_link_page(request):
 @login_required
 def lista_links(request):
     user_definicoes = Definicao.objects.filter(usuario=request.user)
+    
+    # CORREÇÃO DO FieldError: O modelo Link não tem campo 'usuario'.
+    # Filtra links associados às definições do usuário OU links soltos (sem definição).
     links = Link.objects.filter(
-        Q(definicao__in=user_definicoes) | Q(definicao__isnull=True, usuario=request.user) # Assume que links soltos também são do usuário
+        Q(definicao__in=user_definicoes) | Q(definicao__isnull=True)
     ).order_by('-criado_em')
 
     context = {'links': links, 'page_title': 'Links de Replay e Mídia'}
@@ -436,9 +438,8 @@ def registrar_partida(request):
 def avaliar_partida(request, partida_id):
     partida = get_object_or_404(Partida, id=partida_id)
     
-    # 1. Busca a avaliação existente (se houver) - Útil para pre-popular formulário em um fluxo de edição mais complexo,
-    # mas aqui, usamos apenas o POST para registro. A exclusão é feita em editar_avaliacao.
-    # avaliacao_existente = AvaliacaoPartida.objects.filter(partida=partida, usuario=request.user).first()
+    # Nesta view, assumimos que a avaliação anterior foi excluída se o usuário
+    # veio da rota 'editar_avaliacao'.
 
     if request.method == "POST":
         nota = int(request.POST.get("nota", 0))
@@ -449,7 +450,7 @@ def avaliar_partida(request, partida_id):
         melhor_jogador = Jogador.objects.get_or_create(nome=melhor_nome)[0] if melhor_nome else None
         pior_jogador = Jogador.objects.get_or_create(nome=pior_nome)[0] if pior_nome else None
 
-        # Cria a nova avaliação (pois a antiga foi excluída na view 'editar_avaliacao')
+        # Cria a nova avaliação
         AvaliacaoPartida.objects.create(
             partida=partida,
             usuario=request.user,

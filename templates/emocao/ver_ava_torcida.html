@@ -6,6 +6,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 {% endblock %}
 
 {% block content %}
@@ -26,86 +27,91 @@
         </div>
     {% endif %}
 
-    <div class="grid-container">
+    <div class="main-content-grid">
         
-        {% if avaliacoes %}
-            {% for ava in avaliacoes %}
-            <div class="avaliacao-card fade-in-item" style="animation-delay:{{ forloop.counter0|add:'0.2' }}s;">
-                
-                <div class="card-header-stub">
-                    <span class="stub-time-name">{{ ava.time }}</span>
-                    <span class="stub-title">Torcida</span>
-                </div>
-
-                <div class="card-content">
+        <div class="avaliacoes-list">
+            {% if avaliacoes %}
+                {% for ava in avaliacoes %}
+                <div class="avaliacao-card fade-in-item" style="animation-delay:{{ forloop.counter0|add:'0.2' }}s;">
                     
-                    <div class="score-grid">
-                        <div class="score-item score-item-emocao">
-                            <i class="fas fa-heart score-icon"></i>
-                            <span class="score-label">Emoção e Vibração</span>
-                            <span class="score-value">{{ ava.emocao }} / 5</span>
-                            <div class="score-stars">
-                                {% for i in estrelas_range %}
-                                    {% if i <= ava.emocao %}
-                                        <i class="fas fa-star filled"></i>
-                                    {% else %}
-                                        <i class="far fa-star empty"></i>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-                        </div>
-
-                        <div class="score-item score-item-presenca">
-                            <i class="fas fa-volume-up score-icon"></i>
-                            <span class="score-label">Presença e Barulho</span>
-                            <span class="score-value">{{ ava.presenca }} / 5</span>
-                            <div class="score-stars">
-                                {% for i in estrelas_range %}
-                                    {% if i <= ava.presenca %}
-                                        <i class="fas fa-star filled"></i>
-                                    {% else %}
-                                        <i class="far fa-star empty"></i>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-                        </div>
+                    <div class="card-header-stub">
+                        <span class="stub-time-name">{{ ava.time }}</span>
+                        <span class="stub-title">Torcida</span>
                     </div>
-                    
-                    {% if ava.comentario_torcida %}
-                        <div class="comentario-box">
-                            <h4><i class="fas fa-comment-dots"></i> Seu Comentário:</h4>
-                            <p>{{ ava.comentario_torcida }}</p>
-                        </div>
-                    {% endif %}
 
+                    <div class="card-content">
+                        
+                        <div class="score-grid">
+                            <div class="score-item score-item-emocao">
+                                <i class="fas fa-heart score-icon"></i>
+                                <span class="score-label">Emoção e Vibração</span>
+                                <span class="score-value">{{ ava.emocao }} / 5</span>
+                                <div class="score-stars">
+                                    {% for i in estrelas_range %}
+                                        {% if i <= ava.emocao %}
+                                            <i class="fas fa-star filled"></i>
+                                        {% else %}
+                                            <i class="far fa-star empty"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="score-item score-item-presenca">
+                                <i class="fas fa-volume-up score-icon"></i>
+                                <span class="score-label">Presença e Barulho</span>
+                                <span class="score-value">{{ ava.presenca }} / 5</span>
+                                <div class="score-stars">
+                                    {% for i in estrelas_range %}
+                                        {% if i <= ava.presenca %}
+                                            <i class="fas fa-star filled"></i>
+                                        {% else %}
+                                            <i class="far fa-star empty"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {% if ava.comentario_torcida %}
+                            <div class="comentario-box">
+                                <h4><i class="fas fa-comment-dots"></i> Seu Comentário:</h4>
+                                <p>{{ ava.comentario_torcida }}</p>
+                            </div>
+                        {% endif %}
+
+                    </div>
                 </div>
-            </div>
-            {% endfor %}
-        {% else %}
-            <div class="empty-state">
-                <div class="empty-icon"><i class="fas fa-users"></i></div>
-                <h3>Avaliações de Torcida Pendentes</h3>
-                <p>Você ainda não registrou a avaliação da torcida para esta partida.</p>
-                <a href="{% url 'core:avaliar_torcida' partida.id %}" class="btn-submit">
-                    <i class="fas fa-plus-circle"></i> Começar Avaliação
-                </a>
-            </div>
-        {% endif %}
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon"><i class="fas fa-users"></i></div>
+                    <h3>Avaliações de Torcida Pendentes</h3>
+                    <p>Você ainda não registrou a avaliação da torcida para esta partida.</p>
+                    <a href="{% url 'core:avaliar_torcida_primeiro' partida.id %}" class="btn-submit">
+                        <i class="fas fa-plus-circle"></i> Começar Avaliação
+                    </a>
+                </div>
+            {% endif %}
+        </div>
 
         <div class="actions-panel fade-in-item">
-            {% if avaliacoes|length < 2 %}
-            <a href="{% url 'core:avaliar_torcida' partida.id %}" class="btn-submit full-width">
-                <i class="fas fa-plus-circle"></i> Continuar Avaliação
-            </a>
-            {% else %}
-            <a href="{% url 'core:avaliar_torcida' partida.id %}" class="btn-edit-ava full-width">
-                <i class="fas fa-edit"></i> Editar Avaliações
-            </a>
-            {% endif %}
+            <h3 class="panel-title"><i class="fas fa-cogs"></i> Opções Rápidas</h3>
+            <div class="panel-actions-group">
+                {% if avaliacoes|length < 2 %}
+                <a href="{% url 'core:avaliar_torcida_primeiro' partida.id %}" class="btn-submit full-width">
+                    <i class="fas fa-plus-circle"></i> Continuar Avaliação
+                </a>
+                {% else %}
+                <a href="{% url 'core:avaliar_torcida_primeiro' partida.id %}" class="btn-edit-ava full-width" onclick="return confirm('ATENÇÃO: Isso iniciará o processo de reavaliação. Você terá que registrar as duas torcidas novamente. Continuar?')">
+                    <i class="fas fa-edit"></i> Editar/Refazer Avaliações
+                </a>
+                {% endif %}
 
-            <a href="{% url 'core:ver_avaliacao' partida.id %}" class="btn-cancel full-width">
-                <i class="fas fa-arrow-left"></i> Voltar para Avaliação da Partida
-            </a>
+                <a href="{% url 'core:ver_avaliacao' partida.id %}" class="btn-cancel full-width">
+                    <i class="fas fa-arrow-left"></i> Voltar para Avaliação da Partida
+                </a>
+            </div>
         </div>
 
     </div>
@@ -124,39 +130,62 @@
         --star-empty: #E0E6F0;
         --color-emocao: #EF4444; /* Vermelho/Quente */
         --color-presenca: #10B981; /* Verde/Forte */
+        --max-container-width: 1000px; /* Aumento da largura */
     }
     
     /* Base e Animações */
     @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     .fade-in-item { opacity: 0; animation: fadeIn 0.6s ease-out forwards; }
-    .dashboard-container { display:flex; flex-direction:column; gap:30px; max-width:1000px; margin:0 auto; padding:20px; }
+    /* Aumento da largura máxima */
+    .dashboard-container { display:flex; flex-direction:column; gap:30px; max-width:var(--max-container-width); margin:0 auto; padding:20px; }
 
     /* Header */
     .welcome-header { text-align:center; padding:25px 30px; background: rgba(255,255,255,0.98); backdrop-filter: blur(20px); border-radius:20px; box-shadow:var(--shadow-subtle); border:1px solid rgba(0,102,255,0.15); }
     .eyebrow{ display:inline-flex; align-items:center; gap:8px; color:var(--primary-blue); font-size:13px; font-weight:600; text-transform:uppercase; padding:6px 14px; background:var(--blue-light); border-radius:6px; margin-bottom:15px; border:1px solid rgba(0,102,255,0.2);} 
-    .page-title{ font-size:clamp(1.5rem, 3vw, 1.8rem); font-weight:800; color:#1A3A5F; margin:0 0 12px 0; background:linear-gradient(90deg,#1A3A5F,var(--secondary-blue)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .page-title{ font-size:clamp(1.5rem, 3vw, 2rem); font-weight:800; color:#1A3A5F; margin:0 0 12px 0; background:linear-gradient(90deg,#1A3A5F,var(--secondary-blue)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
     .page-subtitle{ font-size:1rem; color:var(--gray-medium); margin:0; }
 
     /* Grid Principal */
-    .grid-container {
+    .main-content-grid {
         display: grid;
         grid-template-columns: 1fr 300px; /* Avaliações e Painel de Ações */
         gap: 30px;
         align-items: start;
     }
     
+    .avaliacoes-list {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
     /* Painel de Ações */
     .actions-panel {
         display: flex;
         flex-direction: column;
-        gap: 15px;
-        padding: 20px;
+        gap: 20px; /* Espaço entre título e ações */
+        padding: 25px;
         background: #fff;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         border: 1px solid rgba(0,102,255,0.1);
         position: sticky;
-        top: 20px; /* Fixa o painel no topo */
+        top: 20px; 
+    }
+    .panel-title {
+        margin: 0;
+        font-size: 1.1rem;
+        color: var(--primary-blue);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px dashed var(--blue-light);
+    }
+    .panel-actions-group {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
     }
 
     /* Cards de Avaliação */
@@ -168,11 +197,15 @@
         min-height: 250px;
         overflow: hidden;
         border: 1px solid rgba(0,102,255,0.15);
+        transition: all 0.3s ease;
+    }
+    .avaliacao-card:hover {
+        box-shadow: 0 12px 40px rgba(0, 102, 255, 0.1);
     }
     
     /* STUB / Canhoto do Time */
     .card-header-stub {
-        width: 150px;
+        width: 180px; /* Ligeiramente mais largo */
         background-color: var(--secondary-blue); 
         color: white;
         padding: 1.5rem 1rem;
@@ -183,6 +216,7 @@
         text-align: center;
         font-family: 'Share Tech Mono', monospace; 
         position: relative;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
     }
     .card-header-stub::after {
         content: '';
@@ -197,24 +231,24 @@
     }
 
     .stub-time-name {
-        font-size: 1.2rem;
+        font-size: 1.3rem; /* Texto maior */
         font-weight: 700;
         letter-spacing: 1px;
         word-break: break-word;
-        margin-bottom: 5px;
+        margin-bottom: 8px;
     }
     .stub-title {
-        font-size: 0.9rem;
+        font-size: 1rem;
         text-transform: uppercase;
-        letter-spacing: 2px;
-        opacity: 0.8;
+        letter-spacing: 3px;
+        opacity: 0.9;
     }
 
     /* Conteúdo Principal do Card */
     .card-content {
         flex-grow: 1; 
         padding: 2rem 2.5rem;
-        background-color: var(--blue-lighter);
+        background-color: #f7f9fc; /* Fundo levemente off-white */
         border-left: 3px dashed rgba(0,102,255,0.15);
         display: flex;
         flex-direction: column;
@@ -225,45 +259,41 @@
     .score-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
+        gap: 25px; /* Maior espaçamento */
         margin-bottom: 20px;
     }
     .score-item {
         background: #fff;
-        padding: 15px;
-        border-radius: 10px;
+        padding: 20px 15px;
+        border-radius: 12px;
         text-align: center;
-        border: 1px solid rgba(0,0,0,0.05);
-        transition: all 0.3s ease;
-    }
-    .score-item:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        border: 1px solid rgba(0,0,0,0.08);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
     }
 
-    .score-item-emocao .score-icon { color: var(--color-emocao); }
-    .score-item-presenca .score-icon { color: var(--color-presenca); }
+    .score-item-emocao { border-top: 4px solid var(--color-emocao); }
+    .score-item-presenca { border-top: 4px solid var(--color-presenca); }
     
-    .score-icon { font-size: 1.5rem; margin-bottom: 5px; }
-    .score-label { display: block; font-size: 0.8rem; text-transform: uppercase; color: var(--gray-medium); font-weight: 500; }
-    .score-value { display: block; font-size: 1.5rem; font-weight: 700; color: var(--gray-dark); margin: 5px 0; }
+    .score-icon { font-size: 1.8rem; margin-bottom: 8px; }
+    .score-label { display: block; font-size: 0.85rem; text-transform: uppercase; color: var(--gray-medium); font-weight: 600; letter-spacing: 0.5px; }
+    .score-value { display: block; font-size: 1.8rem; font-weight: 800; color: var(--gray-dark); margin: 5px 0 10px 0; }
     
-    .score-stars i { font-size: 1rem; }
+    .score-stars i { font-size: 1.2rem; }
     .score-stars .filled { color: var(--star-filled); }
     .score-stars .empty { color: var(--star-empty); }
 
     /* Comentário */
     .comentario-box {
-        margin-top: 20px;
-        padding: 15px;
+        margin-top: 25px;
+        padding: 20px;
         background: var(--blue-light);
-        border-radius: 10px;
-        border-left: 4px solid var(--primary-blue);
+        border-radius: 12px;
+        border-left: 5px solid var(--primary-blue);
     }
     .comentario-box h4 {
         margin: 0 0 10px 0;
-        font-size: 1rem;
-        font-weight: 600;
+        font-size: 1.1rem;
+        font-weight: 700;
         color: var(--primary-blue);
         display: flex;
         align-items: center;
@@ -271,35 +301,51 @@
     }
     .comentario-box p {
         margin: 0;
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         color: var(--gray-dark);
-        line-height: 1.5;
+        line-height: 1.6;
     }
 
-    /* Empty State (mantido) */
+    /* Empty State (ajustado para o novo grid) */
     .empty-state {
-        background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-radius:20px; padding:50px 30px; text-align:center; box-shadow:var(--shadow-subtle); border:1px solid rgba(0,102,255,0.1); grid-column: 1 / 3;
+        background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-radius:20px; padding:50px 30px; text-align:center; box-shadow:var(--shadow-subtle); border:1px solid rgba(0,102,255,0.1); 
+        grid-column: 1 / 3; /* Ocupa as duas colunas quando vazio */
+        width: 100%;
     }
-    .empty-icon{ font-size:3.5rem; color:var(--primary-blue); margin-bottom:20px; }
-    .empty-state p { color: var(--gray-medium); }
+    .empty-icon{ font-size:4rem; color:var(--primary-blue); margin-bottom:25px; }
+    .empty-state p { color: var(--gray-medium); font-size: 1.1rem; }
+    .empty-state .btn-submit {
+        margin-top: 20px;
+        max-width: 300px;
+        margin-left: auto;
+        margin-right: auto;
+    }
 
     /* Botões */
-    .btn-submit { background: linear-gradient(135deg, #10B981 0%, #059669 100%); color:white; padding:14px; border-radius:10px; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:10px; font-weight:600; transition:all 0.3s ease; border: none;}
-    .btn-submit:hover { transform:translateY(-2px); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
+    .btn-submit { background: linear-gradient(135deg, #10B981 0%, #059669 100%); color:white; padding:16px; border-radius:12px; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:10px; font-weight:700; transition:all 0.3s ease; border: none;}
+    .btn-submit:hover { transform:translateY(-2px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); }
 
-    .btn-edit-ava { background: linear-gradient(135deg, #FFC107 0%, #FFA000 100%); color:white; padding:14px; border-radius:10px; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:10px; font-weight:600; transition:all 0.3s ease; border: none;}
-    .btn-edit-ava:hover { transform:translateY(-2px); box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4); }
+    .btn-edit-ava { background: linear-gradient(135deg, #FFC107 0%, #FFA000 100%); color:#333; padding:16px; border-radius:12px; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:10px; font-weight:700; transition:all 0.3s ease; border: none;}
+    .btn-edit-ava:hover { transform:translateY(-2px); box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4); }
 
-    .btn-cancel { background: var(--gray-light); color: var(--gray-medium); border:1px solid rgba(100,116,139,0.2); padding:14px; border-radius:10px; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:10px; font-weight:600; transition:all 0.3s ease; }
-    .btn-cancel:hover { background:#E5E7EB; }
+    .btn-cancel { background: var(--gray-light); color: var(--gray-medium); border:1px solid rgba(100,116,139,0.2); padding:16px; border-radius:12px; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:10px; font-weight:600; transition:all 0.3s ease; }
+    .btn-cancel:hover { background:#E5E7EB; color: #333; }
 
     .full-width { width: 100%; }
 
     /* Responsividade */
     @media (max-width: 768px) {
-        .grid-container {
+        .main-content-grid {
             grid-template-columns: 1fr;
             gap: 20px;
+        }
+        .actions-panel {
+            position: static;
+            order: -1; 
+            padding: 20px;
+        }
+        .welcome-header {
+            padding: 20px;
         }
         .avaliacao-card {
             flex-direction: column;
@@ -311,7 +357,7 @@
             border-radius: 16px 16px 0 0;
         }
         .card-header-stub::after {
-            content: none; /* Remove o triângulo */
+            content: none; 
         }
         .card-content {
             padding: 1.5rem;
@@ -321,13 +367,6 @@
         .score-grid {
             grid-template-columns: 1fr;
             gap: 15px;
-        }
-        .actions-panel {
-            position: static;
-            order: -1; /* Coloca o painel no topo em telas menores */
-        }
-        .empty-state {
-            grid-column: 1 / 2;
         }
     }
 </style>
