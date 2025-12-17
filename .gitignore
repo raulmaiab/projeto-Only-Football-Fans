@@ -109,3 +109,13 @@ dmypy.json
 
 # Other caches
 .ruff_cache/
+
+node_modules/
+staticfiles/
+__pycache__/
+*.pyc
+.env
+venv/
+cypress/videos/
+cypress/screenshots/
+midia/imagens/
