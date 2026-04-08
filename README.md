@@ -1,9 +1,9 @@
-# 🏆 FootballFans 
+# 🏆 OnlyFootballFans 
 <p align="center"> <img src="https://img.shields.io/badge/Python-blue?style=for-the-badge"/> <img src="https://img.shields.io/badge/Django-success?style=for-the-badge"/> <img src="https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow?style=for-the-badge"/> <img src="https://img.shields.io/badge/Deploy-Azure-blue?style=for-the-badge"/> </p>
 
 ## 📌 Visão Geral
 
-O **FootballFans** é um aplicativo web desenvolvido em **Django** que funciona como um diário digital das experiências de cada torcedor.  
+O **OnlyFootballFans** é um aplicativo web desenvolvido em **Django** que funciona como um diário digital das experiências de cada torcedor.  
   
 O objetivo é transformar cada ida ao estádio, cada gol, cada emoção, cada caos na arquibancada, em memórias organizadas, fáceis de buscar, comparar e reviver.
 
@@ -64,7 +64,7 @@ _Um app que eterniza momentos que o futebol entrega e o tempo não devolve._
 
 ---
 
-## 🤝 Como Contribuir com o projeto--Football-Fans
+## 🤝 Como Contribuir com o projeto-Only-Football-Fans
 
 Ficamos muito felizes pelo seu interesse em contribuir! Este projeto é construído pela comunidade, e toda ajuda é bem-vinda.
 
@@ -82,12 +82,12 @@ Este projeto utiliza *Django* e requer um *ambiente virtual*.
 
 Primeiro, prepare o repositório em sua máquina.
 
-1.  **Fork:** Faça um "fork" deste repositório (raulmaiab/projeto--Football-Fans) para sua própria conta no GitHub.
+1.  **Fork:** Faça um "fork" deste repositório (raulmaiab/projeto-Only-Football-Fans) para sua própria conta no GitHub.
 
 2.  **Clone:** Clone o seu fork (substitua SEU-USUARIO):
     ```bash
-    git clone https://github.com/SEU-USUARIO/projeto--Football-Fans.git
-    cd projeto--Football-Fans
+    git clone https://github.com/SEU-USUARIO/projeto-Only-Football-Fans.git
+    cd projeto-Only-Football-Fans
     ```
 
 3.  **Crie uma Branch:** Nunca trabalhe diretamente na branch main ou master. Crie uma nova branch descritiva para sua mudança:
@@ -178,10 +178,10 @@ Depois que seu ambiente estiver configurado e suas alterações estiverem pronta
 3.  **Abra um Pull Request (PR):**
     * Vá até a página do seu fork no GitHub.
     * Clique no botão "Compare & pull request".
-    * Verifique se a base é a branch main (ou master) do repositório raulmaiab/projeto--Football-Fans e o head é a sua branch.
+    * Verifique se a base é a branch main (ou master) do repositório raulmaiab/projeto-Only-Football-Fans e o head é a sua branch.
     * Na descrição, explique *o que* você fez e *por que*. Se sua alteração corrige uma "Issue" aberta, mencione o número dela (ex: Resolve #42).
 
-**Obrigado por ajudar a construir o -Football-Fans!**
+**Obrigado por ajudar a construir o Only-Football-Fans!**
 
 ---
 
@@ -207,7 +207,7 @@ Depois que seu ambiente estiver configurado e suas alterações estiverem pronta
   
   [Print do BackLog Jira da Semana 2](images/backlog2.png) 
   
-  [Link do primeiro Deploy](https://-football-fans.azurewebsites.net/login/)
+  [Link do primeiro Deploy](https://only-football-fans.azurewebsites.net/login/)
   
   [Screencast do Deploy](https://youtu.be/sAhcepC54wo?si=GCJNAyZaQ7O_8hI4)
    
